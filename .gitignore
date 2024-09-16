@@ -3,9 +3,9 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
-# Dependencies
-vendor/
-dependencies/
+## Dependencies
+#vendor/
+#dependencies/
 
 # User-specific files
 *.rsuser

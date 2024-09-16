@@ -134,11 +134,12 @@ namespace NGMC
 		if (stream)
 		{
 			DatabinHeader* header = new DatabinHeader;
+			stream.seekg(0, std::ios_base::beg);
 			stream.read((char*)header, sizeof(DatabinHeader));
 
 			if (index < header->fileCount)
 			{
-				stream.seekg(index * sizeof(uint32_t), std::ios_base::cur);
+				stream.seekg((std::streamoff)index * sizeof(uint32_t), std::ios_base::cur);
 
 				uint32_t fileHeaderOffset = 0;
 				stream.read((char*)&fileHeaderOffset, sizeof(uint32_t));

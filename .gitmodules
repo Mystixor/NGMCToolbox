@@ -1,0 +1,4 @@
+[submodule "NGMCTool/vendor/zlib"]
+	path = NGMCTool/vendor/zlib
+	url = https://github.com/madler/zlib
+	branch = master
