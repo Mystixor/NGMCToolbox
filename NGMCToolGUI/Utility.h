@@ -121,403 +121,6 @@ namespace NGMC
 		};
 	}
 
-	class FileType
-	{
-	public:
-		FileType()
-			: m_Id(General::FileTypeId::unknown), m_Game(NON_GAME)
-		{}
-
-		FileType(General::FileTypeId id)
-			: m_Id(id), m_Game(NON_GAME)
-		{}
-		
-		FileType(S1::FileTypeId id)
-			: m_Id(id), m_Game(SIGMA_1)
-		{}
-		
-		FileType(S2::FileTypeId id)
-			: m_Id(id), m_Game(SIGMA_2)
-		{}
-		
-		FileType(RE::FileTypeId id)
-			: m_Id(id), m_Game(RE_3)
-		{}
-
-		bool operator==(FileType& other) const
-		{
-			if (m_Game == other.GetGame())
-			{
-				if (m_Id == other.GetId())
-				{
-					return true;
-				}
-			}
-			return false;
-		}
-
-		bool operator!=(FileType& other) const
-		{
-			return !operator==(other);
-		}
-
-		void SetType(General::FileTypeId id)
-		{
-			m_Game = NON_GAME;
-			m_Id = id;
-		}
-		
-		void SetType(S1::FileTypeId id)
-		{
-			m_Game = SIGMA_1;
-			m_Id = id;
-		}
-		
-		void SetType(S2::FileTypeId id)
-		{
-			m_Game = SIGMA_2;
-			m_Id = id;
-		}
-		
-		void SetType(RE::FileTypeId id)
-		{
-			m_Game = RE_3;
-			m_Id = id;
-		}
-
-		bool IsUnknown() const
-		{
-			if (
-				(m_Game == NON_GAME && m_Id == General::FileTypeId::unknown) ||
-				(m_Game == SIGMA_1 && m_Id == S1::FileTypeId::unknown) ||
-				(m_Game == SIGMA_2 && m_Id == S2::FileTypeId::unknown)
-				)
-				return true;
-			else
-				return false;
-		}
-
-		int GetId() const { return m_Id; }
-		GAME GetGame() const { return m_Game; }
-
-		//	Returns the name of this FileType as a string.
-		std::string GetTypeName() const
-		{
-			std::string output = "";
-
-			switch (m_Game)
-			{
-			case NON_GAME:
-			{
-				using namespace General;
-				switch (m_Id)
-				{
-				case FileTypeId::DDS:
-				{
-					output += "DDS";
-					break;
-				}
-				case FileTypeId::unknown:
-				{
-					output += "unknown";
-					break;
-				}
-				default:
-				{
-					output += std::format("{:02X}", m_Id);
-					break;
-				}
-				}
-				break;
-			}
-			case SIGMA_1:
-			{
-				using namespace S1;
-				switch (m_Id)
-				{
-				case FileTypeId::tdpack:
-				{
-					output += "tdpack";
-					break;
-				}
-				case FileTypeId::btl_dat:
-				{
-					output += "btl_dat";
-					break;
-				}
-				case FileTypeId::chr_dat2:
-				{
-					output += "chr_dat2";
-					break;
-				}
-				case FileTypeId::TMC_05:
-				case FileTypeId::TMC_10:
-				{
-					output += "TMC";
-					break;
-				}
-				case FileTypeId::GT1G_07:
-				case FileTypeId::GT1G_13:
-				{
-					output += "GT1G";
-					break;
-				}
-				case FileTypeId::itm_dat2_08:
-				case FileTypeId::itm_dat2_0E:
-				{
-					output += "itm_dat2";
-					break;
-				}
-				case FileTypeId::MESSTR:
-				{
-					output += "MESSTR";
-					break;
-				}
-				case FileTypeId::chr_dat:
-				{
-					output += "chr_dat";
-					break;
-				}
-				case FileTypeId::rtm_dat:
-				{
-					output += "rtm_dat";
-					break;
-				}
-				case FileTypeId::SND:
-				{
-					output += "SND";
-					break;
-				}
-				case FileTypeId::stry_dat:
-				{
-					output += "stry_dat";
-					break;
-				}
-				case FileTypeId::VtxLay:
-				{
-					output += "VtxLay";
-					break;
-				}
-				case FileTypeId::sprite:
-				{
-					output += "sprite";
-					break;
-				}
-				case FileTypeId::invalid:
-				{
-					output += "invalid";
-					break;
-				}
-				case FileTypeId::databin:
-				{
-					output += "databin";
-					break;
-				}
-				case FileTypeId::databinItem:
-				{
-					output += "databinCompressedFile";
-					break;
-				}
-				case FileTypeId::unknown:
-				{
-					output += "unknown";
-					break;
-				}
-				default:
-				{
-					output += std::format("{:02X}", m_Id);
-					break;
-				}
-				}
-				break;
-			}
-			case SIGMA_2:
-			{
-				using namespace S2;
-				switch (m_Id)
-				{
-				case FileTypeId::TDP4ACT:
-				{
-					output += "TDP4ACT";
-					break;
-				}
-				case FileTypeId::TDP4CLD:
-				{
-					output += "TDP4CLD";
-					break;
-				}
-				case FileTypeId::TMC_08:
-				case FileTypeId::TMC_0B:
-				{
-					output += "TMC";
-					break;
-				}
-				case FileTypeId::itm_dat2:
-				{
-					output += "itm_dat2";
-					break;
-				}
-				case FileTypeId::DDS_0F:
-				case FileTypeId::DDS_1A:
-				case FileTypeId::DDS_1B:
-				{
-					output += "DDS";
-					break;
-				}
-				case FileTypeId::chr_dat:
-				{
-					output += "chr_dat";
-					break;
-				}
-				case FileTypeId::rtm_dat:
-				{
-					output += "rtm_dat";
-					break;
-				}
-				case FileTypeId::tdpack:
-				{
-					output += "tdpack";
-					break;
-				}
-				case FileTypeId::TDP4SOB:
-				{
-					output += "TDP4SOB";
-					break;
-				}
-				case FileTypeId::TDP4SOC:
-				{
-					output += "TDP4SOC";
-					break;
-				}
-				case FileTypeId::sprpack:
-				{
-					output += "sprpack";
-					break;
-				}
-				case FileTypeId::STAGEETC:
-				{
-					output += "STAGEETC";
-					break;
-				}
-				case FileTypeId::TDP4STY:
-				{
-					output += "TDP4STY";
-					break;
-				}
-				case FileTypeId::TNF:
-				{
-					output += "TNF";
-					break;
-				}
-				case FileTypeId::XWSFILE:
-				{
-					output += "XWSFILE";
-					break;
-				}
-				case FileTypeId::databin:
-				{
-					output += "databin";
-					break;
-				}
-				case FileTypeId::databinItem:
-				{
-					output += "databinCompressedFile";
-					break;
-				}
-				case FileTypeId::unknown:
-				{
-					output += "unknown";
-					break;
-				}
-				default:
-				{
-					output += std::format("{:02X}", m_Id);
-					break;
-				}
-				}
-				break;
-			}
-			case RE_3:
-			{
-				using namespace RE;
-				switch (m_Id)
-				{
-				case FileTypeId::databin:
-				{
-					output += "databin";
-					break;
-				}
-				case FileTypeId::databinItem:
-				{
-					output += "databinCompressedFile";
-					break;
-				}
-				case FileTypeId::unknown:
-				{
-					output += "unknown";
-					break;
-				}
-				default:
-				{
-					output += std::format("{:02X}", m_Id);
-					break;
-				}
-				}
-				break;
-			}
-			default:
-				output += "unsupportedGame";
-			}
-
-			return output;
-		}
-
-		//	Returns the file extension of this FileType as a string.
-		std::string GetFileExtension() const
-		{
-			std::string output = "";
-
-			output += GetTypeName();
-
-			return output;
-		}
-
-	private:
-		int m_Id;
-		GAME m_Game;
-	};
-
-	//	Returns the conversion of a string to a wide char string.
-	static std::wstring GetWStringFromString(const char* string)
-	{
-		std::string tempString = string;
-		
-		return std::wstring(tempString.begin(), tempString.end());
-	}
-	
-	//	Returns the conversion of a wide char string to a string (can lead to undesirable results, see GetStringFromWStringSimple for an alternative).
-	static std::string GetStringFromWString(const wchar_t* wstring)
-	{
-		std::wstring tempString = wstring;
-		
-		return std::string(tempString.begin(), tempString.end());
-	}
-
-	//	Returns the conversion of a wide char string to a string by omitting data that might lead to some weird corruption (hacky).
-	static std::string GetStringFromWStringSimple(const wchar_t* wstring)
-	{
-		std::string outString = "";
-
-		unsigned int offset = 0;
-		while (*(wstring + offset) != 0x0000)
-		{
-			//const wchar_t* test = wstring + offset;
-			outString += *(char*)(wstring + offset++) & 0x7F;
-		}
-
-		return outString;
-	}
-
 	//	Returns the name of this general purpose FileType as a string.
 	static std::string GetTypeName(General::FileTypeId id)
 	{
@@ -527,6 +130,11 @@ namespace NGMC
 
 		switch (id)
 		{
+		case FileTypeId::databin:
+		{
+			output += "databin";
+			break;
+		}
 		case FileTypeId::DDS:
 		{
 			output += "DDS";
@@ -653,7 +261,7 @@ namespace NGMC
 
 		return output;
 	}
-	
+
 	//	Returns the name of this Ninja Gaiden Sigma 2 FileType as a string.
 	static std::string GetTypeName(S2::FileTypeId id)
 	{
@@ -663,6 +271,94 @@ namespace NGMC
 
 		switch (id)
 		{
+		case FileTypeId::TDP4ACT:
+		{
+			output += "TDP4ACT";
+			break;
+		}
+		case FileTypeId::TDP4CLD:
+		{
+			output += "TDP4CLD";
+			break;
+		}
+		case FileTypeId::TMC_08:
+		case FileTypeId::TMC_0B:
+		{
+			output += "TMC";
+			break;
+		}
+		case FileTypeId::itm_dat2:
+		{
+			output += "itm_dat2";
+			break;
+		}
+		case FileTypeId::DDS_0F:
+		case FileTypeId::DDS_1A:
+		case FileTypeId::DDS_1B:
+		{
+			output += "DDS";
+			break;
+		}
+		case FileTypeId::chr_dat:
+		{
+			output += "chr_dat";
+			break;
+		}
+		case FileTypeId::rtm_dat:
+		{
+			output += "rtm_dat";
+			break;
+		}
+		case FileTypeId::tdpack:
+		{
+			output += "tdpack";
+			break;
+		}
+		case FileTypeId::TDP4SOB:
+		{
+			output += "TDP4SOB";
+			break;
+		}
+		case FileTypeId::TDP4SOC:
+		{
+			output += "TDP4SOC";
+			break;
+		}
+		case FileTypeId::sprpack:
+		{
+			output += "sprpack";
+			break;
+		}
+		case FileTypeId::STAGEETC:
+		{
+			output += "STAGEETC";
+			break;
+		}
+		case FileTypeId::TDP4STY:
+		{
+			output += "TDP4STY";
+			break;
+		}
+		case FileTypeId::TNF:
+		{
+			output += "TNF";
+			break;
+		}
+		case FileTypeId::XWSFILE:
+		{
+			output += "XWSFILE";
+			break;
+		}
+		case FileTypeId::databin:
+		{
+			output += "databin";
+			break;
+		}
+		case FileTypeId::databinItem:
+		{
+			output += "databinCompressedFile";
+			break;
+		}
 		case FileTypeId::unknown:
 		{
 			output += "unknown";
@@ -678,8 +374,203 @@ namespace NGMC
 		return output;
 	}
 
-	//	Returns the file extension of this general purpose FileType as a string.
-	static std::string GetFileExtension(General::FileTypeId id)
+	//	Returns the name of this Ninja Gaiden Sigma 2 FileType as a string.
+	static std::string GetTypeName(RE::FileTypeId id)
+	{
+		using namespace RE;
+
+		std::string output = "";
+
+		switch (id)
+		{
+		case FileTypeId::databin:
+		{
+			output += "databin";
+			break;
+		}
+		case FileTypeId::databinItem:
+		{
+			output += "databinCompressedFile";
+			break;
+		}
+		case FileTypeId::unknown:
+		{
+			output += "unknown";
+			break;
+		}
+		default:
+		{
+			output += std::format("{:02X}", (int)id);
+			break;
+		}
+		}
+
+		return output;
+	}
+
+	//	A class holding information on the type of a file object as well as helper methods.
+	class FileType
+	{
+	public:
+		FileType()
+			: m_Id(General::FileTypeId::unknown), m_Game(NON_GAME)
+		{}
+
+		FileType(General::FileTypeId id)
+			: m_Id(id), m_Game(NON_GAME)
+		{}
+		
+		FileType(S1::FileTypeId id)
+			: m_Id(id), m_Game(SIGMA_1)
+		{}
+		
+		FileType(S2::FileTypeId id)
+			: m_Id(id), m_Game(SIGMA_2)
+		{}
+		
+		FileType(RE::FileTypeId id)
+			: m_Id(id), m_Game(RE_3)
+		{}
+
+		bool operator==(FileType& other) const
+		{
+			if (m_Game == other.GetGame())
+			{
+				if (m_Id == other.GetId())
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
+		bool operator!=(FileType& other) const
+		{
+			return !operator==(other);
+		}
+
+		void SetType(General::FileTypeId id)
+		{
+			m_Game = NON_GAME;
+			m_Id = id;
+		}
+		
+		void SetType(S1::FileTypeId id)
+		{
+			m_Game = SIGMA_1;
+			m_Id = id;
+		}
+		
+		void SetType(S2::FileTypeId id)
+		{
+			m_Game = SIGMA_2;
+			m_Id = id;
+		}
+		
+		void SetType(RE::FileTypeId id)
+		{
+			m_Game = RE_3;
+			m_Id = id;
+		}
+
+		bool IsUnknown() const
+		{
+			if (
+				(m_Game == NON_GAME && m_Id == General::FileTypeId::unknown) ||
+				(m_Game == SIGMA_1 && m_Id == S1::FileTypeId::unknown) ||
+				(m_Game == SIGMA_2 && m_Id == S2::FileTypeId::unknown)
+				)
+				return true;
+			else
+				return false;
+		}
+
+		int GetId() const { return m_Id; }
+		GAME GetGame() const { return m_Game; }
+
+		//	Returns the name of this FileType as a string.
+		std::string GetTypeName() const
+		{
+			std::string output = "";
+
+			switch (m_Game)
+			{
+			case NON_GAME:
+			{
+				output += NGMC::GetTypeName((General::FileTypeId)m_Id);
+				break;
+			}
+			case SIGMA_1:
+			{
+				output += NGMC::GetTypeName((S1::FileTypeId)m_Id);
+				break;
+			}
+			case SIGMA_2:
+			{
+				output += NGMC::GetTypeName((S2::FileTypeId)m_Id);
+				break;
+			}
+			case RE_3:
+			{
+				output += NGMC::GetTypeName((RE::FileTypeId)m_Id);
+				break;
+			}
+			default:
+				output += "unsupportedGame";
+			}
+
+			return output;
+		}
+
+		//	Returns the file extension of this FileType as a string (kinda redundant now)
+		std::string GetFileExtension() const
+		{
+			std::string output = "";
+
+			output += GetTypeName();
+
+			return output;
+		}
+
+	private:
+		int m_Id;
+		GAME m_Game;
+	};
+
+	//	Returns the conversion of a string to a wide char string.
+	static std::wstring GetWStringFromString(const char* string)
+	{
+		std::string tempString = string;
+		
+		return std::wstring(tempString.begin(), tempString.end());
+	}
+	
+	//	Returns the conversion of a wide char string to a string (can lead to undesirable results, see GetStringFromWStringSimple for an alternative).
+	static std::string GetStringFromWString(const wchar_t* wstring)
+	{
+		std::wstring tempString = wstring;
+		
+		return std::string(tempString.begin(), tempString.end());
+	}
+
+	//	Returns the conversion of a wide char string to a string by omitting data that might lead to some weird corruption (hacky).
+	static std::string GetStringFromWStringSimple(const wchar_t* wstring)
+	{
+		std::string outString = "";
+
+		unsigned int offset = 0;
+		while (*(wstring + offset) != 0x0000)
+		{
+			//const wchar_t* test = wstring + offset;
+			outString += *(char*)(wstring + offset++) & 0x7F;
+		}
+
+		return outString;
+	}
+
+	//	Returns the file extension of a FileType as a string.
+	template <typename FileTypeId>
+	static std::string GetFileExtension(FileTypeId id)
 	{
 		std::string output = "";
 
@@ -688,26 +579,6 @@ namespace NGMC
 		return output;
 	}
 	
-	//	Returns the file extension of this Ninja Gaiden Sigma 1 FileType as a string.
-	static std::string GetFileExtension(S1::FileTypeId id)
-	{
-		std::string output = "";
-
-		output += GetTypeName(id);
-
-		return output;
-	}
-	
-	//	Returns the file extension of this Ninja Gaiden Sigma 2 FileType as a string.
-	static std::string GetFileExtension(S2::FileTypeId id)
-	{
-		std::string output = "";
-
-		output += GetTypeName(id);
-
-		return output;
-	}
-
 	//	Returns whether a file exists with the specified wide char string file name.
 	inline bool IsFileExisting(const std::wstring& name) {
 		if (FILE* file = _wfopen(name.c_str(), L"r")) {
