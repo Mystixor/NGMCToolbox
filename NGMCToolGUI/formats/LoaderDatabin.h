@@ -146,5 +146,17 @@ namespace NGMC
 
 		//	Sigma 2: List of the item headers, filled by the LoadItemHeaders functions.
 		std::vector<S2::DatabinItemHeader> m_FileHeadersS2;
+
+		//	Loads the item header of the file at the specified index into the specified outItemHeader, returns whether the operation was successful.
+		template <typename t_ItemHeader>
+		bool LoadItemHeaderT(t_ItemHeader& outItemHeader, unsigned int index);
+
+		//	Loads the item header of the file at the specified index into the specified outItemHeader from the specified inStream, returns whether the operation was successful.
+		template <typename t_ItemHeader>
+		bool LoadItemHeaderT(t_ItemHeader& outItemHeader, std::ifstream& inStream, unsigned int index);
+
+		//	Loads the item header of the file at the specified index into the specified outItemHeader from the specified inBuffer, returns whether the operation was successful.
+		template <typename t_ItemHeader>
+		bool LoadItemHeaderT(t_ItemHeader& outItemHeader, MemoryBuffer& inBuffer, unsigned int index);
 	};
 }

@@ -127,173 +127,32 @@ namespace NGMC
 
 	bool LoaderDatabin::LoadItemHeader(S1::DatabinItemHeader& outItemHeader, unsigned int index)
 	{
-		bool isSuccess = false;
-
-		std::ifstream stream(m_FilePath, std::ios::binary);
-
-		if (stream)
-		{
-			DatabinHeader* header = new DatabinHeader;
-			stream.seekg(0, std::ios_base::beg);
-			stream.read((char*)header, sizeof(DatabinHeader));
-
-			if (index < header->fileCount)
-			{
-				stream.seekg((std::streamoff)index * sizeof(uint32_t), std::ios_base::cur);
-
-				uint32_t fileHeaderOffset = 0;
-				stream.read((char*)&fileHeaderOffset, sizeof(uint32_t));
-
-				stream.seekg(header->headerSize + fileHeaderOffset);
-				stream.read((char*)&outItemHeader, sizeof(outItemHeader));
-
-				isSuccess = true;
-			}
-
-			delete header;
-		}
-		return isSuccess;
+		return LoadItemHeaderT(outItemHeader, index);
 	}
 
 	bool LoaderDatabin::LoadItemHeader(S1::DatabinItemHeader& outItemHeader, std::ifstream& inStream, unsigned int index)
 	{
-		bool isSuccess = false;
-
-		if (inStream)
-		{
-			DatabinHeader* header = new DatabinHeader;
-			inStream.seekg(0, std::ios_base::beg);
-			inStream.read((char*)header, sizeof(DatabinHeader));
-
-			if (index < header->fileCount)
-			{
-				inStream.seekg(index * sizeof(uint32_t), std::ios_base::cur);
-
-				uint32_t fileHeaderOffset = 0;
-				inStream.read((char*)&fileHeaderOffset, sizeof(uint32_t));
-
-				inStream.seekg(header->headerSize + fileHeaderOffset);
-				inStream.read((char*)&outItemHeader, sizeof(outItemHeader));
-
-				isSuccess = true;
-			}
-
-			delete header;
-		}
-		return isSuccess;
+		return LoadItemHeaderT(outItemHeader, inStream, index);
 	}
 
 	bool LoaderDatabin::LoadItemHeader(S1::DatabinItemHeader& outItemHeader, MemoryBuffer& inBuffer, unsigned int index)
 	{
-		bool isSuccess = false;
-
-		if (inBuffer.GetSize() > 0)
-		{
-			DatabinHeader* header = new DatabinHeader;
-			inBuffer.Seek(0, MemoryBuffer::beg);
-			inBuffer.Read((char*)header, sizeof(DatabinHeader));
-
-			if (index < header->fileCount)
-			{
-				inBuffer.Seek(index * sizeof(uint32_t), MemoryBuffer::cur);
-
-				uint32_t fileHeaderOffset = 0;
-				inBuffer.Read((char*)&fileHeaderOffset, sizeof(uint32_t));
-
-				inBuffer.Seek(header->headerSize + fileHeaderOffset);
-				inBuffer.Read((char*)&outItemHeader, sizeof(outItemHeader));
-
-				isSuccess = true;
-			}
-
-			delete header;
-		}
-		return isSuccess;
+		return LoadItemHeaderT(outItemHeader, inBuffer, index);
 	}
 	
 	bool LoaderDatabin::LoadItemHeader(S2::DatabinItemHeader& outItemHeader, unsigned int index)
 	{
-		bool isSuccess = false;
-
-		std::ifstream stream(m_FilePath, std::ios::binary);
-
-		if (stream)
-		{
-			DatabinHeader* header = new DatabinHeader;
-			stream.read((char*)header, sizeof(DatabinHeader));
-
-			if (index < header->fileCount)
-			{
-				stream.seekg(index * sizeof(uint32_t), std::ios_base::cur);
-
-				uint32_t fileHeaderOffset = 0;
-				stream.read((char*)&fileHeaderOffset, sizeof(uint32_t));
-
-				stream.seekg(header->headerSize + fileHeaderOffset);
-				stream.read((char*)&outItemHeader, sizeof(outItemHeader));
-
-				isSuccess = true;
-			}
-
-			delete header;
-		}
-		return isSuccess;
+		return LoadItemHeaderT(outItemHeader, index);
 	}
 
 	bool LoaderDatabin::LoadItemHeader(S2::DatabinItemHeader& outItemHeader, std::ifstream& inStream, unsigned int index)
 	{
-		bool isSuccess = false;
-
-		if (inStream)
-		{
-			DatabinHeader* header = new DatabinHeader;
-			inStream.seekg(0, std::ios_base::beg);
-			inStream.read((char*)header, sizeof(DatabinHeader));
-
-			if (index < header->fileCount)
-			{
-				inStream.seekg(index * sizeof(uint32_t), std::ios_base::cur);
-
-				uint32_t fileHeaderOffset = 0;
-				inStream.read((char*)&fileHeaderOffset, sizeof(uint32_t));
-
-				inStream.seekg(header->headerSize + fileHeaderOffset);
-				inStream.read((char*)&outItemHeader, sizeof(outItemHeader));
-
-				isSuccess = true;
-			}
-
-			delete header;
-		}
-		return isSuccess;
+		return LoadItemHeaderT(outItemHeader, inStream, index);
 	}
 
 	bool LoaderDatabin::LoadItemHeader(S2::DatabinItemHeader& outItemHeader, MemoryBuffer& inBuffer, unsigned int index)
 	{
-		bool isSuccess = false;
-
-		if (inBuffer.GetSize() > 0)
-		{
-			DatabinHeader* header = new DatabinHeader;
-			inBuffer.Seek(0, MemoryBuffer::beg);
-			inBuffer.Read((char*)header, sizeof(DatabinHeader));
-
-			if (index < header->fileCount)
-			{
-				inBuffer.Seek(index * sizeof(uint32_t), MemoryBuffer::cur);
-
-				uint32_t fileHeaderOffset = 0;
-				inBuffer.Read((char*)&fileHeaderOffset, sizeof(uint32_t));
-
-				inBuffer.Seek(header->headerSize + fileHeaderOffset);
-				inBuffer.Read((char*)&outItemHeader, sizeof(outItemHeader));
-
-				isSuccess = true;
-			}
-
-			delete header;
-		}
-		return isSuccess;
+		return LoadItemHeaderT(outItemHeader, inBuffer, index);
 	}
 
 	bool LoaderDatabin::LoadItemHeaders(std::ifstream& inStream)
@@ -582,5 +441,88 @@ namespace NGMC
 		std::ifstream stream(m_FilePath, std::ios::binary);
 
 		return DecompressItem(outBuffer, stream, index);
+	}
+	
+	template<typename t_ItemHeader>
+	bool LoaderDatabin::LoadItemHeaderT(t_ItemHeader& outItemHeader, unsigned int index)
+	{
+		bool isSuccess = false;
+
+		std::ifstream stream(m_FilePath, std::ios::binary);
+
+		if (stream)
+		{
+			DatabinHeader header = DatabinHeader();
+			stream.seekg(0, std::ios_base::beg);
+			stream.read((char*)&header, sizeof(DatabinHeader));
+
+			if (index < header.fileCount)
+			{
+				stream.seekg((std::streamoff)index * sizeof(uint32_t), std::ios_base::cur);
+
+				uint32_t fileHeaderOffset = 0;
+				stream.read((char*)&fileHeaderOffset, sizeof(uint32_t));
+
+				stream.seekg(header.headerSize + fileHeaderOffset);
+				stream.read((char*)&outItemHeader, sizeof(outItemHeader));
+
+				isSuccess = true;
+			}
+		}
+		return isSuccess;
+	}
+
+	template<typename t_ItemHeader>
+	bool LoaderDatabin::LoadItemHeaderT(t_ItemHeader& outItemHeader, std::ifstream& inStream, unsigned int index)
+	{
+		bool isSuccess = false;
+
+		if (inStream)
+		{
+			DatabinHeader header = DatabinHeader();
+			inStream.seekg(0, std::ios_base::beg);
+			inStream.read((char*)&header, sizeof(DatabinHeader));
+
+			if (index < header.fileCount)
+			{
+				inStream.seekg(index * sizeof(uint32_t), std::ios_base::cur);
+
+				uint32_t fileHeaderOffset = 0;
+				inStream.read((char*)&fileHeaderOffset, sizeof(uint32_t));
+
+				inStream.seekg(header.headerSize + fileHeaderOffset);
+				inStream.read((char*)&outItemHeader, sizeof(outItemHeader));
+
+				isSuccess = true;
+			}
+		}
+		return isSuccess;
+	}
+
+	template<typename t_ItemHeader>
+	bool LoaderDatabin::LoadItemHeaderT(t_ItemHeader& outItemHeader, MemoryBuffer& inBuffer, unsigned int index)
+	{
+		bool isSuccess = false;
+
+		if (inBuffer.GetSize() > 0)
+		{
+			DatabinHeader header = DatabinHeader();
+			inBuffer.Seek(0, MemoryBuffer::beg);
+			inBuffer.Read((char*)&header, sizeof(DatabinHeader));
+
+			if (index < header.fileCount)
+			{
+				inBuffer.Seek(index * sizeof(uint32_t), MemoryBuffer::cur);
+
+				uint32_t fileHeaderOffset = 0;
+				inBuffer.Read((char*)&fileHeaderOffset, sizeof(uint32_t));
+
+				inBuffer.Seek(header.headerSize + fileHeaderOffset);
+				inBuffer.Read((char*)&outItemHeader, sizeof(outItemHeader));
+
+				isSuccess = true;
+			}
+		}
+		return isSuccess;
 	}
 }
