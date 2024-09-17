@@ -537,6 +537,43 @@ namespace NGMC
 		GAME m_Game;
 	};
 
+	static std::string GetPrettySize(size_t size)
+	{
+		std::string output = "";
+
+		size_t order = std::log2(size) / 10;
+
+		std::string unit = "";
+		switch (order)
+		{
+		case 0:
+			break;
+		case 1:
+			unit += "kB";
+			break;
+		case 2:
+			unit += "MB";
+			break;
+		case 3:
+			unit += "GB";
+			break;
+		case 4:
+		default:
+			unit += "TB";
+			break;
+		}
+
+		if (order == 0)
+			output += std::format("{} bytes", size);
+		else
+		{
+			double prettySize = std::round((double)size / std::pow(1024, order) * 1e2) / 1e2;
+			output += std::vformat("{:.2f} {} ({} bytes)", std::make_format_args(prettySize, unit, size));
+		}
+
+		return output;
+	}
+
 	//	Returns the conversion of a string to a wide char string.
 	static std::wstring GetWStringFromString(const char* string)
 	{

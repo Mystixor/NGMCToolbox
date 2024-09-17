@@ -67,7 +67,7 @@ namespace NGMC
 				gameName = "General";
 				break;
 			case SIGMA_1:
-				gameName = "NGS";
+				gameName = "NGS1";
 				break;
 			case SIGMA_2:
 				gameName = "NGS2";
@@ -106,7 +106,7 @@ namespace NGMC
 
 				ImGui::TableNextRow();
 				ImGui::TableSetColumnIndex(0); ImGui::Text("Size");
-				ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{} bytes", m_File->GetSize()).c_str());
+				ImGui::TableSetColumnIndex(1); ImGui::Text(GetPrettySize(m_File->GetSize()).c_str());
 
 				ImGui::TableNextRow();
 				ImGui::TableSetColumnIndex(0); ImGui::Text("Index in Parent");
@@ -160,6 +160,20 @@ namespace NGMC
 				case SIGMA_2:
 				{
 					using namespace S2;
+					switch (type.GetId())
+					{
+					case FileTypeId::databin:
+						OnRenderDatabin();
+						break;
+					case FileTypeId::databinItem:
+						OnRenderDatabinItem();
+						break;
+					}
+					break;
+				}
+				case RE_3:
+				{
+					using namespace RE;
 					switch (type.GetId())
 					{
 					case FileTypeId::databin:
@@ -591,11 +605,11 @@ namespace NGMC
 			
 			ImGui::TableNextRow();
 			ImGui::TableSetColumnIndex(0); ImGui::Text("headerSize");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("0x{:08X}", m_DatabinHeader.headerSize).c_str());
+			ImGui::TableSetColumnIndex(1); ImGui::Text(GetPrettySize(m_DatabinHeader.headerSize).c_str());
 			
 			ImGui::TableNextRow();
 			ImGui::TableSetColumnIndex(0); ImGui::Text("fileDataOffset");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("0x{:08X}", m_DatabinHeader.fileDataOffset).c_str());
+			ImGui::TableSetColumnIndex(1); ImGui::Text(GetPrettySize(m_DatabinHeader.fileDataOffset).c_str());
 			
 			ImGui::TableNextRow();
 			ImGui::TableSetColumnIndex(0); ImGui::Text("dat_18");
@@ -611,7 +625,7 @@ namespace NGMC
 			
 			ImGui::TableNextRow();
 			ImGui::TableSetColumnIndex(0); ImGui::Text("fileIndicesOffset");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", m_DatabinHeader.fileIndicesOffset).c_str());
+			ImGui::TableSetColumnIndex(1); ImGui::Text(GetPrettySize(m_DatabinHeader.fileIndicesOffset).c_str());
 			
 			ImGui::TableNextRow();
 			ImGui::TableSetColumnIndex(0); ImGui::Text("fileCount1");
@@ -675,11 +689,11 @@ namespace NGMC
 
 			ImGui::TableNextRow();
 			ImGui::TableSetColumnIndex(0); ImGui::Text("size");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", size).c_str());
+			ImGui::TableSetColumnIndex(1); ImGui::Text(GetPrettySize(size).c_str());
 
 			ImGui::TableNextRow();
 			ImGui::TableSetColumnIndex(0); ImGui::Text("sizeCompressed");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", sizeCompressed).c_str());
+			ImGui::TableSetColumnIndex(1); ImGui::Text(GetPrettySize(sizeCompressed).c_str());
 
 			ImGui::TableNextRow();
 			ImGui::TableSetColumnIndex(0); ImGui::Text("dat_10");
@@ -758,7 +772,8 @@ namespace NGMC
 
 			ImGui::TableNextRow();
 			ImGui::TableSetColumnIndex(0); ImGui::Text("fileSize");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", m_GT1GHeader.fileSize).c_str());
+			std::string prettyFileSize = GetPrettySize(m_GT1GHeader.fileSize);
+			ImGui::TableSetColumnIndex(1); ImGui::Text(prettyFileSize.c_str());
 
 			ImGui::TableNextRow();
 			ImGui::TableSetColumnIndex(0); ImGui::Text("textureOffsetTableAddress");
@@ -1058,7 +1073,7 @@ namespace NGMC
 		{
 			ImGui::TableNextRow();
 			ImGui::TableSetColumnIndex(0); ImGui::Text("dwSize");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{} bytes", m_DDS_HEADER.dwSize).c_str());
+			ImGui::TableSetColumnIndex(1); ImGui::Text(GetPrettySize(m_DDS_HEADER.dwSize).c_str());
 			
 			ImGui::TableNextRow();
 			ImGui::TableSetColumnIndex(0); ImGui::Text("dwFlags");
@@ -1105,7 +1120,7 @@ namespace NGMC
 			{
 				ImGui::TableNextRow();
 				ImGui::TableSetColumnIndex(0); ImGui::Text("dwSize");
-				ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{} bytes", m_DDS_HEADER.ddspf.dwSize).c_str());
+				ImGui::TableSetColumnIndex(1); ImGui::Text(GetPrettySize(m_DDS_HEADER.ddspf.dwSize).c_str());
 
 				ImGui::TableNextRow();
 				ImGui::TableSetColumnIndex(0); ImGui::Text("dwFlags");
