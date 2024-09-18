@@ -10,3 +10,11 @@
 	path = NGMCToolGUI/vendor/ImGui
 	url = https://github.com/ocornut/imgui
 	branch = docking
+[submodule "NGMCToolGUI/vendor/GLFW"]
+	path = NGMCToolGUI/vendor/GLFW
+	url = https://github.com/glfw/glfw
+	branch = master
+[submodule "NGMCToolGUI/vendor/GLEW"]
+	path = NGMCToolGUI/vendor/GLEW
+	url = https://github.com/nigels-com/glew.git
+	branch = master
