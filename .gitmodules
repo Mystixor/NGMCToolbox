@@ -6,3 +6,7 @@
 	path = vendor/zlib
 	url = https://github.com/madler/zlib
 	branch = master
+[submodule "NGMCToolGUI/vendor/ImGui"]
+	path = NGMCToolGUI/vendor/ImGui
+	url = https://github.com/ocornut/imgui
+	branch = docking
