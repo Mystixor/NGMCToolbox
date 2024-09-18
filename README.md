@@ -16,6 +16,10 @@ NGMCToolGUI is an executable with a graphical interface powered by [Dear ImGui](
 
 NGMCTool is a small command-line executable without a graphical interface, which can be used to extract the contents of a `databin` archive via the command `NGSTool.exe unpack [path/to/databin/databin] [path/to/output/directory]`. In the future, this tool may receive additional functionality.
 
+## Contribution
+
+If you would like to contribute to the toolset, feel free to open an issue on the repository or message me on Discord (@mystixor) with your suggestions and bug reports. Of course it is also welcomed if you would like to fork the repository and make a pull request. Keep in mind the toolset is still very unrefined and might undergo major rewrites in all parts of the codebase.
+
 ## Building the toolset
 
 All the latest releases of the NGMC Toolbox will be available from the Releases section here on GitHub, however if you would like to build the toolset yourself you first need to go through a few steps:
