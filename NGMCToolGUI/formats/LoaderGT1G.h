@@ -129,6 +129,10 @@ namespace NGMC
 			outBuffer.Write(textureHeaderDatas[i].GetBaseAddress(), textureHeaderDatas[i].GetSize());
 			outBuffer.Write(imageDatas[i].GetBaseAddress(), imageDatas[i].GetSize());
 		}
+
+		isSuccess = true;
+
+		return isSuccess;
 	}
 	
 	//	Class for loading data from a GT1G file.

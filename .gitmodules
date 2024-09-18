@@ -1,0 +1,20 @@
+[submodule "NGMCTool/vendor/zlib"]
+	path = NGMCTool/vendor/zlib
+	url = https://github.com/madler/zlib
+	branch = master
+[submodule "vendor/zlib"]
+	path = vendor/zlib
+	url = https://github.com/madler/zlib
+	branch = master
+[submodule "NGMCToolGUI/vendor/ImGui"]
+	path = NGMCToolGUI/vendor/ImGui
+	url = https://github.com/ocornut/imgui
+	branch = docking
+[submodule "NGMCToolGUI/vendor/GLFW"]
+	path = NGMCToolGUI/vendor/GLFW
+	url = https://github.com/glfw/glfw
+	branch = master
+[submodule "NGMCToolGUI/vendor/GLEW"]
+	path = NGMCToolGUI/vendor/GLEW
+	url = https://github.com/nigels-com/glew.git
+	branch = master

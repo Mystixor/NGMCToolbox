@@ -488,7 +488,7 @@ namespace NGMC
 
 				ImGui::Separator();
 				ImGui::Text((std::string("Type: ") + type.GetTypeName() + std::format(" (0x{:02X})", (char)type.GetId())).c_str());
-				ImGui::Text(std::format("Size: {} bytes", p_File->GetSize()).c_str());
+				ImGui::Text((std::string("Size: ") + GetPrettySize(p_File->GetSize())).c_str());
 				ImGui::Separator();
 			}
 			else if (selectionCount > 1)
@@ -514,7 +514,7 @@ namespace NGMC
 				{
 					size += NGMC::fileManager.GetSelectedFile(i)->GetSize();
 				}
-				ImGui::Text(std::format("Size: {} bytes", size).c_str());
+				ImGui::Text((std::string("Size: ") + GetPrettySize(size)).c_str());
 				ImGui::Separator();
 			}
 
@@ -766,7 +766,6 @@ namespace NGMC
 				if ((ImGui::IsKeyDown(ImGuiKey_LeftCtrl) || ImGui::IsKeyDown(ImGuiKey_RightCtrl)) && ImGui::IsKeyDown(ImGuiKey_A))
 				{
 					//	If Ctrl + A is pressed, then select all files
-					std::cout << "Ctrl + A" << std::endl;
 					IsCtrlAHeld = true;
 					NGMC::fileManager.SelectAllFiles();
 				}

@@ -379,7 +379,7 @@ namespace NGMC
 							if (isSuccess)
 								Close();
 
-							std::cout << "File " << (isSuccess ? "was" : "could not be") << " saved to \"" << std::string(filePath.begin(), filePath.end()) << "\"." << std::endl;
+							Log(L"File {} saved to \"{}\".", isSuccess ? L"was" : L"could not be", filePath);
 						}
 					}
 					else if (isSaveToFileList)
@@ -388,7 +388,7 @@ namespace NGMC
 
 						Close();
 
-						std::cout << "File was saved to memory as \"" << m_OutputName << "\"." << std::endl;
+						Log("File was saved to memory as \"{}\".", m_OutputName);
 					}
 				}
 

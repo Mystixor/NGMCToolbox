@@ -25,8 +25,11 @@ static void glfw_error_callback(int error, const char* description)
 }
 
 // Main code, application entry point
-int main(int argc, char** argv)
+int wmain(int argc, wchar_t** argv)
 {
+	// Set console code page to UTF-8
+	SetConsoleOutputCP(CP_UTF8);
+
 	glfwSetErrorCallback(glfw_error_callback);
 	if (!glfwInit())
 		return 1;
@@ -65,11 +68,11 @@ int main(int argc, char** argv)
 	if (err != GLEW_OK)
 	{
 		// Problem: glewInit failed, something is seriously wrong.
-		std::cout << "glewInit failed: " << glewGetErrorString(err) << std::endl;
+		NGMC::Log("glewInit failed: {}", (char*)glewGetErrorString(err));
 		exit(1);
 	}
 
-	std::cout << glGetString(GL_VERSION) << std::endl;
+	NGMC::Log("OpenGL version: {}", (char*)glGetString(GL_VERSION));
 
 	// Setup Dear ImGui context
 	IMGUI_CHECKVERSION();
@@ -102,6 +105,9 @@ int main(int argc, char** argv)
 		ImFont* font = io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\Arial.ttf", 16.0f, nullptr, io.Fonts->GetGlyphRangesJapanese());
 		IM_ASSERT(font != nullptr);
 	}
+
+
+	NGMC::Log("");
 
 
 	// Register files from command line arguments

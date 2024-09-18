@@ -67,7 +67,7 @@ namespace NGMC
 				gameName = "General";
 				break;
 			case SIGMA_1:
-				gameName = "NGS";
+				gameName = "NGS1";
 				break;
 			case SIGMA_2:
 				gameName = "NGS2";
@@ -106,7 +106,7 @@ namespace NGMC
 
 				ImGui::TableNextRow();
 				ImGui::TableSetColumnIndex(0); ImGui::Text("Size");
-				ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{} bytes", m_File->GetSize()).c_str());
+				ImGui::TableSetColumnIndex(1); ImGui::Text(GetPrettySize(m_File->GetSize()).c_str());
 
 				ImGui::TableNextRow();
 				ImGui::TableSetColumnIndex(0); ImGui::Text("Index in Parent");
@@ -160,6 +160,20 @@ namespace NGMC
 				case SIGMA_2:
 				{
 					using namespace S2;
+					switch (type.GetId())
+					{
+					case FileTypeId::databin:
+						OnRenderDatabin();
+						break;
+					case FileTypeId::databinItem:
+						OnRenderDatabinItem();
+						break;
+					}
+					break;
+				}
+				case RE_3:
+				{
+					using namespace RE;
 					switch (type.GetId())
 					{
 					case FileTypeId::databin:
@@ -591,11 +605,11 @@ namespace NGMC
 			
 			ImGui::TableNextRow();
 			ImGui::TableSetColumnIndex(0); ImGui::Text("headerSize");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("0x{:08X}", m_DatabinHeader.headerSize).c_str());
+			ImGui::TableSetColumnIndex(1); ImGui::Text(GetPrettySize(m_DatabinHeader.headerSize).c_str());
 			
 			ImGui::TableNextRow();
 			ImGui::TableSetColumnIndex(0); ImGui::Text("fileDataOffset");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("0x{:08X}", m_DatabinHeader.fileDataOffset).c_str());
+			ImGui::TableSetColumnIndex(1); ImGui::Text(GetPrettySize(m_DatabinHeader.fileDataOffset).c_str());
 			
 			ImGui::TableNextRow();
 			ImGui::TableSetColumnIndex(0); ImGui::Text("dat_18");
@@ -611,7 +625,7 @@ namespace NGMC
 			
 			ImGui::TableNextRow();
 			ImGui::TableSetColumnIndex(0); ImGui::Text("fileIndicesOffset");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", m_DatabinHeader.fileIndicesOffset).c_str());
+			ImGui::TableSetColumnIndex(1); ImGui::Text(GetPrettySize(m_DatabinHeader.fileIndicesOffset).c_str());
 			
 			ImGui::TableNextRow();
 			ImGui::TableSetColumnIndex(0); ImGui::Text("fileCount1");
@@ -675,11 +689,11 @@ namespace NGMC
 
 			ImGui::TableNextRow();
 			ImGui::TableSetColumnIndex(0); ImGui::Text("size");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", size).c_str());
+			ImGui::TableSetColumnIndex(1); ImGui::Text(GetPrettySize(size).c_str());
 
 			ImGui::TableNextRow();
 			ImGui::TableSetColumnIndex(0); ImGui::Text("sizeCompressed");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", sizeCompressed).c_str());
+			ImGui::TableSetColumnIndex(1); ImGui::Text(GetPrettySize(sizeCompressed).c_str());
 
 			ImGui::TableNextRow();
 			ImGui::TableSetColumnIndex(0); ImGui::Text("dat_10");
@@ -758,7 +772,8 @@ namespace NGMC
 
 			ImGui::TableNextRow();
 			ImGui::TableSetColumnIndex(0); ImGui::Text("fileSize");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", m_GT1GHeader.fileSize).c_str());
+			std::string prettyFileSize = GetPrettySize(m_GT1GHeader.fileSize);
+			ImGui::TableSetColumnIndex(1); ImGui::Text(prettyFileSize.c_str());
 
 			ImGui::TableNextRow();
 			ImGui::TableSetColumnIndex(0); ImGui::Text("textureOffsetTableAddress");
@@ -813,92 +828,6 @@ namespace NGMC
 						PrepareGT1GTexture(m_PreviewGT1GTexIdx);
 					}
 				}
-
-				//ImGui::Text("pointer = %x", m_Image);
-				//ImGui::Text("size = %d x %d", m_ImageWidth, m_ImageHeight);
-
-				//	Save Texture Button
-				/*if (ImGui::Button("Save Texture"))
-				{
-					//	Saving DDS to disk
-					DDSFormat format;
-					switch (m_GT1GTextures[m_PreviewGT1GTexIdx].Format)
-					{
-					case PixelFormat::RGBA8_BGRA_u8:
-					{
-						format = DDSFormat::BGRA8;
-						break;
-					}
-					case PixelFormat::RGBA8_RGBA_u8:
-					{
-						format = DDSFormat::RGBA8;
-						break;
-					}
-					case PixelFormat::CompressedRgbS3tcDxt1Ext_06:
-					case PixelFormat::CompressedRgbS3tcDxt1Ext_59:
-					{
-						format = DDSFormat::DXT1;
-						break;
-					}
-					case PixelFormat::CompressedRgbaS3tcDxt5Ext_08:
-					case PixelFormat::CompressedRgbaS3tcDxt5Ext_5B:
-					{
-						format = DDSFormat::DXT5;
-						break;
-					}
-					case PixelFormat::ColorMap_u8:
-					{
-						if ((m_PreviewGT1GTexIdx == 1) && (!g_ReadColorMapAsLuminance))
-						{
-							format = DDSFormat::BGRA8;
-						}
-						else
-						{
-							format = DDSFormat::LUMINANCE;
-						}
-						break;
-					}
-					default:
-					{
-						std::cout << "This texture format is not yet supported." << std::endl;
-					}
-					}
-
-					LoaderGT1G loader(m_File);
-
-					unsigned int mipMapCount = loader.GetMipMapCount(m_PreviewGT1GTexIdx);
-
-					size_t dataSize = 0;
-					size_t* mipSizes = new size_t[mipMapCount];
-					for (unsigned int i = 0; i < mipMapCount; i++)
-					{
-						mipSizes[i] = loader.GetMipDataSize(m_PreviewGT1GTexIdx, i);
-						dataSize += mipSizes[i];
-					}
-
-					char* imageData = new char[dataSize];
-					size_t offset = 0;
-					for (unsigned int i = 0; i < mipMapCount; i++)
-					{
-						MemoryBuffer mipBuffer;
-						loader.GetImageData(mipBuffer, m_PreviewGT1GTexIdx, i);
-						memcpy((void*)((uintptr_t)imageData + offset), mipBuffer.GetBaseAddress(), mipSizes[i]);
-						offset += mipSizes[i];
-					}
-
-					SaveDDSTexture(
-						(GetWString(m_File->GetName()) + L".dds").c_str(),
-						imageData,
-						m_GT1GTextures[m_PreviewGT1GTexIdx].MipMaps[0].Width,
-						m_GT1GTextures[m_PreviewGT1GTexIdx].MipMaps[0].Height,
-						m_GT1GTextures[m_PreviewGT1GTexIdx].MipMapCount,
-						format,
-						mipSizes
-					);
-
-					delete[] imageData;
-					delete[] mipSizes;
-				}*/
 
 				ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(0.0f, 0.0f));
 				if (ImGui::BeginTable("tablePreviewerGT1GImage", 1, flags, { (float)m_ImageDisplayWidth + 1, (float)m_ImageDisplayHeight + 1 }))
@@ -1058,7 +987,7 @@ namespace NGMC
 		{
 			ImGui::TableNextRow();
 			ImGui::TableSetColumnIndex(0); ImGui::Text("dwSize");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{} bytes", m_DDS_HEADER.dwSize).c_str());
+			ImGui::TableSetColumnIndex(1); ImGui::Text(GetPrettySize(m_DDS_HEADER.dwSize).c_str());
 			
 			ImGui::TableNextRow();
 			ImGui::TableSetColumnIndex(0); ImGui::Text("dwFlags");
@@ -1105,7 +1034,7 @@ namespace NGMC
 			{
 				ImGui::TableNextRow();
 				ImGui::TableSetColumnIndex(0); ImGui::Text("dwSize");
-				ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{} bytes", m_DDS_HEADER.ddspf.dwSize).c_str());
+				ImGui::TableSetColumnIndex(1); ImGui::Text(GetPrettySize(m_DDS_HEADER.ddspf.dwSize).c_str());
 
 				ImGui::TableNextRow();
 				ImGui::TableSetColumnIndex(0); ImGui::Text("dwFlags");

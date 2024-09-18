@@ -275,7 +275,7 @@ namespace NGMC
 						}
 						default:
 						{
-							std::cout << "This texture format is not yet supported." << std::endl;
+							Log("This texture format is not yet supported.");
 							return false;
 						}
 						}
@@ -319,7 +319,7 @@ namespace NGMC
 
 					if (textureCount == 0)
 					{
-						std::cout << "GT1G file did not contain any textures." << std::endl;
+						Log("GT1G file did not contain any textures.");
 					}
 					m_IsLoaded = true;
 
@@ -331,7 +331,7 @@ namespace NGMC
 				case FileTypeId::invalid:
 				default:
 				{
-					std::cout << std::format("File type 0x{:02X} is not supported.", (char)m_Type.GetId()) << std::endl;
+					Log("File type 0x{:02X} is not supported.", (char)m_Type.GetId());
 				}
 				}
 				break;
@@ -354,7 +354,7 @@ namespace NGMC
 				case FileTypeId::unknown:
 				default:
 				{
-					std::cout << std::format("File type 0x{:02X} is not supported.", (char)m_Type.GetId()) << std::endl;
+					Log("File type 0x{:02X} is not supported.", (char)m_Type.GetId());
 				}
 				}
 				break;
@@ -377,21 +377,21 @@ namespace NGMC
 				case FileTypeId::unknown:
 				default:
 				{
-					std::cout << std::format("File type 0x{:02X} is not supported.", (char)m_Type.GetId()) << std::endl;
+					Log("File type 0x{:02X} is not supported.", (char)m_Type.GetId());
 				}
 				}
 				break;
 			}
 			default:
 			{
-				std::cout << "This file comes from an unsupported game." << std::endl;
+				Log("This file comes from an unsupported game.");
 			}
 			}
 
 			if (m_IsLoaded)
 				m_IsNodeOpened = false;
 
-			std::cout << "File \"" << m_Name << (m_IsLoaded ? "\" loaded." : "\" could not be loaded.") << std::endl;
+			Log("File \"{}\"{} loaded.", m_Name, m_IsLoaded ? "" : " could not be");
 
 			return m_IsLoaded;
 		}
@@ -407,13 +407,13 @@ namespace NGMC
 
 			m_IsLoaded = false;
 
-			std::cout << "File \"" << m_Name << "\" unloaded." << std::endl;
+			Log("File \"{}\" unloaded.", m_Name);
 		}
 
 		return m_IsLoaded;
 	}
 
-	bool File::Save(const wchar_t* filePath)
+	bool File::Save(const wchar_t* filePath, bool isPrintResult)
 	{
 		bool isSuccess = false;
 
@@ -429,9 +429,8 @@ namespace NGMC
 			}
 		}
 
-		std::wstring tempWString = filePath;
-		std::string pathString = std::string(tempWString.begin(), tempWString.end());
-		std::cout << "File \"" << m_Name << (isSuccess ? "\" was" : "\" could not be") << " saved to \"" << pathString << "\"." << std::endl;
+		if(isPrintResult)
+			Log(L"File \"{}\" {} saved to \"{}\".", std::wstring(m_Name.begin(), m_Name.end()), isSuccess ? L"was" : L"could not be", filePath);
 
 		return isSuccess;
 	}
@@ -451,11 +450,6 @@ namespace NGMC
 			case FileTypeId::databin:
 			{
 				extractCount = ExtractDatabin(SIGMA_1, directory);
-
-				std::wstring filePath = directory;
-				std::string dirString = std::string(filePath.begin(), filePath.end());
-				std::cout << extractCount << " files were extracted to \"" << dirString << "\"." << std::endl;
-
 				break;
 			}
 			default:
@@ -467,11 +461,12 @@ namespace NGMC
 					{
 						File* p_Child = &m_Childs[i];
 
-						std::string tempString = p_Child->GetName();
+						std::string name = p_Child->GetName();
 						std::wstring filePath = directory;
-						filePath += L"\\" + std::wstring(tempString.begin(), tempString.end());
+						filePath += L"\\" + std::wstring(name.begin(), name.end());
 
-						p_Child->Save(filePath.c_str());
+						p_Child->Save(filePath.c_str(), false);
+						extractCount++;
 					}
 
 					if (!isLoaded)
@@ -485,11 +480,6 @@ namespace NGMC
 				}
 				break;
 			}
-			//default:
-			//{
-			//	std::cout << "Extraction not supported for file type " << GetTypeName(m_Type) << "." << std::endl;
-			//	break;
-			//}
 			}
 			break;
 		}
@@ -501,11 +491,34 @@ namespace NGMC
 			case FileTypeId::databin:
 			{
 				extractCount = ExtractDatabin(SIGMA_2, directory);
+				break;
+			}
+			default:
+			{
+				bool isLoaded = IsLoaded();
+				if (isLoaded || Load())
+				{
+					for (unsigned int i = 0; i < GetChildCount(); i++)
+					{
+						File* p_Child = &m_Childs[i];
 
-				std::wstring filePath = directory;
-				std::string dirString = std::string(filePath.begin(), filePath.end());
-				std::cout << extractCount << " files were extracted to \"" << dirString << "\"." << std::endl;
+						std::string name = p_Child->GetName();
+						std::wstring filePath = directory;
+						filePath += L"\\" + std::wstring(name.begin(), name.end());
 
+						p_Child->Save(filePath.c_str(), false);
+						extractCount++;
+					}
+
+					if (!isLoaded)
+					{
+						Unload();
+					}
+				}
+				else
+				{
+					isSuccess = false;
+				}
 				break;
 			}
 			}
@@ -519,17 +532,42 @@ namespace NGMC
 			case FileTypeId::databin:
 			{
 				extractCount = ExtractDatabin(RE_3, directory);
+				break;
+			}
+			default:
+			{
+				bool isLoaded = IsLoaded();
+				if (isLoaded || Load())
+				{
+					for (unsigned int i = 0; i < GetChildCount(); i++)
+					{
+						File* p_Child = &m_Childs[i];
 
-				std::wstring filePath = directory;
-				std::string dirString = std::string(filePath.begin(), filePath.end());
-				std::cout << extractCount << " files were extracted to \"" << dirString << "\"." << std::endl;
+						std::string name = p_Child->GetName();
+						std::wstring filePath = directory;
+						filePath += L"\\" + std::wstring(name.begin(), name.end());
 
+						p_Child->Save(filePath.c_str(), false);
+						extractCount++;
+					}
+
+					if (!isLoaded)
+					{
+						Unload();
+					}
+				}
+				else
+				{
+					isSuccess = false;
+				}
 				break;
 			}
 			}
 			break;
 		}
 		}
+
+		Log(L"{} file{} extracted to \"{}\".", extractCount, extractCount != 1 ? L"s were" : L" was", directory);
 
 		return isSuccess;
 	}
@@ -757,7 +795,7 @@ namespace NGMC
 			}
 			else
 			{
-				std::cout << "[ERROR] loader.GetFileCount() <= m_IndexInParent" << std::endl;
+				Log("[ERROR] loader.GetFileCount() <= m_IndexInParent");
 			}
 		}
 

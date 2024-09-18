@@ -15,40 +15,24 @@ namespace NGMC
 
 	void FileManager::RegisterFile(const wchar_t* filePath)
 	{
-		std::wstring tempWString = filePath;
+		std::wstring wFilePath = filePath;
 		for (unsigned int i = 0; i < this->GetFileCount(); i++)
 		{
-			if (tempWString == m_Files[i].GetFilePath())
+			if (wFilePath == m_Files[i].GetFilePath())
 			{
-				std::cout << "File \"" << m_Files[i].GetName() << "\", located at \"" << std::string(tempWString.begin(), tempWString.end()) << "\", was already registered." << std::endl;
+				std::string fileName = m_Files[i].GetName();
+				Log(L"File \"{}\", located at \"{}\", was already registered.", std::wstring(fileName.begin(), fileName.end()), filePath);
 				return;
 			}
 		}
 
-		//if (GetSelectionCount())
-		//{
-		//	File* p_Files = &m_Files[0];
-		//
-		//	m_Files.emplace_back(filePath);
-		//
-		//	if (&m_Files[0] != p_Files)
-		//	{
-		//		for (unsigned int i = 0; i < GetSelectionCount(); i++)
-		//		{
-		//			m_SelectedFiles[i] = &m_Files[(m_SelectedFiles[i] - p_Files) / sizeof(File*)];
-		//		}
-		//	}
-		//}
-		//else
-		//{
-		//	m_Files.emplace_back(filePath);
-		//}
 		DeselectAllFiles();
 		m_Files.emplace_back(filePath);
 
 		m_Files.back().UpdateStatus();
 
-		std::cout << "File \"" << m_Files[this->GetFileCount()-1].GetName() << "\", located at \"" << std::string(tempWString.begin(), tempWString.end()) << "\", is now registered." << std::endl;
+		std::string fileName = m_Files.back().GetName();
+		Log(L"File \"{}\", located at \"{}\", is now registered.", std::wstring(fileName.begin(), fileName.end()), filePath);
 	}
 
 	void FileManager::RegisterFile(const char* filePath)
@@ -60,30 +44,12 @@ namespace NGMC
 
 	void FileManager::RegisterFile(MemoryBuffer& memoryBuffer, const char* name, FileType type)
 	{
-		//if (GetSelectionCount())
-		//{
-		//	File* p_Files = &m_Files[0];
-		//
-		//	m_Files.emplace_back(memoryBuffer, name, 0, nullptr, type);
-		//
-		//	if (&m_Files[0] != p_Files)
-		//	{
-		//		for (unsigned int i = 0; i < GetSelectionCount(); i++)
-		//		{
-		//			m_SelectedFiles[i] = &m_Files[(m_SelectedFiles[i] - p_Files) / sizeof(File*)];
-		//		}
-		//	}
-		//}
-		//else
-		//{
-		//	m_Files.emplace_back(memoryBuffer, name, 0, nullptr, type);
-		//}
 		DeselectAllFiles();
 		m_Files.emplace_back(memoryBuffer, name, 0, nullptr, type);
 
 		m_Files.back().UpdateStatus();
 
-		std::cout << "File \"" << m_Files[this->GetFileCount() - 1].GetName() << "\", located in memory, is now registered." << std::endl;
+		Log("File \"{}\", located in memory, is now registered.", m_Files.back().GetName());
 	}
 
 	size_t FileManager::GetFileCount() const
