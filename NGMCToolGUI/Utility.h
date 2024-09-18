@@ -8,6 +8,114 @@
 
 namespace NGMC
 {
+	//	Logs a text encoded as UTF-8 to the console.
+	static void Log(const std::string& text)
+	{
+		std::cout << text << std::endl;
+	}
+
+	//	Logs a text encoded as UTF-8 to the console. Text will be formatted in the same way as with std::format.
+	template <class... _Types>
+	_NODISCARD static void Log(const std::string_view formatText, _Types&&... _Args)
+	{
+		std::string text = std::vformat(formatText, std::make_format_args(_Args...));
+
+		Log(text);
+	}
+
+	//	Logs a wide character text encoded as UTF-8 to the console.
+	static void Log(const std::wstring& text)
+	{
+		int bufferSize = WideCharToMultiByte(CP_UTF8, 0, text.c_str(), -1, NULL, 0, NULL, NULL);
+		char* buffer = new char[bufferSize];
+		WideCharToMultiByte(CP_UTF8, 0, text.c_str(), -1, buffer, bufferSize, NULL, NULL);
+		Log(buffer);
+		delete[] buffer;
+	}
+
+	//	Logs a wide character text encoded as UTF-8 to the console. Text will be formatted in the same way as with std::format.
+	template <class... _Types>
+	_NODISCARD static void Log(const std::wstring_view formatText, _Types&&... _Args)
+	{
+		std::wstring text = std::vformat(formatText, std::make_wformat_args(_Args...));
+
+		int bufferSize = WideCharToMultiByte(CP_UTF8, 0, text.c_str(), -1, NULL, 0, NULL, NULL);
+		char* buffer = new char[bufferSize];
+		WideCharToMultiByte(CP_UTF8, 0, text.c_str(), -1, buffer, bufferSize, NULL, NULL);
+		Log(buffer);
+		delete[] buffer;
+	}
+
+
+	static std::string GetPrettySize(size_t size)
+	{
+		std::string output = "";
+
+		size_t order = std::log2(size) / 10;
+
+		std::string unit = "";
+		switch (order)
+		{
+		case 0:
+			break;
+		case 1:
+			unit += "kB";
+			break;
+		case 2:
+			unit += "MB";
+			break;
+		case 3:
+			unit += "GB";
+			break;
+		case 4:
+		default:
+			unit += "TB";
+			break;
+		}
+
+		if (order == 0)
+			output += std::format("{} bytes", size);
+		else
+		{
+			double prettySize = std::round((double)size / std::pow(1024, order) * 1e2) / 1e2;
+			output += std::vformat("{:.2f} {} ({} bytes)", std::make_format_args(prettySize, unit, size));
+		}
+
+		return output;
+	}
+
+	//	Returns the conversion of a string to a wide char string.
+	static std::wstring GetWStringFromString(const char* string)
+	{
+		std::string tempString = string;
+		
+		return std::wstring(tempString.begin(), tempString.end());
+	}
+	
+	//	Returns the conversion of a wide char string to a string (can lead to undesirable results, see GetStringFromWStringSimple for an alternative).
+	static std::string GetStringFromWString(const wchar_t* wstring)
+	{
+		std::wstring tempString = wstring;
+		
+		return std::string(tempString.begin(), tempString.end());
+	}
+
+	//	Returns the conversion of a wide char string to a string by omitting data that might lead to some weird corruption (hacky).
+	static std::string GetStringFromWStringSimple(const wchar_t* wstring)
+	{
+		std::string outString = "";
+
+		unsigned int offset = 0;
+		while (*(wstring + offset) != 0x0000)
+		{
+			//const wchar_t* test = wstring + offset;
+			outString += *(char*)(wstring + offset++) & 0x7F;
+		}
+
+		return outString;
+	}
+
+
 	//	Unique identifier for each supported game.
 	typedef unsigned char GAME;
 
@@ -408,6 +516,17 @@ namespace NGMC
 		return output;
 	}
 
+	//	Returns the file extension of a FileType as a string.
+	template <typename FileTypeId>
+	static std::string GetFileExtension(FileTypeId id)
+	{
+		std::string output = "";
+
+		output += GetTypeName(id);
+
+		return output;
+	}
+	
 	//	A class holding information on the type of a file object as well as helper methods.
 	class FileType
 	{
@@ -537,85 +656,7 @@ namespace NGMC
 		GAME m_Game;
 	};
 
-	static std::string GetPrettySize(size_t size)
-	{
-		std::string output = "";
 
-		size_t order = std::log2(size) / 10;
-
-		std::string unit = "";
-		switch (order)
-		{
-		case 0:
-			break;
-		case 1:
-			unit += "kB";
-			break;
-		case 2:
-			unit += "MB";
-			break;
-		case 3:
-			unit += "GB";
-			break;
-		case 4:
-		default:
-			unit += "TB";
-			break;
-		}
-
-		if (order == 0)
-			output += std::format("{} bytes", size);
-		else
-		{
-			double prettySize = std::round((double)size / std::pow(1024, order) * 1e2) / 1e2;
-			output += std::vformat("{:.2f} {} ({} bytes)", std::make_format_args(prettySize, unit, size));
-		}
-
-		return output;
-	}
-
-	//	Returns the conversion of a string to a wide char string.
-	static std::wstring GetWStringFromString(const char* string)
-	{
-		std::string tempString = string;
-		
-		return std::wstring(tempString.begin(), tempString.end());
-	}
-	
-	//	Returns the conversion of a wide char string to a string (can lead to undesirable results, see GetStringFromWStringSimple for an alternative).
-	static std::string GetStringFromWString(const wchar_t* wstring)
-	{
-		std::wstring tempString = wstring;
-		
-		return std::string(tempString.begin(), tempString.end());
-	}
-
-	//	Returns the conversion of a wide char string to a string by omitting data that might lead to some weird corruption (hacky).
-	static std::string GetStringFromWStringSimple(const wchar_t* wstring)
-	{
-		std::string outString = "";
-
-		unsigned int offset = 0;
-		while (*(wstring + offset) != 0x0000)
-		{
-			//const wchar_t* test = wstring + offset;
-			outString += *(char*)(wstring + offset++) & 0x7F;
-		}
-
-		return outString;
-	}
-
-	//	Returns the file extension of a FileType as a string.
-	template <typename FileTypeId>
-	static std::string GetFileExtension(FileTypeId id)
-	{
-		std::string output = "";
-
-		output += GetTypeName(id);
-
-		return output;
-	}
-	
 	//	Returns whether a file exists with the specified wide char string file name.
 	inline bool IsFileExisting(const std::wstring& name) {
 		if (FILE* file = _wfopen(name.c_str(), L"r")) {
@@ -648,6 +689,7 @@ namespace NGMC
 	{
 		return GetFileNameFromPath(std::string(path.begin(), path.end()));
 	}
+
 
 	/**
 	 * @brief Open a dialog to select item(s) or folder(s).

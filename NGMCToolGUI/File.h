@@ -91,8 +91,8 @@ namespace NGMC
 		//	Unloads the file, given it was loaded before. Useful to free memory occupied by the file's children.
 		bool Unload();
 
-		//	Saves the file at the given path, given it is registered in memory as opposed to on disk (in the latter case, consider just copying the file in your file explorer).
-		bool Save(const wchar_t* filePath);
+		//	Saves the file at the given path, given it is registered in memory as opposed to on disk (in the latter case, consider just copying the file in your file explorer). If isPrintResult == true, a message will be logged to the console.
+		bool Save(const wchar_t* filePath, bool isPrintResult = true);
 
 		//	Extracts all contents of the file to the given directory, equal to loading the file and saving all children to disk manually.
 		bool Extract(const wchar_t* directory);

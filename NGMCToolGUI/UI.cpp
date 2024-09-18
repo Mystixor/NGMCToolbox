@@ -766,7 +766,6 @@ namespace NGMC
 				if ((ImGui::IsKeyDown(ImGuiKey_LeftCtrl) || ImGui::IsKeyDown(ImGuiKey_RightCtrl)) && ImGui::IsKeyDown(ImGuiKey_A))
 				{
 					//	If Ctrl + A is pressed, then select all files
-					std::cout << "Ctrl + A" << std::endl;
 					IsCtrlAHeld = true;
 					NGMC::fileManager.SelectAllFiles();
 				}
