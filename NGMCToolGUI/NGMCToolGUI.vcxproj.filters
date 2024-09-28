@@ -45,7 +45,7 @@
     <ClCompile Include="File.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="formats\LoaderDatabin.cpp">
+    <ClCompile Include="loaders\LoaderDatabin.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="stdafx.cpp">
@@ -54,7 +54,7 @@
     <ClCompile Include="MemoryBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="formats\LoaderGT1G.cpp">
+    <ClCompile Include="loaders\LoaderGT1G.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CachedUI.cpp">
@@ -63,7 +63,7 @@
     <ClCompile Include="Previewer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="formats\LoaderDDS.cpp">
+    <ClCompile Include="loaders\LoaderDDS.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="popups\Popup.cpp">
@@ -185,7 +185,7 @@
     <ClInclude Include="File.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="formats\LoaderDatabin.h">
+    <ClInclude Include="loaders\LoaderDatabin.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="stdafx.h">
@@ -194,7 +194,7 @@
     <ClInclude Include="MemoryBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="formats\LoaderGT1G.h">
+    <ClInclude Include="loaders\LoaderGT1G.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CachedUI.h">
@@ -203,7 +203,7 @@
     <ClInclude Include="Previewer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="formats\LoaderDDS.h">
+    <ClInclude Include="loaders\LoaderDDS.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="popups\Popup.h">

@@ -171,9 +171,9 @@
     <ClCompile Include="CachedUI.cpp" />
     <ClCompile Include="FileManager.cpp" />
     <ClCompile Include="File.cpp" />
-    <ClCompile Include="formats\LoaderDatabin.cpp" />
-    <ClCompile Include="formats\LoaderGT1G.cpp" />
-    <ClCompile Include="formats\LoaderDDS.cpp" />
+    <ClCompile Include="loaders\LoaderDatabin.cpp" />
+    <ClCompile Include="loaders\LoaderGT1G.cpp" />
+    <ClCompile Include="loaders\LoaderDDS.cpp" />
     <ClCompile Include="MemoryBuffer.cpp" />
     <ClCompile Include="NGMCToolGUI.cpp" />
     <ClCompile Include="popups\PopupSelectGame.cpp" />
@@ -237,9 +237,9 @@
     <ClInclude Include="CachedUI.h" />
     <ClInclude Include="FileManager.h" />
     <ClInclude Include="File.h" />
-    <ClInclude Include="formats\LoaderDatabin.h" />
-    <ClInclude Include="formats\LoaderGT1G.h" />
-    <ClInclude Include="formats\LoaderDDS.h" />
+    <ClInclude Include="loaders\LoaderDatabin.h" />
+    <ClInclude Include="loaders\LoaderGT1G.h" />
+    <ClInclude Include="loaders\LoaderDDS.h" />
     <ClInclude Include="MemoryBuffer.h" />
     <ClInclude Include="popups\PopupSelectGame.h" />
     <ClInclude Include="popups\PopupAbout.h" />

@@ -2,7 +2,7 @@
 
 #include "Popup.h"
 
-#include "formats/LoaderGT1G.h"
+#include "loaders/LoaderGT1G.h"
 
 #include "PopupFilePicker.h"
 

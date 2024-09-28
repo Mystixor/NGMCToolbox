@@ -2,7 +2,7 @@
 
 #include "PopupBuildGT1G.h"
 
-#include "formats/LoaderDDS.h"
+#include "loaders/LoaderDDS.h"
 #include "FileManager.h"
 
 namespace NGMC

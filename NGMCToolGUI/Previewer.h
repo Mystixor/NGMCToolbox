@@ -2,9 +2,9 @@
 
 #include "Utility.h"
 #include "File.h"
-#include "formats/LoaderDatabin.h"
-#include "formats/LoaderGT1G.h"
-#include "formats/LoaderDDS.h"
+#include "loaders/LoaderDatabin.h"
+#include "loaders/LoaderGT1G.h"
+#include "loaders/LoaderDDS.h"
 
 namespace NGMC
 {
