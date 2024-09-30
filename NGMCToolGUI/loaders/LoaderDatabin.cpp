@@ -28,21 +28,41 @@ namespace NGMC
 	{
 	}
 
-	unsigned int LoaderDatabin::GetFileCount() const
+	unsigned int LoaderDatabin::GetFileCount()
 	{
-		return m_FileHeaderOffsets.size();
+		std::streamoff pos = m_Reader.Tell();
+
+		m_Reader.Seek(offsetof(DatabinHeader, DatabinHeader::fileCount), MemoryBuffer::beg);
+
+		uint32_t fileCount = m_Reader.ReadUInt32();
+
+		m_Reader.Seek(pos, MemoryBuffer::beg);
+
+		return fileCount;
 	}
 
-	uint32_t LoaderDatabin::GetFileHeaderOffset(unsigned int index) const
+	uint32_t LoaderDatabin::GetFileHeaderOffset(unsigned int index)
 	{
 		if (this->GetFileCount() <= index)
 		{
 			return 0U;
 		}
-		return m_FileHeaderOffsets[index];
+
+		if(m_FileHeaderOffsets.size() >= index)
+			return m_FileHeaderOffsets[index];
+
+		std::streamoff pos = m_Reader.Tell();
+
+		m_Reader.Seek(sizeof(DatabinHeader) + index * sizeof(uint32_t), MemoryBuffer::beg);
+
+		uint32_t fileHeaderOffset = m_Reader.ReadUInt32();
+
+		m_Reader.Seek(pos, MemoryBuffer::beg);
+
+		return fileHeaderOffset;
 	}
 
-	FileType LoaderDatabin::GetFileType(unsigned int index) const
+	FileType LoaderDatabin::GetFileType(unsigned int index)
 	{
 		if (this->GetFileCount() <= index)
 		{
@@ -52,33 +72,65 @@ namespace NGMC
 		switch (m_Game)
 		{
 		case SIGMA_1:
-			return FileType((S1::FileTypeId)m_ItemHeadersS1[index].type);
+			if (m_ItemHeadersS1.size() >= index)
+				return FileType((S1::FileTypeId)m_ItemHeadersS1[index].type);
+			else
+			{
+				S1::DatabinItemHeader itemHeader = S1::DatabinItemHeader();
+				this->LoadItemHeader(itemHeader, index);
+				return FileType((S1::FileTypeId)itemHeader.type);
+			}
+			break;
 		case SIGMA_2:
-			return FileType((S2::FileTypeId)m_ItemHeadersS2[index].type);
+			if (m_ItemHeadersS2.size() >= index)
+				return FileType((S2::FileTypeId)m_ItemHeadersS2[index].type);
+			else
+			{
+				S2::DatabinItemHeader itemHeader = S2::DatabinItemHeader();
+				this->LoadItemHeader(itemHeader, index);
+				return FileType((S2::FileTypeId)itemHeader.type);
+			}
+			break;
 		default:
 			return FileType();
 		}
 	}
 
-	std::uintmax_t LoaderDatabin::GetFileSize(unsigned int index) const
+	std::uintmax_t LoaderDatabin::GetFileSize(unsigned int index)
 	{
 		if (this->GetFileCount() <= index)
 		{
 			return 0ULL;
 		}
-
+		
 		switch (m_Game)
 		{
 		case SIGMA_1:
-			return m_ItemHeadersS1[index].size;
+			if (m_ItemHeadersS1.size() >= index)
+				return m_ItemHeadersS1[index].size;
+			else
+			{
+				S1::DatabinItemHeader itemHeader = S1::DatabinItemHeader();
+				this->LoadItemHeader(itemHeader, index);
+				return itemHeader.size;
+			}
+			break;
 		case SIGMA_2:
-			return m_ItemHeadersS2[index].size;
+			if (m_ItemHeadersS2.size() >= index)
+				return m_ItemHeadersS2[index].size;
+			else
+			{
+				S2::DatabinItemHeader itemHeader = S2::DatabinItemHeader();
+				this->LoadItemHeader(itemHeader, index);
+				return itemHeader.size;
+			}
+			break;
 		default:
 			return 0ULL;
 		}
 	}
 	
-	std::uintmax_t LoaderDatabin::GetFileSizeCompressed(unsigned int index) const
+	std::uintmax_t LoaderDatabin::GetFileSizeCompressed(unsigned int index)
 	{
 		if (this->GetFileCount() <= index)
 		{
@@ -88,9 +140,25 @@ namespace NGMC
 		switch (m_Game)
 		{
 		case SIGMA_1:
-			return m_ItemHeadersS1[index].sizeCompressed;
+			if (m_ItemHeadersS1.size() >= index)
+				return m_ItemHeadersS1[index].sizeCompressed;
+			else
+			{
+				S1::DatabinItemHeader itemHeader = S1::DatabinItemHeader();
+				this->LoadItemHeader(itemHeader, index);
+				return itemHeader.sizeCompressed;
+			}
+			break;
 		case SIGMA_2:
-			return m_ItemHeadersS2[index].sizeCompressed;
+			if (m_ItemHeadersS2.size() >= index)
+				return m_ItemHeadersS2[index].sizeCompressed;
+			else
+			{
+				S2::DatabinItemHeader itemHeader = S2::DatabinItemHeader();
+				this->LoadItemHeader(itemHeader, index);
+				return itemHeader.sizeCompressed;
+			}
+			break;
 		default:
 			return 0ULL;
 		}
@@ -98,7 +166,18 @@ namespace NGMC
 
 	bool LoaderDatabin::LoadHeader(DatabinHeader& outHeader)
 	{
-		return m_Reader.ReadValue(outHeader);
+		bool isSuccess = false;
+
+		std::streamoff pos = m_Reader.Tell();
+
+		{
+			m_Reader.Seek(0, MemoryBuffer::beg);
+			isSuccess = m_Reader.ReadValue(outHeader);
+		}
+
+		m_Reader.Seek(pos, MemoryBuffer::beg);
+
+		return isSuccess;
 	}
 	
 	bool LoaderDatabin::LoadItemHeader(S1::DatabinItemHeader& outItemHeader, unsigned int index)

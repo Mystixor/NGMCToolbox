@@ -572,11 +572,9 @@ namespace NGMC
 		return isSuccess;
 	}
 
-	bool File::IsNodeOpened()
+	bool File::IsNodeOpened() const
 	{
-		bool isNodeOpened = m_IsNodeOpened;
-		//m_IsNodeOpened = false;
-		return isNodeOpened;
+		return m_IsNodeOpened;
 	}
 
 	void File::SetNodeOpenness(bool isOpen)
@@ -724,7 +722,7 @@ namespace NGMC
 	{
 		bool isSuccess = false;
 
-		LoaderDatabin loader(game, m_FilePath);
+		LoaderDatabin loader(game, *this);
 
 		if (loader.LoadItemHeaders())
 		{
@@ -770,32 +768,29 @@ namespace NGMC
 	{
 		bool isSuccess = false;
 
-		LoaderDatabin loader(game, m_FilePath);
+		LoaderDatabin loader(game, *this);
 
-		if (loader.LoadItemHeaders())
+		if (m_IndexInParent < loader.GetFileCount())
 		{
-			if (m_IndexInParent < loader.GetFileCount())
+			MemoryBuffer decBuf;
+			if (loader.DecompressItem(decBuf, m_IndexInParent))
 			{
-				MemoryBuffer decBuf;
-				if (loader.DecompressItem(decBuf, m_IndexInParent))
-				{
-					FileType type = loader.GetFileType(m_IndexInParent);
+				FileType type = loader.GetFileType(m_IndexInParent);
 
-					m_Childs.emplace_back(
-						decBuf,
-						(std::format("{:05d}.", m_IndexInParent) + type.GetFileExtension()).c_str(),
-						0,
-						this,
-						type
-					);
+				m_Childs.emplace_back(
+					decBuf,
+					(std::format("{:05d}.", m_IndexInParent) + type.GetFileExtension()).c_str(),
+					0,
+					this,
+					type
+				);
 
-					isSuccess = true;
-				}
+				isSuccess = true;
 			}
-			else
-			{
-				Log("[ERROR] loader.GetFileCount() <= m_IndexInParent");
-			}
+		}
+		else
+		{
+			Log("[ERROR] loader.GetFileCount() <= m_IndexInParent");
 		}
 
 		return isSuccess;

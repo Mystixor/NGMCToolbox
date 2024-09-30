@@ -102,7 +102,7 @@ namespace NGMC
 		//	Content Viewer
 
 		//	Returns whether the node is opened.
-		bool IsNodeOpened();
+		bool IsNodeOpened() const;
 		
 		//	Sets the openness of the node. Only opens the node (if true), or keeps it closed (if false) if called after it was opened and before the node gets rendered the next time.
 		void SetNodeOpenness(bool isOpen);

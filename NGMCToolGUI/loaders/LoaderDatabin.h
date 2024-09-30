@@ -72,19 +72,19 @@ namespace NGMC
 		~LoaderDatabin();
 
 		//	Returns the count of databin items contained in the databin.
-		unsigned int GetFileCount() const;
+		unsigned int GetFileCount();
 
 		//	Returns the offset between the databin header and the databin item header at the specified index.
-		uint32_t GetFileHeaderOffset(unsigned int index) const;
+		uint32_t GetFileHeaderOffset(unsigned int index);
 
 		//	Returns the FileType of the databin item at the specified index.
-		FileType GetFileType(unsigned int index) const;
+		FileType GetFileType(unsigned int index);
 
 		//	Returns the size of the databin item at the specified index.
-		std::uintmax_t GetFileSize(unsigned int index) const;
+		std::uintmax_t GetFileSize(unsigned int index);
 
 		//	Returns the compressed size of the databin item at the specified index.
-		std::uintmax_t GetFileSizeCompressed(unsigned int index) const;
+		std::uintmax_t GetFileSizeCompressed(unsigned int index);
 
 
 		//	Loads the Databin header into the specified outHeader, returns whether the operation was successful.
@@ -103,6 +103,7 @@ namespace NGMC
 		bool DecompressItem(MemoryBuffer& outBuffer, unsigned int index);
 
 	private:
+		//	Unique identifier for the game to which the databin belongs. As of now, this cannot be infered purely from the file itself.
 		GAME m_Game;
 
 		//	The DataReader object responsible for reading data from the file associated with the loader object.
