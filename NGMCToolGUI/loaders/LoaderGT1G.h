@@ -2,6 +2,7 @@
 
 #include "MemoryBuffer.h"
 #include "File.h"
+#include "DataReader.h"
 
 namespace NGMC
 {
@@ -141,10 +142,10 @@ namespace NGMC
 	public:
 		//	Constructs a GT1G Loader object from the raw memory of a GT1G texture file.
 		LoaderGT1G(MemoryBuffer& memoryBuffer);
-
+		
 		//	Constructs a GT1G Loader object with a wide char string path of a GT1G texture file.
 		LoaderGT1G(const wchar_t* path);
-
+		
 		//	Constructs a GT1G Loader object with a GT1G file object.
 		LoaderGT1G(File* p_File);
 
@@ -174,69 +175,24 @@ namespace NGMC
 		
 		//	Loads the header as well as the counts of mipmaps, the formats, pixel widths and heights, flags and extra flags into the memory at the specified addresses of all textures in the file.
 		bool			GetTexturesInfo(GT1GHeader& inHeader, unsigned int* mipMapCounts, PixelFormat* formats, unsigned int* widths, unsigned int* heights, uint32_t* flags, uint32_t* outExtraFlags0s, uint32_t* outExtraFlags1s, uint32_t* outExtraFlags2s);
-
+		
 		//	Returns the width in pixels of the specified mip level at the specified texture index.
 		unsigned int	GetTextureMipMapWidth(unsigned int textureIndex, unsigned int mipLevel = 0U);
-
+		
 		//	Returns the height in pixels of the specified mip level at the specified texture index.
 		unsigned int	GetTextureMipMapHeight(unsigned int textureIndex, unsigned int mipLevel = 0U);
-
+		
 		//	Returns the size of the raw image data of the specified mip level at the specified texture index.
 		size_t			GetMipDataSize(unsigned int textureIndex, unsigned int mipLevel = 0U);
-
+		
 		//	Loads the raw image data of the specified mip level at the specified texture index into the specified outBuffer, returns whether the operation was successful.
 		bool			GetMipData(MemoryBuffer& outBuffer, unsigned int textureIndex, unsigned int mipLevel = 0U);
-
+		
 		//	Loads the raw image data including all mipmaps of the texture at the specified texture index into the specified outBuffer, returns whether the operation was successful.
 		bool			GetImageData(MemoryBuffer& outBuffer, unsigned int textureIndex);
-
+		
 	private:
-		bool GetHeaderFromDisk(GT1GHeader& outHeader);
-		bool GetHeaderFromMemory(GT1GHeader& outHeader);
-
-		GT1GVersion GetVersionFromDisk();
-		GT1GVersion GetVersionFromMemory();
-
-		unsigned int GetTextureCountFromDisk();
-		unsigned int GetTextureCountFromMemory();
-
-		unsigned int GetMipMapCountFromDisk(unsigned int textureIndex);
-		unsigned int GetMipMapCountFromMemory(unsigned int textureIndex);
-
-		unsigned int GetTextureWidthFromDisk(unsigned int textureIndex, unsigned int mipLevel);
-		unsigned int GetTextureWidthFromMemory(unsigned int textureIndex, unsigned int mipLevel);
-
-		unsigned int GetTextureHeightFromDisk(unsigned int textureIndex, unsigned int mipLevel);
-		unsigned int GetTextureHeightFromMemory(unsigned int textureIndex, unsigned int mipLevel);
-
-		PixelFormat GetTexturePixelFormatFromDisk(unsigned int textureIndex);
-		PixelFormat GetTexturePixelFormatFromMemory(unsigned int textureIndex);
-
-		uint32_t GetTextureFlagsFromDisk(unsigned int textureIndex);
-		uint32_t GetTextureFlagsFromMemory(unsigned int textureIndex);
-		
-		bool GetTextureExtraFlagsFromDisk(unsigned int textureIndex, uint32_t* outExtraFlags0, uint32_t* outExtraFlags1, uint32_t* outExtraFlags2);
-		bool GetTextureExtraFlagsFromMemory(unsigned int textureIndex, uint32_t* outExtraFlags0, uint32_t* outExtraFlags1, uint32_t* outExtraFlags2);
-
-		bool GetTexturesInfoFromDisk(GT1GHeader& inHeader, unsigned int* mipMapCounts, PixelFormat* formats, unsigned int* widths, unsigned int* heights, uint32_t* flags, uint32_t* outExtraFlags0s, uint32_t* outExtraFlags1s, uint32_t* outExtraFlags2s);
-		bool GetTexturesInfoFromMemory(GT1GHeader& inHeader, unsigned int* mipMapCounts, PixelFormat* formats, unsigned int* widths, unsigned int* heights, uint32_t* flags, uint32_t* outExtraFlags0s, uint32_t* outExtraFlags1s, uint32_t* outExtraFlags2s);
-		
-		size_t GetMipDataSizeFromDisk(unsigned int textureIndex, unsigned int mipLevel);
-		size_t GetMipDataSizeFromMemory(unsigned int textureIndex, unsigned int mipLevel);
-
-		bool GetMipDataFromDisk(MemoryBuffer& outBuffer, unsigned int textureIndex, unsigned int mipLevel);
-		bool GetMipDataFromMemory(MemoryBuffer& outBuffer, unsigned int textureIndex, unsigned int mipLevel);
-		
-		bool GetImageDataFromDisk(MemoryBuffer& outBuffer, unsigned int textureIndex);
-		bool GetImageDataFromMemory(MemoryBuffer& outBuffer, unsigned int textureIndex);
-
-		//	Whether the file is loaded from memory or disk.
-		bool m_IsFileInMemory;
-
-		//	The MemoryBuffer holding the memory to read the file from, unused if m_IsFileInMemory == false
-		MemoryBuffer m_MemBuf;
-
-		//	The wide char string to read the file from, unused if m_IsFileInMemory == true
-		std::wstring m_FilePath;
+		//	The DataReader object responsible for reading data from the file associated with the loader object.
+		DataReader m_Reader;
 	};
 }

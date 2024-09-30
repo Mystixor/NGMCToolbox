@@ -4,6 +4,7 @@
 
 #include "MemoryBuffer.h"
 #include "File.h"
+#include "DataReader.h"
 
 namespace NGMC
 {
@@ -352,22 +353,7 @@ namespace NGMC
 		DDSFormat GetPixelFormat();
 
 	private:
-		bool GetHeaderFromDisk(DDS_HEADER& outHeader);
-		bool GetHeaderFromMemory(DDS_HEADER& outHeader);
-
-		bool GetMipDataFromDisk(MemoryBuffer& outBuffer, unsigned int mipLevel);
-		bool GetMipDataFromMemory(MemoryBuffer& outBuffer, unsigned int mipLevel);
-		
-		bool GetImageDataFromDisk(MemoryBuffer& outBuffer);
-		bool GetImageDataFromMemory(MemoryBuffer& outBuffer);
-
-		//	Whether the file is loaded from memory or disk.
-		bool m_IsFileInMemory;
-
-		//	The MemoryBuffer holding the memory to read the file from, unused if m_IsFileInMemory == false
-		MemoryBuffer m_MemBuf;
-
-		//	The wide char string to read the file from, unused if m_IsFileInMemory == true
-		std::wstring m_FilePath;
+		//	The DataReader object responsible for reading data from the file associated with the loader object.
+		DataReader m_Reader;
 	};
 }

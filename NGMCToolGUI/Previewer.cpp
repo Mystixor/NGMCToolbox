@@ -273,17 +273,9 @@ namespace NGMC
 	{
 		bool isSuccess = false;
 
-		LoaderDatabin loader = LoaderDatabin(m_File->GetType().GetGame());
+		LoaderDatabin loader = LoaderDatabin(m_File->GetType().GetGame(), *m_File);
 
-		if (m_File->IsFileInMemory())
-		{
-			isSuccess = loader.LoadHeader(m_DatabinHeader, m_File->GetMemoryBuffer());
-		}
-		else
-		{
-			loader.SetFilePath(m_File->GetFilePath());
-			isSuccess = loader.LoadHeader(m_DatabinHeader);
-		}
+		isSuccess = loader.LoadHeader(m_DatabinHeader);
 
 		return isSuccess;
 	}
@@ -293,32 +285,16 @@ namespace NGMC
 		bool isSuccess = false;
 
 		GAME game = m_File->GetType().GetGame();
-		LoaderDatabin loader = LoaderDatabin(game);
+		LoaderDatabin loader = LoaderDatabin(game, *m_File);
 
-		if (m_File->IsFileInMemory())
+		switch (game)
 		{
-			switch (game)
-			{
-			case SIGMA_1:
-				isSuccess = loader.LoadItemHeader(m_DatabinItemHeaderS1, m_File->GetMemoryBuffer(), m_File->GetIndexInParent());
-				break;
-			case SIGMA_2:
-				isSuccess = loader.LoadItemHeader(m_DatabinItemHeaderS2, m_File->GetMemoryBuffer(), m_File->GetIndexInParent());
-				break;
-			}
-		}
-		else
-		{
-			loader.SetFilePath(m_File->GetFilePath());
-			switch (game)
-			{
-			case SIGMA_1:
-				isSuccess = loader.LoadItemHeader(m_DatabinItemHeaderS1, m_File->GetIndexInParent());
-				break;
-			case SIGMA_2:
-				isSuccess = loader.LoadItemHeader(m_DatabinItemHeaderS2, m_File->GetIndexInParent());
-				break;
-			}
+		case SIGMA_1:
+			isSuccess = loader.LoadItemHeader(m_DatabinItemHeaderS1, m_File->GetIndexInParent());
+			break;
+		case SIGMA_2:
+			isSuccess = loader.LoadItemHeader(m_DatabinItemHeaderS2, m_File->GetIndexInParent());
+			break;
 		}
 
 		return isSuccess;

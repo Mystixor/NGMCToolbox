@@ -4,6 +4,7 @@
 
 #include "Utility.h"
 #include "MemoryBuffer.h"
+#include "DataReader.h"
 
 namespace NGMC
 {
@@ -58,105 +59,87 @@ namespace NGMC
 	class LoaderDatabin
 	{
 	public:
-		//	Constructs a Databin Loader object.
-		LoaderDatabin(GAME game);
-
 		//	Constructs a Databin Loader object by specifying the wide char string file path to read the file at.
 		LoaderDatabin(GAME game, std::wstring& filePath);
+		
+		//	Constructs a Databin Loader object by specifying the memory buffer to read the file from.
+		LoaderDatabin(GAME game, MemoryBuffer& memBuf);
+		
+		//	Constructs a Databin Loader object by specifying the file object to read from.
+		LoaderDatabin(GAME game, File& file);
 
 		//	Deconstructs the Databin Loader object.
 		~LoaderDatabin();
 
-		//	Returns the count of files contained in the Databin file.
+		//	Returns the count of databin items contained in the databin.
 		unsigned int GetFileCount() const;
 
-		//	Returns the offset between the Databin file header and the item header of the file at the specified index.
+		//	Returns the offset between the databin header and the databin item header at the specified index.
 		uint32_t GetFileHeaderOffset(unsigned int index) const;
 
-		//	Returns the FileType of the file at the specified index.
+		//	Returns the FileType of the databin item at the specified index.
 		FileType GetFileType(unsigned int index) const;
 
-		//	Returns the size of the file at the specified index.
+		//	Returns the size of the databin item at the specified index.
 		std::uintmax_t GetFileSize(unsigned int index) const;
 
-		//	Returns the compressed size of the file at the specified index.
+		//	Returns the compressed size of the databin item at the specified index.
 		std::uintmax_t GetFileSizeCompressed(unsigned int index) const;
 
 
-		//	Sets the file path to be reading the Databin file from to the specified wide char string file path.
-		void SetFilePath(const wchar_t* filePath);
-
-		//	Loads the Databin file header into the specified outHeader from the file path saved in the Databin Loader object, returns whether the operation was successful.
+		//	Loads the Databin header into the specified outHeader, returns whether the operation was successful.
 		bool LoadHeader(DatabinHeader& outHeader);
 
-		//	Loads the Databin file header into the specified outHeader from the specified inStream, returns whether the operation was successful.
-		bool LoadHeader(DatabinHeader& outHeader, std::ifstream& inStream);
-
-		//	Loads the Databin file header into the specified outHeader from the specified inBuffer, returns whether the operation was successful.
-		bool LoadHeader(DatabinHeader& outHeader, MemoryBuffer& inBuffer);
-
-		//	Sigma 1: Loads the item header of the file at the specified index into the specified outItemHeader, returns whether the operation was successful.
+		//	Sigma 1: Loads the item header of the databin item at the specified index into the specified outItemHeader, returns whether the operation was successful.
 		bool LoadItemHeader(S1::DatabinItemHeader& outItemHeader, unsigned int index);
 
-		//	Sigma 1: Loads the item header of the file at the specified index into the specified outItemHeader from the specified inStream, returns whether the operation was successful.
-		bool LoadItemHeader(S1::DatabinItemHeader& outItemHeader, std::ifstream& inStream, unsigned int index);
-
-		//	Sigma 1: Loads the item header of the file at the specified index into the specified outItemHeader from the specified inBuffer, returns whether the operation was successful.
-		bool LoadItemHeader(S1::DatabinItemHeader& outItemHeader, MemoryBuffer& inBuffer, unsigned int index);
-		
-		//	Sigma 2: Loads the item header of the file at the specified index into the specified outItemHeader, returns whether the operation was successful.
+		//	Sigma 2: Loads the item header of the databin item at the specified index into the specified outItemHeader, returns whether the operation was successful.
 		bool LoadItemHeader(S2::DatabinItemHeader& outItemHeader, unsigned int index);
 
-		//	Sigma 2: Loads the item header of the file at the specified index into the specified outItemHeader from the specified inStream, returns whether the operation was successful.
-		bool LoadItemHeader(S2::DatabinItemHeader& outItemHeader, std::ifstream& inStream, unsigned int index);
-
-		//	Sigma 2: Loads the item header of the file at the specified index into the specified outItemHeader from the specified inBuffer, returns whether the operation was successful.
-		bool LoadItemHeader(S2::DatabinItemHeader& outItemHeader, MemoryBuffer& inBuffer, unsigned int index);
-
-		//	Loads the item headers of all files into m_FileHeaders from the specified inStream, returns whether the operation was successful.
-		bool LoadItemHeaders(std::ifstream& inStream);
-
-		//	Loads the item headers of all files into m_FileHeaders from the specified inBuffer, returns whether the operation was successful.
-		bool LoadItemHeaders(MemoryBuffer& inBuffer);
-
-		//	Loads the item headers of all files into m_FileHeaders from the file path saved in the Databin Loader object, returns whether the operation was successful.
+		//	Loads the item headers of all databin items into m_ItemHeaders, returns whether the operation was successful.
 		bool LoadItemHeaders();
 
-		//	Decompresses the item at the specified index by reading from the specified inStream into the specified outBuffer, returns whether the operation was successful.
-		bool DecompressItem(MemoryBuffer& outBuffer, std::ifstream& inStream, unsigned int index);
-
-		//	Decompresses the item at the specified index by reading from the specified inBuffer into the specified outBuffer, returns whether the operation was successful.
-		bool DecompressItem(MemoryBuffer& outBuffer, MemoryBuffer& inBuffer, unsigned int index);
-
-		//	Decompresses the item at the specified index by reading from the file path saved in the Databin Loader object, returns whether the operation was successful.
+		//	Decompresses the databin item at the specified index, returns whether the operation was successful.
 		bool DecompressItem(MemoryBuffer& outBuffer, unsigned int index);
 
 	private:
 		GAME m_Game;
 
-		//	The wide char string file path of the Databin file to read from, unused if functions specifying an inStream or inBuffer are called.
-		std::wstring m_FilePath;
+		//	The DataReader object responsible for reading data from the file associated with the loader object.
+		DataReader m_Reader;
 
 		//	List of the item header offsets, filled by the LoadItemHeaders functions.
 		std::vector<uint32_t> m_FileHeaderOffsets;
 
-
 		//	Sigma 1: List of the item headers, filled by the LoadItemHeaders functions.
-		std::vector<S1::DatabinItemHeader> m_FileHeadersS1;
+		std::vector<S1::DatabinItemHeader> m_ItemHeadersS1;
 
 		//	Sigma 2: List of the item headers, filled by the LoadItemHeaders functions.
-		std::vector<S2::DatabinItemHeader> m_FileHeadersS2;
+		std::vector<S2::DatabinItemHeader> m_ItemHeadersS2;
 
 		//	Loads the item header of the file at the specified index into the specified outItemHeader, returns whether the operation was successful.
-		template <typename t_ItemHeader>
-		bool LoadItemHeaderT(t_ItemHeader& outItemHeader, unsigned int index);
+		template<typename T_ItemHeader>
+		bool LoadItemHeaderT(T_ItemHeader& outItemHeader, unsigned int index)
+		{
+			bool isSuccess = false;
 
-		//	Loads the item header of the file at the specified index into the specified outItemHeader from the specified inStream, returns whether the operation was successful.
-		template <typename t_ItemHeader>
-		bool LoadItemHeaderT(t_ItemHeader& outItemHeader, std::ifstream& inStream, unsigned int index);
+			DatabinHeader header = DatabinHeader();
+			m_Reader.Seek(0, MemoryBuffer::beg);
+			m_Reader.ReadValue(header);
 
-		//	Loads the item header of the file at the specified index into the specified outItemHeader from the specified inBuffer, returns whether the operation was successful.
-		template <typename t_ItemHeader>
-		bool LoadItemHeaderT(t_ItemHeader& outItemHeader, MemoryBuffer& inBuffer, unsigned int index);
+			if (index < header.fileCount)
+			{
+				m_Reader.Seek((std::streamoff)index * sizeof(uint32_t), MemoryBuffer::cur);
+
+				uint32_t fileHeaderOffset = m_Reader.ReadUInt32();
+
+				m_Reader.Seek((std::streamoff)header.headerSize + fileHeaderOffset);
+				m_Reader.ReadValue(outItemHeader);
+
+				isSuccess = true;
+			}
+
+			return isSuccess;
+		}
 	};
 }

@@ -776,15 +776,14 @@ namespace NGMC
 		{
 			if (m_IndexInParent < loader.GetFileCount())
 			{
-				MemoryBuffer decompressed;
-				if (loader.DecompressItem(decompressed, m_IndexInParent))
+				MemoryBuffer decBuf;
+				if (loader.DecompressItem(decBuf, m_IndexInParent))
 				{
 					FileType type = loader.GetFileType(m_IndexInParent);
 
 					m_Childs.emplace_back(
-						decompressed,
+						decBuf,
 						(std::format("{:05d}.", m_IndexInParent) + type.GetFileExtension()).c_str(),
-						//loader.GetFileSize(m_IndexInParent),
 						0,
 						this,
 						type
@@ -806,94 +805,46 @@ namespace NGMC
 	{
 		unsigned int extractCount = 0U;
 
-		LoaderDatabin loader(game);
+		LoaderDatabin loader(game, *this);
 
-		if (m_IsFileInMemory)
+		if (loader.LoadItemHeaders())
 		{
-			if (loader.LoadItemHeaders(m_MemBuf))
+			for (unsigned int i = 0; i < loader.GetFileCount(); i++)
 			{
-				for (unsigned int i = 0; i < loader.GetFileCount(); i++)
+				MemoryBuffer outBuf;
+
+				bool extracted = false;
+				File* p_File = GetChild(i);
+				if (p_File != nullptr)
 				{
-					MemoryBuffer outBuf;
-
-					bool extracted = false;
-					File* p_File = GetChild(i);
-					if (p_File != nullptr)
+					if (p_File->IsLoaded())
 					{
-						if (p_File->IsLoaded())
+						for (unsigned int j = 0; j < p_File->GetChildCount(); j++)
 						{
-							for (unsigned int j = 0; j < p_File->GetChildCount(); j++)
-							{
-								File* p_Child = p_File->GetChild(j);
+							File* p_Child = p_File->GetChild(j);
 
-								std::string tempString = std::format("{:05d}.", i) + p_Child->GetType().GetFileExtension();
-								std::wstring filePath = directory;
-								filePath += L"\\" + std::wstring(tempString.begin(), tempString.end());
+							std::string tempString = std::format("{:05d}.", i) + p_Child->GetType().GetFileExtension();
+							std::wstring filePath = directory;
+							filePath += L"\\" + std::wstring(tempString.begin(), tempString.end());
 
-								p_Child->Save(filePath.c_str());
-							}
-							extracted = true;
+							p_Child->Save(filePath.c_str());
 						}
+						extracted = true;
 					}
-
-					if (!extracted)
-					{
-						loader.DecompressItem(outBuf, m_MemBuf, i);
-
-						std::string tempString = std::format("{:05d}.", i) + loader.GetFileType(i).GetFileExtension();
-						std::wstring filePath = directory;
-						filePath += L"\\" + std::wstring(tempString.begin(), tempString.end());
-
-						outBuf.SaveToFile(filePath.c_str());
-					}
-
-					extractCount++;
 				}
-			}
-		}
-		else
-		{
-			std::ifstream stream(m_FilePath, std::ios::binary);
 
-			if (loader.LoadItemHeaders(stream))
-			{
-				for (unsigned int i = 0; i < loader.GetFileCount(); i++)
+				if (!extracted)
 				{
-					MemoryBuffer outBuf;
+					loader.DecompressItem(outBuf, /*m_MemBuf, */ i);
 
-					bool extracted = false;
-					File* p_File = GetChild(i);
-					if (p_File != nullptr)
-					{
-						if (p_File->IsLoaded())
-						{
-							for (unsigned int j = 0; j < p_File->GetChildCount(); j++)
-							{
-								File* p_Child = p_File->GetChild(j);
+					std::string tempString = std::format("{:05d}.", i) + loader.GetFileType(i).GetFileExtension();
+					std::wstring filePath = directory;
+					filePath += L"\\" + std::wstring(tempString.begin(), tempString.end());
 
-								std::string tempString = std::format("{:05d}.", i) + p_Child->GetType().GetFileExtension();
-								std::wstring filePath = directory;
-								filePath += L"\\" + std::wstring(tempString.begin(), tempString.end());
-
-								p_Child->Save(filePath.c_str());
-							}
-							extracted = true;
-						}
-					}
-
-					if (!extracted)
-					{
-						loader.DecompressItem(outBuf, stream, i);
-
-						std::string tempString = std::format("{:05d}.", i) + loader.GetFileType(i).GetFileExtension();
-						std::wstring filePath = directory;
-						filePath += L"\\" + std::wstring(tempString.begin(), tempString.end());
-
-						outBuf.SaveToFile(filePath.c_str());
-					}
-
-					extractCount++;
+					outBuf.SaveToFile(filePath.c_str());
 				}
+
+				extractCount++;
 			}
 		}
 
