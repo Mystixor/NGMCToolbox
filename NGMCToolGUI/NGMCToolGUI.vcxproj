@@ -168,7 +168,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CachedUI.cpp" />
     <ClCompile Include="DataReader.cpp" />
     <ClCompile Include="FileManager.cpp" />
     <ClCompile Include="File.cpp" />
@@ -235,7 +234,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CachedUI.h" />
     <ClInclude Include="DataReader.h" />
     <ClInclude Include="FileManager.h" />
     <ClInclude Include="File.h" />

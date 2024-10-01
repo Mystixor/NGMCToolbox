@@ -57,9 +57,6 @@
     <ClCompile Include="loaders\LoaderGT1G.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CachedUI.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Previewer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -198,9 +195,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="loaders\LoaderGT1G.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CachedUI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Previewer.h">
