@@ -2,7 +2,7 @@
 
 #include "MemoryBuffer.h"
 
-#include "Utility.h"
+#include "utility/Utility.h"
 
 namespace NGMC
 {

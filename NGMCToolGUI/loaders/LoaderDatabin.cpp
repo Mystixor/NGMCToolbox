@@ -6,10 +6,10 @@
 
 namespace NGMC
 {
-	LoaderDatabin::LoaderDatabin(GAME game, std::wstring& filePath)
+	LoaderDatabin::LoaderDatabin(GAME game, const wchar_t* filePath)
 		: m_Game(game)
 	{
-		m_Reader.Init(filePath.c_str());
+		m_Reader.Init(filePath);
 	}
 
 	LoaderDatabin::LoaderDatabin(GAME game, MemoryBuffer& memBuf)

@@ -2,7 +2,7 @@
 
 #include "UI.h"
 
-#include "Utility.h"
+#include "utility/Utility.h"
 #include "Previewer.h"
 
 #include "popups/PopupBuildGT1G.h"

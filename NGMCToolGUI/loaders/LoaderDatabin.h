@@ -2,7 +2,7 @@
 
 #include "stdafx.h"
 
-#include "Utility.h"
+#include "utility/Utility.h"
 #include "MemoryBuffer.h"
 #include "DataReader.h"
 
@@ -60,7 +60,7 @@ namespace NGMC
 	{
 	public:
 		//	Constructs a Databin Loader object by specifying the wide char string file path to read the file at.
-		LoaderDatabin(GAME game, std::wstring& filePath);
+		LoaderDatabin(GAME game, const wchar_t* filePath);
 		
 		//	Constructs a Databin Loader object by specifying the memory buffer to read the file from.
 		LoaderDatabin(GAME game, MemoryBuffer& memBuf);

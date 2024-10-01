@@ -250,7 +250,7 @@
     <ClInclude Include="Previewer.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="UI.h" />
-    <ClInclude Include="Utility.h" />
+    <ClInclude Include="utility\Utility.h" />
     <ClInclude Include="vendor\GLFW\include\GLFW\glfw3.h" />
     <ClInclude Include="vendor\GLFW\src\cocoa_joystick.h" />
     <ClInclude Include="vendor\GLFW\src\cocoa_platform.h" />
