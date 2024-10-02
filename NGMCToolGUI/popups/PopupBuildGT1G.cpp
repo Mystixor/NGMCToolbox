@@ -7,6 +7,8 @@
 
 namespace NGMC
 {
+	using namespace GT1G;
+
 	extern FileManager fileManager;
 
 	namespace BGT1G
@@ -155,7 +157,7 @@ namespace NGMC
 							if (ImGui::Button("Browse##ddsTextureInput"))
 							{
 								std::vector<std::wstring> filePaths;
-								if (NGMC::OpenFileDialog(filePaths, false, false))
+								if (OpenFileDialog(filePaths, false, false))
 								{
 									if (filePaths.size())
 									{
@@ -219,7 +221,7 @@ namespace NGMC
 
 							if (ImGui::Button("Browse##listTextureInput"))
 							{
-								m_FilePicker.Setup(nullptr, &m_TextureFilePointers[i], FileType(General::FileTypeId::DDS));
+								m_FilePicker.Setup(nullptr, &m_TextureFilePointers[i], FileType(Databin::General::FileTypeId::DDS));
 								m_FilePicker.Open();
 							}
 						}
@@ -384,7 +386,7 @@ namespace NGMC
 					}
 					else if (isSaveToFileList)
 					{
-						fileManager.RegisterFile(outBuffer, m_OutputName.c_str(), FileType(S1::FileTypeId::GT1G_07));
+						fileManager.RegisterFile(outBuffer, m_OutputName.c_str(), FileType(Databin::S1::FileTypeId::GT1G_07));
 
 						Close();
 

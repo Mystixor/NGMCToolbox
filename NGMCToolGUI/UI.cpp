@@ -38,10 +38,10 @@ namespace NGMC
 	//	The function handling the rendering of all top-level Popups.
 	static void HandlePopups()
 	{
-		NGMC::g_PopupBuildGT1G.OnRender();
-		NGMC::g_PopupRenameFile.OnRender();
-		NGMC::g_PopupAbout.OnRender();
-		NGMC::g_PopupSelectGame.OnRender();
+		g_PopupBuildGT1G.OnRender();
+		g_PopupRenameFile.OnRender();
+		g_PopupAbout.OnRender();
+		g_PopupSelectGame.OnRender();
 	}
 
 
@@ -57,11 +57,11 @@ namespace NGMC
 	static ImGuiWindowFlags dockspaceWindowFlags = ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoMove;
 
 	//	The function drawing an ImGui::MenuItem for each FileType in the tool, loading a type into the specified variable if the respective MenuItem is clicked.
-	static void OnImGuiNGMCFileTypeMenuItems(NGMC::FileType& type)
+	static void OnImGuiNGMCFileTypeMenuItems(FileType& type)
 	{
 		if (ImGui::BeginMenu("NGS"))
 		{
-			using namespace NGMC::S1;
+			using namespace Databin::S1;
 			if (ImGui::MenuItem("databin"))
 			{
 				type.SetType(FileTypeId::databin);
@@ -152,7 +152,7 @@ namespace NGMC
 
 		if (ImGui::BeginMenu("NGS2"))
 		{
-			using namespace NGMC::S2;
+			using namespace Databin::S2;
 			if (ImGui::MenuItem("databin"))
 			{
 				type.SetType(FileTypeId::databin);
@@ -287,7 +287,7 @@ namespace NGMC
 
 		if (ImGui::BeginMenu("NG3RE"))
 		{
-			using namespace NGMC::RE;
+			using namespace Databin::RE;
 			if (ImGui::MenuItem("databin"))
 			{
 				type.SetType(FileTypeId::databin);
@@ -306,11 +306,11 @@ namespace NGMC
 			{
 				if (ImGui::BeginMenu("New..."))
 				{
-					NGMC::FileType type = NGMC::FileType();
+					FileType type = FileType();
 					//OnImGuiNGMCFileTypeMenuItems(type);
 					if (ImGui::BeginMenu("NGS"))
 					{
-						using namespace NGMC::S1;
+						using namespace Databin::S1;
 						if (ImGui::MenuItem("GT1G"))
 						{
 							type.SetType(FileTypeId::GT1G_07);
@@ -327,13 +327,13 @@ namespace NGMC
 						{
 						case SIGMA_1:
 						{
-							using namespace NGMC::S1;
+							using namespace Databin::S1;
 							switch (type.GetId())
 							{
 							case FileTypeId::GT1G_07:
 							case FileTypeId::GT1G_13:
-								NGMC::g_PopupBuildGT1G.Setup();
-								NGMC::g_PopupBuildGT1G.Open();
+								g_PopupBuildGT1G.Setup();
+								g_PopupBuildGT1G.Open();
 								break;
 							}
 							break;
@@ -345,10 +345,10 @@ namespace NGMC
 				if (ImGui::MenuItem("Open"))
 				{
 					std::vector<std::wstring> filePaths;
-					if (NGMC::OpenFileDialog(filePaths, false, false))
+					if (OpenFileDialog(filePaths, false, false))
 					{
 						if (filePaths.size())
-							NGMC::fileManager.RegisterFile(filePaths[0].c_str());
+							fileManager.RegisterFile(filePaths[0].c_str());
 					}
 				}
 
@@ -372,8 +372,8 @@ namespace NGMC
 
 			if (ImGui::MenuItem("About"))
 			{
-				NGMC::g_PopupAbout.Setup();
-				NGMC::g_PopupAbout.Open();
+				g_PopupAbout.Setup();
+				g_PopupAbout.Open();
 			}
 
 			ImGui::EndMenuBar();
@@ -394,7 +394,7 @@ namespace NGMC
 	//	The function drawing and handling the context menu in the Content Viewer window.
 	static void OnImGuiNGMCFileContextMenu()
 	{
-		size_t selectionCount = NGMC::fileManager.GetSelectionCount();
+		size_t selectionCount = fileManager.GetSelectionCount();
 		if (selectionCount == 0)
 		{
 
@@ -405,8 +405,8 @@ namespace NGMC
 
 			if (selectionCount == 1)
 			{
-				NGMC::File* p_File = NGMC::fileManager.GetSelectedFile(0);
-				NGMC::FileType type = p_File->GetType();
+				File* p_File = fileManager.GetSelectedFile(0);
+				FileType type = p_File->GetType();
 
 				if (p_File->IsLoaded())
 				{
@@ -434,7 +434,7 @@ namespace NGMC
 				{
 				case SIGMA_1:
 				{
-					using namespace NGMC::S1;
+					using namespace Databin::S1;
 					switch (type.GetId())
 					{
 					case FileTypeId::databin:
@@ -451,7 +451,7 @@ namespace NGMC
 				}
 				case SIGMA_2:
 				{
-					using namespace NGMC::S2;
+					using namespace Databin::S2;
 					switch (type.GetId())
 					{
 					case FileTypeId::databin:
@@ -471,7 +471,7 @@ namespace NGMC
 					OnImGuiNGMCFileTypeMenuItems(type);
 					if (ImGui::MenuItem("DDS"))
 					{
-						type.SetType(NGMC::General::FileTypeId::DDS);
+						type.SetType(Databin::General::FileTypeId::DDS);
 					}
 
 					p_File->SetType(type);
@@ -480,10 +480,8 @@ namespace NGMC
 				}
 				if (ImGui::Selectable("Rename"))
 				{
-					//NGMC::popups.push_back(new NGMC::PopupRenameFile(p_File));
-					//NGMC::popups.back()->Open();
-					NGMC::g_PopupRenameFile.Setup(p_File);
-					NGMC::g_PopupRenameFile.Open();
+					g_PopupRenameFile.Setup(p_File);
+					g_PopupRenameFile.Open();
 				}
 
 				ImGui::Separator();
@@ -507,12 +505,12 @@ namespace NGMC
 				}
 
 				ImGui::Separator();
-				ImGui::Text(std::format("{} items selected", NGMC::fileManager.GetSelectionCount()).c_str());
+				ImGui::Text(std::format("{} items selected", fileManager.GetSelectionCount()).c_str());
 
 				uintmax_t size = 0ULL;
 				for (unsigned int i = 0; i < selectionCount; i++)
 				{
-					size += NGMC::fileManager.GetSelectedFile(i)->GetSize();
+					size += fileManager.GetSelectedFile(i)->GetSize();
 				}
 				ImGui::Text((std::string("Size: ") + GetPrettySize(size)).c_str());
 				ImGui::Separator();
@@ -524,10 +522,10 @@ namespace NGMC
 			{
 				for (unsigned int i = 0; i < selectionCount; i++)
 				{
-					NGMC::fileManager.GetSelectedFile(i)->Load();
+					fileManager.GetSelectedFile(i)->Load();
 
-					if (NGMC::fileManager.GetSelectedFile(i)->GetChildCount())
-						NGMC::fileManager.GetSelectedFile(i)->SetNodeOpenness(true);
+					if (fileManager.GetSelectedFile(i)->GetChildCount())
+						fileManager.GetSelectedFile(i)->SetNodeOpenness(true);
 				}
 				break;
 			}
@@ -535,7 +533,7 @@ namespace NGMC
 			{
 				for (unsigned int i = 0; i < selectionCount; i++)
 				{
-					NGMC::fileManager.GetSelectedFile(i)->Unload();
+					fileManager.GetSelectedFile(i)->Unload();
 				}
 				break;
 			}
@@ -543,12 +541,12 @@ namespace NGMC
 			{
 				if (selectionCount == 1)
 				{
-					NGMC::File* p_File = NGMC::fileManager.GetSelectedFile(0);
+					File* p_File = fileManager.GetSelectedFile(0);
 
 					std::wstring savePath;
 					std::string tempName = p_File->GetName();
 					std::wstring defaultName = std::wstring(tempName.begin(), tempName.end());
-					if (NGMC::SaveFileDialog(savePath, defaultName))
+					if (SaveFileDialog(savePath, defaultName))
 					{
 						p_File->Save(savePath.c_str());
 					}
@@ -556,13 +554,13 @@ namespace NGMC
 				else
 				{
 					std::wstring savePath;
-					if (NGMC::OpenFolderDialog(savePath))
+					if (OpenFolderDialog(savePath))
 					{
-						NGMC::File* p_File;
+						File* p_File;
 						savePath += L"\\";
 						for (unsigned int i = 0; i < selectionCount; i++)
 						{
-							p_File = NGMC::fileManager.GetSelectedFile(i);
+							p_File = fileManager.GetSelectedFile(i);
 							std::string tempName = p_File->GetName();
 							std::wstring saveName = std::wstring(tempName.begin(), tempName.end());
 							p_File->Save((savePath + saveName).c_str());
@@ -574,14 +572,14 @@ namespace NGMC
 			case ContextMenuFileAction::Extract:
 			{
 				std::wstring savePath;
-				if (NGMC::OpenFolderDialog(savePath))
+				if (OpenFolderDialog(savePath))
 				{
 					if (savePath.length())
 					{
 						savePath += L"\\";
 						for (unsigned int i = 0; i < selectionCount; i++)
 						{
-							NGMC::File* p_File = NGMC::fileManager.GetSelectedFile(i);
+							File* p_File = fileManager.GetSelectedFile(i);
 
 							p_File->Extract(savePath.c_str());
 						}
@@ -614,7 +612,7 @@ namespace NGMC
 	static bool IsContentWindowFocused = false;
 
 	//	The function drawing and handling file objects in the Content Window.
-	static void OnImGuiNGMCFile(NGMC::File* p_File, bool isNotClipped)
+	static void OnImGuiNGMCFile(File* p_File, bool isNotClipped)
 	{
 		unsigned int childCount = p_File->GetChildCount();
 
@@ -632,7 +630,7 @@ namespace NGMC
 			const char* name = p_File->GetName();
 			std::string identifier = std::string(name) + std::format("##{:X}", (uintptr_t)p_File);
 
-			bool isSelected = NGMC::fileManager.IsFileSelected(p_File);
+			bool isSelected = fileManager.IsFileSelected(p_File);
 
 			ImGuiTreeNodeFlags flags =
 				ImGuiTreeNodeFlags_OpenOnArrow |
@@ -666,7 +664,7 @@ namespace NGMC
 				{
 					if (!ImGui::IsKeyDown(ImGuiKey_LeftCtrl) && !ImGui::IsKeyDown(ImGuiKey_RightCtrl))
 					{
-						NGMC::fileManager.SelectFile(p_File, true);
+						fileManager.SelectFile(p_File, true);
 					}
 					else
 					{
@@ -689,17 +687,17 @@ namespace NGMC
 					{
 						//	Holding Ctrl keeps previous selection and toggles selection of this file
 						if (isSelected)
-							NGMC::fileManager.DeselectFile(p_File);
+							fileManager.DeselectFile(p_File);
 						else
-							NGMC::fileManager.SelectFile(p_File);
+							fileManager.SelectFile(p_File);
 					}
 					else
-						NGMC::fileManager.SelectFile(p_File, true);
+						fileManager.SelectFile(p_File, true);
 				}
 				if (ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
 				{
 					//	Double left-click selects and loads the file
-					NGMC::fileManager.SelectFile(p_File, true);
+					fileManager.SelectFile(p_File, true);
 					p_File->Load();
 					childCount = p_File->GetChildCount();
 				}
@@ -767,7 +765,7 @@ namespace NGMC
 				{
 					//	If Ctrl + A is pressed, then select all files
 					IsCtrlAHeld = true;
-					NGMC::fileManager.SelectAllFiles();
+					fileManager.SelectAllFiles();
 				}
 			}
 		}
@@ -778,9 +776,9 @@ namespace NGMC
 		clipper.Begin(listItemCount);
 		listItemCount = 0U;
 		IsStepping = clipper.Step();
-		for (unsigned int i = 0; i < NGMC::fileManager.GetFileCount(); i++)
+		for (unsigned int i = 0; i < fileManager.GetFileCount(); i++)
 		{
-			OnImGuiNGMCFile(NGMC::fileManager.GetFile(i), clipper.DisplayStart - 1 <= listItemCount && listItemCount < clipper.DisplayEnd + 1);
+			OnImGuiNGMCFile(fileManager.GetFile(i), clipper.DisplayStart - 1 <= listItemCount && listItemCount < clipper.DisplayEnd + 1);
 		}
 		clipper.End();
 
@@ -804,7 +802,7 @@ namespace NGMC
 		//ImGui::Separator();
 		//ImGui::Dummy(ImVec2(0.0f, 2.0f));
 		//
-		//ImGui::Text(std::format("Popup count: {}", NGMC::popups.size()).c_str());
+		//ImGui::Text(std::format("Popup count: {}", popups.size()).c_str());
 
 		ImGui::End();
 	}
@@ -816,17 +814,17 @@ namespace NGMC
 
 		ImGui::Begin("Preview", NULL, dockspaceWindowFlags);
 
-		size_t selectionCount = NGMC::fileManager.GetSelectionCount();
+		size_t selectionCount = fileManager.GetSelectionCount();
 		if (selectionCount == 1)
 		{
-			NGMC::previewer.SetFile(NGMC::fileManager.GetSelectedFile(0));
+			previewer.SetFile(fileManager.GetSelectedFile(0));
 		}
 		else if (selectionCount == 0)
 		{
-			NGMC::previewer.SetFile(nullptr);
+			previewer.SetFile(nullptr);
 		}
 
-		NGMC::previewer.OnRender();
+		previewer.OnRender();
 
 		ImGui::End();
 	}

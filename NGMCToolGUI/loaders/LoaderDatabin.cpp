@@ -6,6 +6,8 @@
 
 namespace NGMC
 {
+	using namespace Databin;
+
 	LoaderDatabin::LoaderDatabin(GAME game, const wchar_t* filePath)
 		: m_Game(game)
 	{
@@ -32,7 +34,7 @@ namespace NGMC
 	{
 		std::streamoff pos = m_Reader.Tell();
 
-		m_Reader.Seek(offsetof(DatabinHeader, DatabinHeader::fileCount), MemoryBuffer::beg);
+		m_Reader.Seek(offsetof(Header, Header::fileCount), MemoryBuffer::beg);
 
 		uint32_t fileCount = m_Reader.ReadUInt32();
 
@@ -53,7 +55,7 @@ namespace NGMC
 
 		std::streamoff pos = m_Reader.Tell();
 
-		m_Reader.Seek(sizeof(DatabinHeader) + index * sizeof(uint32_t), MemoryBuffer::beg);
+		m_Reader.Seek(sizeof(Header) + index * sizeof(uint32_t), MemoryBuffer::beg);
 
 		uint32_t fileHeaderOffset = m_Reader.ReadUInt32();
 
@@ -76,7 +78,7 @@ namespace NGMC
 				return FileType((S1::FileTypeId)m_ItemHeadersS1[index].type);
 			else
 			{
-				S1::DatabinItemHeader itemHeader = S1::DatabinItemHeader();
+				S1::ItemHeader itemHeader = S1::ItemHeader();
 				this->LoadItemHeader(itemHeader, index);
 				return FileType((S1::FileTypeId)itemHeader.type);
 			}
@@ -86,7 +88,7 @@ namespace NGMC
 				return FileType((S2::FileTypeId)m_ItemHeadersS2[index].type);
 			else
 			{
-				S2::DatabinItemHeader itemHeader = S2::DatabinItemHeader();
+				S2::ItemHeader itemHeader = S2::ItemHeader();
 				this->LoadItemHeader(itemHeader, index);
 				return FileType((S2::FileTypeId)itemHeader.type);
 			}
@@ -110,7 +112,7 @@ namespace NGMC
 				return m_ItemHeadersS1[index].size;
 			else
 			{
-				S1::DatabinItemHeader itemHeader = S1::DatabinItemHeader();
+				S1::ItemHeader itemHeader = S1::ItemHeader();
 				this->LoadItemHeader(itemHeader, index);
 				return itemHeader.size;
 			}
@@ -120,7 +122,7 @@ namespace NGMC
 				return m_ItemHeadersS2[index].size;
 			else
 			{
-				S2::DatabinItemHeader itemHeader = S2::DatabinItemHeader();
+				S2::ItemHeader itemHeader = S2::ItemHeader();
 				this->LoadItemHeader(itemHeader, index);
 				return itemHeader.size;
 			}
@@ -144,7 +146,7 @@ namespace NGMC
 				return m_ItemHeadersS1[index].sizeCompressed;
 			else
 			{
-				S1::DatabinItemHeader itemHeader = S1::DatabinItemHeader();
+				S1::ItemHeader itemHeader = S1::ItemHeader();
 				this->LoadItemHeader(itemHeader, index);
 				return itemHeader.sizeCompressed;
 			}
@@ -154,7 +156,7 @@ namespace NGMC
 				return m_ItemHeadersS2[index].sizeCompressed;
 			else
 			{
-				S2::DatabinItemHeader itemHeader = S2::DatabinItemHeader();
+				S2::ItemHeader itemHeader = S2::ItemHeader();
 				this->LoadItemHeader(itemHeader, index);
 				return itemHeader.sizeCompressed;
 			}
@@ -164,7 +166,7 @@ namespace NGMC
 		}
 	}
 
-	bool LoaderDatabin::LoadHeader(DatabinHeader& outHeader)
+	bool LoaderDatabin::LoadHeader(Header& outHeader)
 	{
 		bool isSuccess = false;
 
@@ -180,12 +182,12 @@ namespace NGMC
 		return isSuccess;
 	}
 	
-	bool LoaderDatabin::LoadItemHeader(S1::DatabinItemHeader& outItemHeader, unsigned int index)
+	bool LoaderDatabin::LoadItemHeader(S1::ItemHeader& outItemHeader, unsigned int index)
 	{
 		return LoadItemHeaderT(outItemHeader, index);
 	}
 
-	bool LoaderDatabin::LoadItemHeader(S2::DatabinItemHeader& outItemHeader, unsigned int index)
+	bool LoaderDatabin::LoadItemHeader(S2::ItemHeader& outItemHeader, unsigned int index)
 	{
 		return LoadItemHeaderT(outItemHeader, index);
 	}
@@ -194,7 +196,7 @@ namespace NGMC
 	{
 		if (m_Reader.GetFileSize() > 0)
 		{
-			DatabinHeader header = DatabinHeader();
+			Header header = Header();
 			m_Reader.Seek(0, MemoryBuffer::beg);
 			m_Reader.ReadValue(header);
 
@@ -214,11 +216,11 @@ namespace NGMC
 				switch (m_Game)
 				{
 				case SIGMA_1:
-					m_ItemHeadersS1.push_back(S1::DatabinItemHeader());
+					m_ItemHeadersS1.push_back(S1::ItemHeader());
 					m_Reader.ReadValue(m_ItemHeadersS1[i]);
 					break;
 				case SIGMA_2:
-					m_ItemHeadersS2.push_back(S2::DatabinItemHeader());
+					m_ItemHeadersS2.push_back(S2::ItemHeader());
 					m_Reader.ReadValue(m_ItemHeadersS2[i]);
 					break;
 				default:
@@ -239,7 +241,7 @@ namespace NGMC
 		{
 			m_Reader.Seek(0, MemoryBuffer::beg);
 
-			DatabinHeader header;
+			Header header;
 			m_Reader.ReadValue(header);
 
 			if (index < header.fileCount)
@@ -257,7 +259,7 @@ namespace NGMC
 				{
 				case SIGMA_1:
 				{
-					S1::DatabinItemHeader fileHeader = S1::DatabinItemHeader();
+					S1::ItemHeader fileHeader = S1::ItemHeader();
 					m_Reader.ReadValue(fileHeader);
 					offset = fileHeader.offset;
 					size = fileHeader.size;
@@ -266,7 +268,7 @@ namespace NGMC
 				}
 				case SIGMA_2:
 				{
-					S2::DatabinItemHeader fileHeader = S2::DatabinItemHeader();
+					S2::ItemHeader fileHeader = S2::ItemHeader();
 					m_Reader.ReadValue(fileHeader);
 					offset = fileHeader.offset;
 					size = fileHeader.size;

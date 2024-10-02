@@ -80,6 +80,8 @@ namespace NGMC
 
 			if (newGame != NON_GAME)
 			{
+				using namespace Databin;
+
 				switch (GetFile()->GetType().GetId())
 				{
 				case General::databin:

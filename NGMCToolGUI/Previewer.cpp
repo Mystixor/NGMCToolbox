@@ -10,10 +10,10 @@ namespace NGMC
 		: m_File(nullptr), m_PrevType(FileType()), m_IsSetup(false),
 		m_Image(nullptr), m_ImageInUse(false),
 		m_ImageWidth(0), m_ImageHeight(0), m_ImageDisplayWidth(0), m_ImageDisplayHeight(0),
-		m_DatabinHeader(DatabinHeader()),
-		m_DatabinItemHeaderS1(S1::DatabinItemHeader()),
-		m_DatabinItemHeaderS2(S2::DatabinItemHeader()),
-		m_GT1GHeader(GT1GHeader()), m_GT1GTextures(0), m_PreviewGT1GTexIdx(0U), m_PreviewGT1GMipMapIdx(0U),
+		m_DatabinHeader(Databin::Header()),
+		m_DatabinItemHeaderS1(Databin::S1::ItemHeader()),
+		m_DatabinItemHeaderS2(Databin::S2::ItemHeader()),
+		m_GT1GHeader(GT1G::Header()), m_GT1GTextures(0), m_PreviewGT1GTexIdx(0U), m_PreviewGT1GMipMapIdx(0U),
 		m_DDS_HEADER(DDS_HEADER()), m_PreviewDDSMipMapIdx(0U)
 	{
 	}
@@ -126,6 +126,8 @@ namespace NGMC
 
 			if (m_IsSetup)
 			{
+				using namespace Databin;
+
 				switch (game)
 				{
 				case NON_GAME:
@@ -205,6 +207,8 @@ namespace NGMC
 	{
 		if (m_File != nullptr)
 		{
+			using namespace Databin;
+
 			FileType type = m_File->GetType();
 			switch (type.GetGame())
 			{
@@ -307,6 +311,8 @@ namespace NGMC
 		LoaderGT1G loader = LoaderGT1G(m_File);
 
 		{
+			using namespace GT1G;
+
 			loader.GetHeader(m_GT1GHeader);
 
 			m_GT1GTextures.reserve(m_GT1GTextures.size() + m_GT1GHeader.textureCount);
@@ -324,24 +330,11 @@ namespace NGMC
 
 			for (unsigned int i = 0; i < m_GT1GHeader.textureCount; i++)
 			{
-				//unsigned int mipMapCount = loader.GetTextureMipMapCount(i);
-				//PixelFormat format = loader.GetTexturePixelFormat(i);
-				//uint32_t flags = loader.GetTextureFlags(i);
-				//uint32_t extraFlags0 = 0;
-				//uint32_t extraFlags1 = 0;
-				//uint32_t extraFlags2 = 0;
-				//if ((flags >> 24) == 0x10)
-				//{
-				//	loader.GetTextureExtraFlags(i, &extraFlags0, &extraFlags1, &extraFlags2);
-				//}
-				//m_GT1GTextures.emplace_back(mipMapCount, format, flags, extraFlags0, extraFlags1, extraFlags2, std::vector<GT1GMipMap>(mipMapCount));
 				m_GT1GTextures.emplace_back(mipMapCounts[i], formats[i], flags[i], extraFlags0s[i], extraFlags1s[i], extraFlags2s[i], std::vector<GT1GMipMap>(mipMapCounts[i]));
 
 				unsigned int denom = 1;
 				for (unsigned int j = 0; j < mipMapCounts[i]; j++)
 				{
-					//m_GT1GTextures[i].MipMaps[j].Width = loader.GetTextureMipMapWidth(i, j);
-					//m_GT1GTextures[i].MipMaps[j].Height = loader.GetTextureMipMapHeight(i, j);
 					m_GT1GTextures[i].MipMaps[j].Width = widths[i] / denom;
 					m_GT1GTextures[i].MipMaps[j].Height = heights[i] / denom;
 					denom *= 2;
@@ -371,6 +364,8 @@ namespace NGMC
 
 		if (m_PreviewGT1GTexIdx < loader.GetTextureCount())
 		{
+			using namespace GT1G;
+
 			unsigned int textureIndex = m_PreviewGT1GTexIdx;
 			unsigned int mipLevel = m_PreviewGT1GMipMapIdx;
 
@@ -439,7 +434,7 @@ namespace NGMC
 			{
 				DDSFormat format = loader.GetPixelFormat();
 
-				if (format != PixelFormat::unsupportedFormat)
+				if (format != DDSFormat::unsupported)
 				{
 					MemoryBuffer imageDataBuffer;
 					if (loader.GetMipData(imageDataBuffer, m_PreviewDDSMipMapIdx))
@@ -689,15 +684,15 @@ namespace NGMC
 
 				ImGui::TableNextRow();
 				ImGui::TableSetColumnIndex(0); ImGui::Text("typeLinkedFile0");
-				ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("0x{:02X} ({})", m_DatabinItemHeaderS1.typeLinkedFile0, GetFileExtension((S1::FileTypeId)m_DatabinItemHeaderS1.typeLinkedFile0)).c_str());
+				ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("0x{:02X} ({})", m_DatabinItemHeaderS1.typeLinkedFile0, GetFileExtension((Databin::S1::FileTypeId)m_DatabinItemHeaderS1.typeLinkedFile0)).c_str());
 
 				ImGui::TableNextRow();
 				ImGui::TableSetColumnIndex(0); ImGui::Text("typeLinkedFile1");
-				ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("0x{:02X} ({})", m_DatabinItemHeaderS1.typeLinkedFile1, GetFileExtension((S1::FileTypeId)m_DatabinItemHeaderS1.typeLinkedFile1)).c_str());
+				ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("0x{:02X} ({})", m_DatabinItemHeaderS1.typeLinkedFile1, GetFileExtension((Databin::S1::FileTypeId)m_DatabinItemHeaderS1.typeLinkedFile1)).c_str());
 
 				ImGui::TableNextRow();
 				ImGui::TableSetColumnIndex(0); ImGui::Text("type");
-				ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("0x{:02X} ({})", m_DatabinItemHeaderS1.type, GetFileExtension((S1::FileTypeId)m_DatabinItemHeaderS1.type)).c_str());
+				ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("0x{:02X} ({})", m_DatabinItemHeaderS1.type, GetFileExtension((Databin::S1::FileTypeId)m_DatabinItemHeaderS1.type)).c_str());
 
 				ImGui::TableNextRow();
 				ImGui::TableSetColumnIndex(0); ImGui::Text("dat_1B");
@@ -717,11 +712,11 @@ namespace NGMC
 
 				ImGui::TableNextRow();
 				ImGui::TableSetColumnIndex(0); ImGui::Text("typeLinkedFile");
-				ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("0x{:02X} ({})", m_DatabinItemHeaderS2.typeLinkedFile, GetFileExtension((S2::FileTypeId)m_DatabinItemHeaderS2.typeLinkedFile)).c_str());
+				ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("0x{:02X} ({})", m_DatabinItemHeaderS2.typeLinkedFile, GetFileExtension((Databin::S2::FileTypeId)m_DatabinItemHeaderS2.typeLinkedFile)).c_str());
 
 				ImGui::TableNextRow();
 				ImGui::TableSetColumnIndex(0); ImGui::Text("type");
-				ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("0x{:02X} ({})", m_DatabinItemHeaderS2.type, GetFileExtension((S2::FileTypeId)m_DatabinItemHeaderS2.type)).c_str());
+				ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("0x{:02X} ({})", m_DatabinItemHeaderS2.type, GetFileExtension((Databin::S2::FileTypeId)m_DatabinItemHeaderS2.type)).c_str());
 
 				break;
 			}
@@ -733,6 +728,8 @@ namespace NGMC
 
 	void Previewer::OnRenderGT1G()
 	{
+		using namespace GT1G;
+
 		ImGuiTableFlags flags =
 			ImGuiTableFlags_RowBg |
 			ImGuiTableFlags_SizingFixedFit |

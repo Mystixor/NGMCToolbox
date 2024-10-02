@@ -132,107 +132,110 @@ namespace NGMC
 	constexpr GAME RE_3 = 3;
 	
 
-	namespace General
+	namespace Databin
 	{
-		//	Type Ids of general purpose files.
-		enum FileTypeId
+		namespace General
 		{
-			DDS,
-			databin,	//	The databin file name is not enough to infer which game it belongs to. Until determined, this will be the file's type.
-			unknown
-		};
-	}
+			//	Type Ids of general purpose files.
+			enum FileTypeId
+			{
+				DDS,
+				databin,	//	The databin file name is not enough to infer which game it belongs to. Until determined, this will be the file's type.
+				unknown
+			};
+		}
 
-	namespace S1
-	{
-		//	Type Ids of files found in NGS1.
-		enum FileTypeId
+		namespace S1
 		{
-			tdpack = 0x00,
-			btl_dat = 0x01,
-			type_02 = 0x02,
-			chr_dat2 = 0x03,
-			type_04 = 0x04,
-			TMC_05 = 0x05,
-			type_06 = 0x06,
-			GT1G_07 = 0x07,
-			itm_dat2_08 = 0x08,
-			MESSTR = 0x09,
-			type_0A = 0x0A,
-			chr_dat = 0x0B,
-			rtm_dat = 0x0C,
-			SND = 0x0D,
-			itm_dat2_0E = 0x0E,
-			stry_dat = 0x0F,
-			TMC_10 = 0x10,
-			VtxLay = 0x11,
-			sprite = 0x12,
-			GT1G_13 = 0x13,
-			invalid = 0x14,
-			databin,
-			databinItem,
-			unknown
-		};
-	}
-	
-	namespace S2
-	{
-		//	Type Ids of files found in NGS2.
-		enum FileTypeId
+			//	Type Ids of files found in NGS1.
+			enum FileTypeId
+			{
+				tdpack = 0x00,
+				btl_dat = 0x01,
+				type_02 = 0x02,
+				chr_dat2 = 0x03,
+				type_04 = 0x04,
+				TMC_05 = 0x05,
+				type_06 = 0x06,
+				GT1G_07 = 0x07,
+				itm_dat2_08 = 0x08,
+				MESSTR = 0x09,
+				type_0A = 0x0A,
+				chr_dat = 0x0B,
+				rtm_dat = 0x0C,
+				SND = 0x0D,
+				itm_dat2_0E = 0x0E,
+				stry_dat = 0x0F,
+				TMC_10 = 0x10,
+				VtxLay = 0x11,
+				sprite = 0x12,
+				GT1G_13 = 0x13,
+				invalid = 0x14,
+				databin,
+				databinItem,
+				unknown
+			};
+		}
+
+		namespace S2
 		{
-			type_00 = 0x00,
-			type_01 = 0x01,
-			type_02 = 0x02,
-			TDP4ACT = 0x03,
-			TDP4CLD = 0x04,
-			type_05 = 0x05,
-			type_06 = 0x06,
-			type_07 = 0x07,
-			TMC_08 = 0x08,
-			type_09 = 0x09,
-			type_0A = 0x0A,
-			TMC_0B = 0x0B,
-			type_0C = 0x0C,
-			itm_dat2 = 0x0D,
-			type_0E = 0x0E,
-			DDS_0F = 0x0F,
-			type_10 = 0x10,
-			chr_dat = 0x11,
-			rtm_dat = 0x12,
-			tdpack = 0x13,
-			TDP4SOB = 0x14,
-			TDP4SOC = 0x15,
-			sprpack = 0x16,
-			STAGEETC = 0x17,
-			TDP4STY = 0x18,
-			TNF = 0x19,
-			DDS_1A = 0x1A,
-			DDS_1B = 0x1B,
-			XWSFILE = 0x1C,
-			type_1D = 0x1D,
-			type_1E = 0x1E,
-			invalid = 0x1F,
-			databin,
-			databinItem,
-			unknown
-		};
-	}
-	
-	namespace RE
-	{
-		//	Type Ids of files found in NG3RE.
-		enum FileTypeId
+			//	Type Ids of files found in NGS2.
+			enum FileTypeId
+			{
+				type_00 = 0x00,
+				type_01 = 0x01,
+				type_02 = 0x02,
+				TDP4ACT = 0x03,
+				TDP4CLD = 0x04,
+				type_05 = 0x05,
+				type_06 = 0x06,
+				type_07 = 0x07,
+				TMC_08 = 0x08,
+				type_09 = 0x09,
+				type_0A = 0x0A,
+				TMC_0B = 0x0B,
+				type_0C = 0x0C,
+				itm_dat2 = 0x0D,
+				type_0E = 0x0E,
+				DDS_0F = 0x0F,
+				type_10 = 0x10,
+				chr_dat = 0x11,
+				rtm_dat = 0x12,
+				tdpack = 0x13,
+				TDP4SOB = 0x14,
+				TDP4SOC = 0x15,
+				sprpack = 0x16,
+				STAGEETC = 0x17,
+				TDP4STY = 0x18,
+				TNF = 0x19,
+				DDS_1A = 0x1A,
+				DDS_1B = 0x1B,
+				XWSFILE = 0x1C,
+				type_1D = 0x1D,
+				type_1E = 0x1E,
+				invalid = 0x1F,
+				databin,
+				databinItem,
+				unknown
+			};
+		}
+
+		namespace RE
 		{
-			databin,
-			databinItem,
-			unknown
-		};
+			//	Type Ids of files found in NG3RE.
+			enum FileTypeId
+			{
+				databin,
+				databinItem,
+				unknown
+			};
+		}
 	}
 
 	//	Returns the name of this general purpose FileType as a string.
-	static std::string GetTypeName(General::FileTypeId id)
+	static std::string GetTypeName(Databin::General::FileTypeId id)
 	{
-		using namespace General;
+		using namespace Databin::General;
 
 		std::string output = "";
 
@@ -264,9 +267,9 @@ namespace NGMC
 	}
 
 	//	Returns the name of this Ninja Gaiden Sigma 1 FileType as a string.
-	static std::string GetTypeName(S1::FileTypeId id)
+	static std::string GetTypeName(Databin::S1::FileTypeId id)
 	{
-		using namespace S1;
+		using namespace Databin::S1;
 
 		std::string output = "";
 
@@ -371,9 +374,9 @@ namespace NGMC
 	}
 
 	//	Returns the name of this Ninja Gaiden Sigma 2 FileType as a string.
-	static std::string GetTypeName(S2::FileTypeId id)
+	static std::string GetTypeName(Databin::S2::FileTypeId id)
 	{
-		using namespace S2;
+		using namespace Databin::S2;
 
 		std::string output = "";
 
@@ -483,9 +486,9 @@ namespace NGMC
 	}
 
 	//	Returns the name of this Ninja Gaiden Sigma 2 FileType as a string.
-	static std::string GetTypeName(RE::FileTypeId id)
+	static std::string GetTypeName(Databin::RE::FileTypeId id)
 	{
-		using namespace RE;
+		using namespace Databin::RE;
 
 		std::string output = "";
 
@@ -532,22 +535,22 @@ namespace NGMC
 	{
 	public:
 		FileType()
-			: m_Id(General::FileTypeId::unknown), m_Game(NON_GAME)
+			: m_Id(Databin::General::FileTypeId::unknown), m_Game(NON_GAME)
 		{}
 
-		FileType(General::FileTypeId id)
+		FileType(Databin::General::FileTypeId id)
 			: m_Id(id), m_Game(NON_GAME)
 		{}
 		
-		FileType(S1::FileTypeId id)
+		FileType(Databin::S1::FileTypeId id)
 			: m_Id(id), m_Game(SIGMA_1)
 		{}
 		
-		FileType(S2::FileTypeId id)
+		FileType(Databin::S2::FileTypeId id)
 			: m_Id(id), m_Game(SIGMA_2)
 		{}
 		
-		FileType(RE::FileTypeId id)
+		FileType(Databin::RE::FileTypeId id)
 			: m_Id(id), m_Game(RE_3)
 		{}
 
@@ -568,25 +571,25 @@ namespace NGMC
 			return !operator==(other);
 		}
 
-		void SetType(General::FileTypeId id)
+		void SetType(Databin::General::FileTypeId id)
 		{
 			m_Game = NON_GAME;
 			m_Id = id;
 		}
 		
-		void SetType(S1::FileTypeId id)
+		void SetType(Databin::S1::FileTypeId id)
 		{
 			m_Game = SIGMA_1;
 			m_Id = id;
 		}
 		
-		void SetType(S2::FileTypeId id)
+		void SetType(Databin::S2::FileTypeId id)
 		{
 			m_Game = SIGMA_2;
 			m_Id = id;
 		}
 		
-		void SetType(RE::FileTypeId id)
+		void SetType(Databin::RE::FileTypeId id)
 		{
 			m_Game = RE_3;
 			m_Id = id;
@@ -595,9 +598,9 @@ namespace NGMC
 		bool IsUnknown() const
 		{
 			if (
-				(m_Game == NON_GAME && m_Id == General::FileTypeId::unknown) ||
-				(m_Game == SIGMA_1 && m_Id == S1::FileTypeId::unknown) ||
-				(m_Game == SIGMA_2 && m_Id == S2::FileTypeId::unknown)
+				(m_Game == NON_GAME && m_Id == Databin::General::FileTypeId::unknown) ||
+				(m_Game == SIGMA_1 && m_Id == Databin::S1::FileTypeId::unknown) ||
+				(m_Game == SIGMA_2 && m_Id == Databin::S2::FileTypeId::unknown)
 				)
 				return true;
 			else
@@ -610,6 +613,8 @@ namespace NGMC
 		//	Returns the name of this FileType as a string.
 		std::string GetTypeName() const
 		{
+			using namespace Databin;
+
 			std::string output = "";
 
 			switch (m_Game)

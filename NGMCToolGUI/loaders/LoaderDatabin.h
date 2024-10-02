@@ -8,51 +8,54 @@
 
 namespace NGMC
 {
-	//	The databin file header struct.
-	struct DatabinHeader
+	namespace Databin
 	{
-		int32_t dat_00, dat_04, dat_08, dat_0C;
-		uint32_t headerSize;        // 0x20 ? less than the whole header idk
-		uint32_t fileDataOffset;    // relative to the headerSize
-		int32_t dat_18, dat_1C;
-		uint32_t fileCount;
-		uint32_t fileIndicesOffset; // relative to the headerSize
-		uint32_t fileCount1;
-		int32_t dat_2C;
-	};
-
-	namespace S1
-	{
-		//	The compressed databin item header struct from NGS1.
-		struct DatabinItemHeader
+		//	The databin file header struct.
+		struct Header
 		{
-			uint32_t offset;
-			int32_t dat_04;
-			uint32_t size;
-			uint32_t sizeCompressed;
-			uint32_t dat_10;
-			uint16_t indexLinkedFile0, indexLinkedFile1;
-			uint8_t typeLinkedFile0, typeLinkedFile1;
-			uint8_t type;
-			uint8_t dat_1B;
-			int32_t dat_1C;
+			int32_t dat_00, dat_04, dat_08, dat_0C;
+			uint32_t headerSize;        // 0x20 ? less than the whole header idk
+			uint32_t fileDataOffset;    // relative to the headerSize
+			int32_t dat_18, dat_1C;
+			uint32_t fileCount;
+			uint32_t fileIndicesOffset; // relative to the headerSize
+			uint32_t fileCount1;
+			int32_t dat_2C;
 		};
-	}
 
-	namespace S2
-	{
-		//	The compressed databin item header struct from NGS2.
-		struct DatabinItemHeader
+		namespace S1
 		{
-			uint32_t offset;
-			int32_t dat_04;
-			uint32_t size;
-			uint32_t sizeCompressed;
-			uint32_t dat_10;
-			uint16_t indexLinkedFile;
-			uint8_t typeLinkedFile;
-			uint8_t type;
-		};
+			//	The compressed databin item header struct from NGS1.
+			struct ItemHeader
+			{
+				uint32_t offset;
+				int32_t dat_04;
+				uint32_t size;
+				uint32_t sizeCompressed;
+				uint32_t dat_10;
+				uint16_t indexLinkedFile0, indexLinkedFile1;
+				uint8_t typeLinkedFile0, typeLinkedFile1;
+				uint8_t type;
+				uint8_t dat_1B;
+				int32_t dat_1C;
+			};
+		}
+
+		namespace S2
+		{
+			//	The compressed databin item header struct from NGS2.
+			struct ItemHeader
+			{
+				uint32_t offset;
+				int32_t dat_04;
+				uint32_t size;
+				uint32_t sizeCompressed;
+				uint32_t dat_10;
+				uint16_t indexLinkedFile;
+				uint8_t typeLinkedFile;
+				uint8_t type;
+			};
+		}
 	}
 
 	//	Class for loading data from a databin file.
@@ -88,13 +91,13 @@ namespace NGMC
 
 
 		//	Loads the Databin header into the specified outHeader, returns whether the operation was successful.
-		bool LoadHeader(DatabinHeader& outHeader);
+		bool LoadHeader(Databin::Header& outHeader);
 
 		//	Sigma 1: Loads the item header of the databin item at the specified index into the specified outItemHeader, returns whether the operation was successful.
-		bool LoadItemHeader(S1::DatabinItemHeader& outItemHeader, unsigned int index);
+		bool LoadItemHeader(Databin::S1::ItemHeader& outItemHeader, unsigned int index);
 
 		//	Sigma 2: Loads the item header of the databin item at the specified index into the specified outItemHeader, returns whether the operation was successful.
-		bool LoadItemHeader(S2::DatabinItemHeader& outItemHeader, unsigned int index);
+		bool LoadItemHeader(Databin::S2::ItemHeader& outItemHeader, unsigned int index);
 
 		//	Loads the item headers of all databin items into m_ItemHeaders, returns whether the operation was successful.
 		bool LoadItemHeaders();
@@ -113,10 +116,10 @@ namespace NGMC
 		std::vector<uint32_t> m_FileHeaderOffsets;
 
 		//	Sigma 1: List of the item headers, filled by the LoadItemHeaders functions.
-		std::vector<S1::DatabinItemHeader> m_ItemHeadersS1;
+		std::vector<Databin::S1::ItemHeader> m_ItemHeadersS1;
 
 		//	Sigma 2: List of the item headers, filled by the LoadItemHeaders functions.
-		std::vector<S2::DatabinItemHeader> m_ItemHeadersS2;
+		std::vector<Databin::S2::ItemHeader> m_ItemHeadersS2;
 
 		//	Loads the item header of the file at the specified index into the specified outItemHeader, returns whether the operation was successful.
 		template<typename T_ItemHeader>
@@ -124,7 +127,7 @@ namespace NGMC
 		{
 			bool isSuccess = false;
 
-			DatabinHeader header = DatabinHeader();
+			Databin::Header header = Databin::Header();
 			m_Reader.Seek(0, MemoryBuffer::beg);
 			m_Reader.ReadValue(header);
 

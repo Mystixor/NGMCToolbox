@@ -4,6 +4,8 @@
 
 namespace NGMC
 {
+	using namespace GT1G;
+
 	extern bool g_ReadColorMapAsLuminance;
 
 
@@ -26,11 +28,11 @@ namespace NGMC
 	{
 	}
 
-	bool LoaderGT1G::GetHeader(GT1GHeader& outHeader)
+	bool LoaderGT1G::GetHeader(Header& outHeader)
 	{
 		bool isSuccess = false;
 
-		if (m_Reader.GetFileSize() >= sizeof(GT1GHeader))
+		if (m_Reader.GetFileSize() >= sizeof(Header))
 		{
 			std::streamoff pos = m_Reader.Tell();
 
@@ -45,9 +47,9 @@ namespace NGMC
 		return isSuccess;
 	}
 
-	GT1GVersion LoaderGT1G::GetVersion()
+	Version LoaderGT1G::GetVersion()
 	{
-		GT1GVersion version = GT1GVersion();
+		Version version = Version();
 
 		if (m_Reader.GetFileSize() >= 4 + sizeof(version))
 		{
@@ -66,11 +68,11 @@ namespace NGMC
 	{
 		uint32_t textureCount = 0U;
 
-		if (m_Reader.GetFileSize() >= offsetof(GT1GHeader, GT1GHeader::textureCount) + sizeof(textureCount))
+		if (m_Reader.GetFileSize() >= offsetof(Header, Header::textureCount) + sizeof(textureCount))
 		{
 			std::streamoff pos = m_Reader.Tell();
 
-			m_Reader.Seek(offsetof(GT1GHeader, GT1GHeader::textureCount), MemoryBuffer::beg);
+			m_Reader.Seek(offsetof(Header, Header::textureCount), MemoryBuffer::beg);
 			textureCount = m_Reader.ReadUInt32();
 
 			m_Reader.Seek(pos, MemoryBuffer::beg);
@@ -81,7 +83,7 @@ namespace NGMC
 
 	unsigned int LoaderGT1G::GetTextureMipMapCount(unsigned int textureIndex)
 	{
-		GT1GHeader header;
+		Header header;
 		GetHeader(header);
 
 		if (textureIndex < header.textureCount)
@@ -105,7 +107,7 @@ namespace NGMC
 
 	unsigned int LoaderGT1G::GetTextureMipMapWidth(unsigned int textureIndex, unsigned int mipLevel)
 	{
-		GT1GHeader header;
+		Header header;
 		GetHeader(header);
 
 		if (textureIndex < header.textureCount)
@@ -137,7 +139,7 @@ namespace NGMC
 
 	unsigned int LoaderGT1G::GetTextureMipMapHeight(unsigned int textureIndex, unsigned int mipLevel)
 	{
-		GT1GHeader header;
+		Header header;
 		GetHeader(header);
 
 		if (textureIndex < header.textureCount)
@@ -169,7 +171,7 @@ namespace NGMC
 
 	PixelFormat LoaderGT1G::GetTexturePixelFormat(unsigned int textureIndex)
 	{
-		GT1GHeader header;
+		Header header;
 		GetHeader(header);
 
 		if (textureIndex < header.textureCount)
@@ -192,7 +194,7 @@ namespace NGMC
 
 	uint32_t LoaderGT1G::GetTextureFlags(unsigned int textureIndex)
 	{
-		GT1GHeader header;
+		Header header;
 		GetHeader(header);
 
 		if (textureIndex < header.textureCount)
@@ -215,7 +217,7 @@ namespace NGMC
 
 	bool LoaderGT1G::GetTextureExtraFlags(unsigned int textureIndex, uint32_t* outExtraFlags0, uint32_t* outExtraFlags1, uint32_t* outExtraFlags2)
 	{
-		GT1GHeader header;
+		Header header;
 		if (!GetHeader(header))
 			return false;
 
@@ -245,7 +247,7 @@ namespace NGMC
 		return isSuccess;
 	}
 
-	bool LoaderGT1G::GetTexturesInfo(GT1GHeader& inHeader, unsigned int* mipMapCounts, PixelFormat* formats, unsigned int* widths, unsigned int* heights, uint32_t* flags, uint32_t* outExtraFlags0s, uint32_t* outExtraFlags1s, uint32_t* outExtraFlags2s)
+	bool LoaderGT1G::GetTexturesInfo(Header& inHeader, unsigned int* mipMapCounts, PixelFormat* formats, unsigned int* widths, unsigned int* heights, uint32_t* flags, uint32_t* outExtraFlags0s, uint32_t* outExtraFlags1s, uint32_t* outExtraFlags2s)
 	{
 		bool isSuccess = false;
 
@@ -290,7 +292,7 @@ namespace NGMC
 
 	size_t LoaderGT1G::GetMipDataSize(unsigned int textureIndex, unsigned int mipLevel)
 	{
-		GT1GHeader header;
+		Header header;
 		GetHeader(header);
 
 		if (textureIndex < header.textureCount)
@@ -379,7 +381,7 @@ namespace NGMC
 
 	bool LoaderGT1G::GetMipData(MemoryBuffer& outBuffer, unsigned int textureIndex, unsigned int mipLevel)
 	{
-		GT1GHeader header;
+		Header header;
 		GetHeader(header);
 
 		if (textureIndex < header.textureCount)
@@ -505,7 +507,7 @@ namespace NGMC
 
 	bool LoaderGT1G::GetImageData(MemoryBuffer& outBuffer, unsigned int textureIndex)
 	{
-		GT1GHeader header;
+		Header header;
 		GetHeader(header);
 
 		if (textureIndex < header.textureCount)

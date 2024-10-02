@@ -6,42 +6,45 @@
 
 namespace NGMC
 {
-	//	The GT1G version struct
-	struct GT1GVersion
+	namespace GT1G
 	{
-		uint8_t major, submajor, minor, patch;
-	};
+		//	The GT1G version struct
+		struct Version
+		{
+			uint8_t major, submajor, minor, patch;
+		};
 
-	//	The GT1G file header struct
-	struct GT1GHeader
-	{
-		char magic[4];
-		GT1GVersion version;
-		uint32_t fileSize;
-		uint32_t textureOffsetTableAddress;
-		uint32_t textureCount;
-		uint32_t dat_14, dat_18;
-	};
+		//	The GT1G file header struct
+		struct Header
+		{
+			char magic[4];
+			Version version;
+			uint32_t fileSize;
+			uint32_t textureOffsetTableAddress;
+			uint32_t textureCount;
+			uint32_t dat_14, dat_18;
+		};
 
-	//	Formats used in GT1G texture files
-	enum PixelFormat
-	{
-		RGBA8_BGRA_u8 = 0x1,
-		RGBA8_RGBA_u8 = 0x2,
-		CompressedRgbS3tcDxt1Ext_06 = 0x06,
-		CompressedRgbS3tcDxt1Ext_59 = 0x59,
-		CompressedRgbaS3tcDxt5Ext_08 = 0x08,
-		CompressedRgbaS3tcDxt5Ext_5B = 0x5B,
-		ColorMap_u8 = 0x72,
-		unsupportedFormat
-	};
+		//	Formats used in GT1G texture files
+		enum PixelFormat
+		{
+			RGBA8_BGRA_u8 = 0x1,
+			RGBA8_RGBA_u8 = 0x2,
+			CompressedRgbS3tcDxt1Ext_06 = 0x06,
+			CompressedRgbS3tcDxt1Ext_59 = 0x59,
+			CompressedRgbaS3tcDxt5Ext_08 = 0x08,
+			CompressedRgbaS3tcDxt5Ext_5B = 0x5B,
+			ColorMap_u8 = 0x72,
+			unsupportedFormat
+		};
+	}
 
 	//	Builds a GT1G file from the specified count of textures, raw image datas, pixel widths and heights, counts of mipmaps and pixel formats and loads its raw data into the specified outBuffer.
-	static bool BuildGT1G(MemoryBuffer& outBuffer, unsigned int textureCount, MemoryBuffer* imageDatas, unsigned int* widths, unsigned int* heights, unsigned int* mipMapCounts, PixelFormat* formats)
+	static bool BuildGT1G(MemoryBuffer& outBuffer, unsigned int textureCount, MemoryBuffer* imageDatas, unsigned int* widths, unsigned int* heights, unsigned int* mipMapCounts, GT1G::PixelFormat* formats)
 	{
 		bool isSuccess = false;
 
-		size_t fileSize = sizeof(GT1GHeader) + (size_t)2 * textureCount * sizeof(uint32_t);
+		size_t fileSize = sizeof(GT1G::Header) + (size_t)2 * textureCount * sizeof(uint32_t);
 		std::vector<MemoryBuffer> textureHeaderDatas(textureCount);
 
 		for (unsigned int i = 0; i < textureCount; i++)
@@ -60,7 +63,7 @@ namespace NGMC
 			size_t textureHeaderDataSize;
 			switch (formats[i])
 			{
-			case PixelFormat::ColorMap_u8:
+			case GT1G::PixelFormat::ColorMap_u8:
 				flags		= 0x10211000;
 				extraFlags0 = 0x0000000C;
 				extraFlags1 = 0x00000000;
@@ -106,7 +109,7 @@ namespace NGMC
 		outBuffer.Write((char*)&fileSize, 4);
 
 		size_t offset = textureCount * sizeof(uint32_t);			// size of both normalMapFlags and offsetTable EACH
-		size_t offsetTableAddress = sizeof(GT1GHeader) + offset;	// sizeof(GT1GHeader) + "sizeof(normalMapFlags)"
+		size_t offsetTableAddress = sizeof(GT1G::Header) + offset;	// sizeof(GT1GHeader) + "sizeof(normalMapFlags)"
 
 		outBuffer.Write((char*)&offsetTableAddress, 4);
 		outBuffer.Write((char*)&textureCount, 4);
@@ -153,10 +156,10 @@ namespace NGMC
 		~LoaderGT1G();
 
 		//	Loads the header into the specified outHeader.
-		bool			GetHeader(GT1GHeader& outHeader);
+		bool			GetHeader(GT1G::Header& outHeader);
 
 		//	Returns the file format version.
-		GT1GVersion		GetVersion();
+		GT1G::Version		GetVersion();
 
 		//	Returns the count of textures in the file.
 		unsigned int	GetTextureCount();
@@ -165,7 +168,7 @@ namespace NGMC
 		unsigned int	GetTextureMipMapCount(unsigned int textureIndex);
 
 		//	Returns the PixelFormat of the texture at the specified texture index.
-		PixelFormat		GetTexturePixelFormat(unsigned int textureIndex);
+		GT1G::PixelFormat	GetTexturePixelFormat(unsigned int textureIndex);
 
 		//	Returns the texture flags of the texture at the specified texture index.
 		uint32_t		GetTextureFlags(unsigned int textureIndex);
@@ -174,7 +177,7 @@ namespace NGMC
 		bool			GetTextureExtraFlags(unsigned int textureIndex, uint32_t* outExtraFlags0, uint32_t* outExtraFlags1, uint32_t* outExtraFlags2);
 		
 		//	Loads the header as well as the counts of mipmaps, the formats, pixel widths and heights, flags and extra flags into the memory at the specified addresses of all textures in the file.
-		bool			GetTexturesInfo(GT1GHeader& inHeader, unsigned int* mipMapCounts, PixelFormat* formats, unsigned int* widths, unsigned int* heights, uint32_t* flags, uint32_t* outExtraFlags0s, uint32_t* outExtraFlags1s, uint32_t* outExtraFlags2s);
+		bool			GetTexturesInfo(GT1G::Header& inHeader, unsigned int* mipMapCounts, GT1G::PixelFormat* formats, unsigned int* widths, unsigned int* heights, uint32_t* flags, uint32_t* outExtraFlags0s, uint32_t* outExtraFlags1s, uint32_t* outExtraFlags2s);
 		
 		//	Returns the width in pixels of the specified mip level at the specified texture index.
 		unsigned int	GetTextureMipMapWidth(unsigned int textureIndex, unsigned int mipLevel = 0U);

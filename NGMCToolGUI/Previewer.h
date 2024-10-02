@@ -87,17 +87,17 @@ namespace NGMC
 		//	databin	///////////////////////////////////////
 
 		//	The header of a databin file.
-		DatabinHeader m_DatabinHeader;
+		Databin::Header m_DatabinHeader;
 
 
 
 		//	databinItem	///////////////////////////////////
 
 		//	The header of a compressed databin item from Ninja Gaiden Sigma 1.
-		S1::DatabinItemHeader m_DatabinItemHeaderS1;
+		Databin::S1::ItemHeader m_DatabinItemHeaderS1;
 		
 		//	The header of a compressed databin item from Ninja Gaiden Sigma 2.
-		S2::DatabinItemHeader m_DatabinItemHeaderS2;
+		Databin::S2::ItemHeader m_DatabinItemHeaderS2;
 
 
 
@@ -113,7 +113,7 @@ namespace NGMC
 		struct GT1GTexture
 		{
 			unsigned int MipMapCount;
-			PixelFormat Format;
+			GT1G::PixelFormat Format;
 			uint32_t Flags;
 			uint32_t ExtraFlags0;
 			uint32_t ExtraFlags1;
@@ -122,7 +122,7 @@ namespace NGMC
 		};
 
 		//	The header of a GT1G file.
-		GT1GHeader m_GT1GHeader;
+		GT1G::Header m_GT1GHeader;
 
 		//	The list of structs with information on the textures found in a GT1G file.
 		std::vector<GT1GTexture> m_GT1GTextures;

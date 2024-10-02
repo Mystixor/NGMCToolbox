@@ -57,7 +57,7 @@ namespace NGMC
 		std::vector<unsigned int> m_FormatIDs;
 
 		//	List of the PixelFormat of every texture.
-		std::vector<PixelFormat> m_Formats;
+		std::vector<GT1G::PixelFormat> m_Formats;
 
 		//	The File Picker Popup object which handles the selection of files loaded in memory.
 		PopupFilePicker m_FilePicker;

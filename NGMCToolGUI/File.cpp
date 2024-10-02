@@ -207,6 +207,7 @@ namespace NGMC
 	{
 		if (!m_IsLoaded)
 		{
+			using namespace Databin;
 			switch (m_Type.GetGame())
 			{
 			case SIGMA_1:
@@ -227,8 +228,7 @@ namespace NGMC
 				case FileTypeId::GT1G_07:
 				case FileTypeId::GT1G_13:
 				{
-					//bool g_ReadColorMapAsLuminanceBackup = g_ReadColorMapAsLuminance;
-					//g_ReadColorMapAsLuminance = false;
+					using namespace GT1G;
 
 					LoaderGT1G loader(this);
 
@@ -440,131 +440,135 @@ namespace NGMC
 		bool isSuccess = true;
 		unsigned int extractCount = 0U;
 
-		switch (m_Type.GetGame())
 		{
-		case SIGMA_1:
-		{
-			using namespace S1;
-			switch (m_Type.GetId())
+			using namespace Databin;
+
+			switch (m_Type.GetGame())
 			{
-			case FileTypeId::databin:
+			case SIGMA_1:
 			{
-				extractCount = ExtractDatabin(SIGMA_1, directory);
-				break;
-			}
-			default:
-			{
-				bool isLoaded = IsLoaded();
-				if (isLoaded || Load())
+				using namespace S1;
+				switch (m_Type.GetId())
 				{
-					for (unsigned int i = 0; i < GetChildCount(); i++)
-					{
-						File* p_Child = &m_Childs[i];
-
-						std::string name = p_Child->GetName();
-						std::wstring filePath = directory;
-						filePath += L"\\" + std::wstring(name.begin(), name.end());
-
-						p_Child->Save(filePath.c_str(), false);
-						extractCount++;
-					}
-
-					if (!isLoaded)
-					{
-						Unload();
-					}
+				case FileTypeId::databin:
+				{
+					extractCount = ExtractDatabin(SIGMA_1, directory);
+					break;
 				}
-				else
+				default:
 				{
-					isSuccess = false;
-				}
-				break;
-			}
-			}
-			break;
-		}
-		case SIGMA_2:
-		{
-			using namespace S2;
-			switch (m_Type.GetId())
-			{
-			case FileTypeId::databin:
-			{
-				extractCount = ExtractDatabin(SIGMA_2, directory);
-				break;
-			}
-			default:
-			{
-				bool isLoaded = IsLoaded();
-				if (isLoaded || Load())
-				{
-					for (unsigned int i = 0; i < GetChildCount(); i++)
+					bool isLoaded = IsLoaded();
+					if (isLoaded || Load())
 					{
-						File* p_Child = &m_Childs[i];
+						for (unsigned int i = 0; i < GetChildCount(); i++)
+						{
+							File* p_Child = &m_Childs[i];
 
-						std::string name = p_Child->GetName();
-						std::wstring filePath = directory;
-						filePath += L"\\" + std::wstring(name.begin(), name.end());
+							std::string name = p_Child->GetName();
+							std::wstring filePath = directory;
+							filePath += L"\\" + std::wstring(name.begin(), name.end());
 
-						p_Child->Save(filePath.c_str(), false);
-						extractCount++;
+							p_Child->Save(filePath.c_str(), false);
+							extractCount++;
+						}
+
+						if (!isLoaded)
+						{
+							Unload();
+						}
 					}
-
-					if (!isLoaded)
+					else
 					{
-						Unload();
+						isSuccess = false;
 					}
+					break;
 				}
-				else
-				{
-					isSuccess = false;
 				}
 				break;
 			}
-			}
-			break;
-		}
-		case RE_3:
-		{
-			using namespace RE;
-			switch (m_Type.GetId())
+			case SIGMA_2:
 			{
-			case FileTypeId::databin:
-			{
-				extractCount = ExtractDatabin(RE_3, directory);
+				using namespace S2;
+				switch (m_Type.GetId())
+				{
+				case FileTypeId::databin:
+				{
+					extractCount = ExtractDatabin(SIGMA_2, directory);
+					break;
+				}
+				default:
+				{
+					bool isLoaded = IsLoaded();
+					if (isLoaded || Load())
+					{
+						for (unsigned int i = 0; i < GetChildCount(); i++)
+						{
+							File* p_Child = &m_Childs[i];
+
+							std::string name = p_Child->GetName();
+							std::wstring filePath = directory;
+							filePath += L"\\" + std::wstring(name.begin(), name.end());
+
+							p_Child->Save(filePath.c_str(), false);
+							extractCount++;
+						}
+
+						if (!isLoaded)
+						{
+							Unload();
+						}
+					}
+					else
+					{
+						isSuccess = false;
+					}
+					break;
+				}
+				}
 				break;
 			}
-			default:
+			case RE_3:
 			{
-				bool isLoaded = IsLoaded();
-				if (isLoaded || Load())
+				using namespace RE;
+				switch (m_Type.GetId())
 				{
-					for (unsigned int i = 0; i < GetChildCount(); i++)
-					{
-						File* p_Child = &m_Childs[i];
-
-						std::string name = p_Child->GetName();
-						std::wstring filePath = directory;
-						filePath += L"\\" + std::wstring(name.begin(), name.end());
-
-						p_Child->Save(filePath.c_str(), false);
-						extractCount++;
-					}
-
-					if (!isLoaded)
-					{
-						Unload();
-					}
+				case FileTypeId::databin:
+				{
+					extractCount = ExtractDatabin(RE_3, directory);
+					break;
 				}
-				else
+				default:
 				{
-					isSuccess = false;
+					bool isLoaded = IsLoaded();
+					if (isLoaded || Load())
+					{
+						for (unsigned int i = 0; i < GetChildCount(); i++)
+						{
+							File* p_Child = &m_Childs[i];
+
+							std::string name = p_Child->GetName();
+							std::wstring filePath = directory;
+							filePath += L"\\" + std::wstring(name.begin(), name.end());
+
+							p_Child->Save(filePath.c_str(), false);
+							extractCount++;
+						}
+
+						if (!isLoaded)
+						{
+							Unload();
+						}
+					}
+					else
+					{
+						isSuccess = false;
+					}
+					break;
+				}
 				}
 				break;
 			}
 			}
-			break;
-		}
 		}
 
 		Log(L"{} file{} extracted to \"{}\".", extractCount, extractCount != 1 ? L"s were" : L" was", directory);
@@ -614,105 +618,109 @@ namespace NGMC
 			}
 		}
 
-		if (stricmp(extension.c_str(), GetTypeName(S1::FileTypeId::btl_dat).c_str()) == 0)
 		{
-			if (strnicmp(extension.c_str(), magic, 7) == 0)
-				outType = S1::FileTypeId::btl_dat;
-		}
-		else if (stricmp(extension.c_str(), GetTypeName(S1::FileTypeId::chr_dat2).c_str()) == 0)
-		{
-			if (strnicmp(extension.c_str(), magic, 8) == 0)
-				outType = S1::FileTypeId::chr_dat2;
-		}
-		else if (stricmp(extension.c_str(), GetTypeName(S1::FileTypeId::TMC_05).c_str()) == 0)
-		{
-			if (strnicmp(extension.c_str(), magic, 3) == 0)
-				outType = S1::FileTypeId::TMC_05;
-		}
-		else if (stricmp(extension.c_str(), GetTypeName(S1::FileTypeId::GT1G_07).c_str()) == 0)
-		{
-			if (strnicmp(extension.c_str(), magic, 4) == 0)
-				outType = S1::FileTypeId::GT1G_07;
-		}
-		else if (stricmp(extension.c_str(), GetTypeName(S1::FileTypeId::itm_dat2_08).c_str()) == 0)
-		{
-			if (strnicmp(extension.c_str(), magic, 8) == 0)
-				outType = S1::FileTypeId::itm_dat2_08;
-		}
-		else if (stricmp(extension.c_str(), GetTypeName(S1::FileTypeId::MESSTR).c_str()) == 0)
-		{
-			if (strnicmp(extension.c_str(), magic, 6) == 0)
-				outType = S1::FileTypeId::MESSTR;
-		}
-		else if (stricmp(extension.c_str(), GetTypeName(S1::FileTypeId::chr_dat).c_str()) == 0)
-		{
-			if (strnicmp(extension.c_str(), magic, 7) == 0)
-				outType = S1::FileTypeId::chr_dat;
-		}
-		else if (stricmp(extension.c_str(), GetTypeName(S1::FileTypeId::rtm_dat).c_str()) == 0)
-		{
-			if (strnicmp(extension.c_str(), magic, 7) == 0)
-				outType = S1::FileTypeId::rtm_dat;
-		}
-		else if (stricmp(extension.c_str(), GetTypeName(S1::FileTypeId::SND).c_str()) == 0)
-		{
-			if (strnicmp(extension.c_str(), magic, 3) == 0)
-				outType = S1::FileTypeId::SND;
-		}
-		else if (stricmp(extension.c_str(), GetTypeName(S1::FileTypeId::stry_dat).c_str()) == 0)
-		{
-			if (strnicmp(extension.c_str(), magic, 8) == 0)
-				outType = S1::FileTypeId::stry_dat;
-		}
-		else if (stricmp(extension.c_str(), GetTypeName(S1::FileTypeId::VtxLay).c_str()) == 0)
-		{
-			if (strnicmp(extension.c_str(), magic, 6) == 0)
-				outType = S1::FileTypeId::VtxLay;
-		}
-		else if (stricmp(extension.c_str(), GetTypeName(S1::FileTypeId::sprite).c_str()) == 0)
-		{
-			if (strnicmp(extension.c_str(), magic, 6) == 0)
-				outType = S1::FileTypeId::sprite;
-		}
-		else if (stricmp(extension.c_str(), GetTypeName(General::FileTypeId::DDS).c_str()) == 0)
-		{
-			//char ddsMagic[4] = { ' ', 'S', 'D', 'D' };
-			if (strnicmp("DDS ", magic, 4) == 0)
-				outType = General::FileTypeId::DDS;
-		}
-		else if (stricmp(extension.c_str(), GetTypeName(S1::FileTypeId::databin).c_str()) == 0)
-		{
-			// no magic => rely on file name as well as user to pick the correct game
+			using namespace Databin;
 
-			g_PopupSelectGame.Setup(this);
-			g_PopupSelectGame.Open();
+			if (stricmp(extension.c_str(), GetTypeName(S1::FileTypeId::btl_dat).c_str()) == 0)
+			{
+				if (strnicmp(extension.c_str(), magic, 7) == 0)
+					outType = S1::FileTypeId::btl_dat;
+			}
+			else if (stricmp(extension.c_str(), GetTypeName(S1::FileTypeId::chr_dat2).c_str()) == 0)
+			{
+				if (strnicmp(extension.c_str(), magic, 8) == 0)
+					outType = S1::FileTypeId::chr_dat2;
+			}
+			else if (stricmp(extension.c_str(), GetTypeName(S1::FileTypeId::TMC_05).c_str()) == 0)
+			{
+				if (strnicmp(extension.c_str(), magic, 3) == 0)
+					outType = S1::FileTypeId::TMC_05;
+			}
+			else if (stricmp(extension.c_str(), GetTypeName(S1::FileTypeId::GT1G_07).c_str()) == 0)
+			{
+				if (strnicmp(extension.c_str(), magic, 4) == 0)
+					outType = S1::FileTypeId::GT1G_07;
+			}
+			else if (stricmp(extension.c_str(), GetTypeName(S1::FileTypeId::itm_dat2_08).c_str()) == 0)
+			{
+				if (strnicmp(extension.c_str(), magic, 8) == 0)
+					outType = S1::FileTypeId::itm_dat2_08;
+			}
+			else if (stricmp(extension.c_str(), GetTypeName(S1::FileTypeId::MESSTR).c_str()) == 0)
+			{
+				if (strnicmp(extension.c_str(), magic, 6) == 0)
+					outType = S1::FileTypeId::MESSTR;
+			}
+			else if (stricmp(extension.c_str(), GetTypeName(S1::FileTypeId::chr_dat).c_str()) == 0)
+			{
+				if (strnicmp(extension.c_str(), magic, 7) == 0)
+					outType = S1::FileTypeId::chr_dat;
+			}
+			else if (stricmp(extension.c_str(), GetTypeName(S1::FileTypeId::rtm_dat).c_str()) == 0)
+			{
+				if (strnicmp(extension.c_str(), magic, 7) == 0)
+					outType = S1::FileTypeId::rtm_dat;
+			}
+			else if (stricmp(extension.c_str(), GetTypeName(S1::FileTypeId::SND).c_str()) == 0)
+			{
+				if (strnicmp(extension.c_str(), magic, 3) == 0)
+					outType = S1::FileTypeId::SND;
+			}
+			else if (stricmp(extension.c_str(), GetTypeName(S1::FileTypeId::stry_dat).c_str()) == 0)
+			{
+				if (strnicmp(extension.c_str(), magic, 8) == 0)
+					outType = S1::FileTypeId::stry_dat;
+			}
+			else if (stricmp(extension.c_str(), GetTypeName(S1::FileTypeId::VtxLay).c_str()) == 0)
+			{
+				if (strnicmp(extension.c_str(), magic, 6) == 0)
+					outType = S1::FileTypeId::VtxLay;
+			}
+			else if (stricmp(extension.c_str(), GetTypeName(S1::FileTypeId::sprite).c_str()) == 0)
+			{
+				if (strnicmp(extension.c_str(), magic, 6) == 0)
+					outType = S1::FileTypeId::sprite;
+			}
+			else if (stricmp(extension.c_str(), GetTypeName(General::FileTypeId::DDS).c_str()) == 0)
+			{
+				//char ddsMagic[4] = { ' ', 'S', 'D', 'D' };
+				if (strnicmp("DDS ", magic, 4) == 0)
+					outType = General::FileTypeId::DDS;
+			}
+			else if (stricmp(extension.c_str(), GetTypeName(S1::FileTypeId::databin).c_str()) == 0)
+			{
+				// no magic => rely on file name as well as user to pick the correct game
 
-			outType = General::FileTypeId::databin;
-		}
-		else if (stricmp(extension.c_str(), GetTypeName(S1::FileTypeId::tdpack).c_str()) == 0)
-		{
-			// no magic => rely on file name
-			outType = S1::FileTypeId::tdpack;
-		}
-		else if (stricmp(extension.c_str(), GetTypeName(S1::FileTypeId::type_02).c_str()) == 0)
-		{
-			// no magic => rely on file name
-			outType = S1::FileTypeId::type_02;
-		}
-		else if (stricmp(extension.c_str(), GetTypeName(S1::FileTypeId::type_04).c_str()) == 0)
-		{
-			// no magic => rely on file name
-			outType = S1::FileTypeId::type_04;
-		}
-		else if (stricmp(extension.c_str(), GetTypeName(S1::FileTypeId::type_06).c_str()) == 0)
-		{
-			// no magic => rely on file name
-			outType = S1::FileTypeId::type_06;
-		}
-		else if (stricmp(extension.c_str(), GetTypeName(S1::FileTypeId::type_0A).c_str()) == 0)
-		{
-			// no magic => rely on file name
-			outType = S1::FileTypeId::type_0A;
+				g_PopupSelectGame.Setup(this);
+				g_PopupSelectGame.Open();
+
+				outType = General::FileTypeId::databin;
+			}
+			else if (stricmp(extension.c_str(), GetTypeName(S1::FileTypeId::tdpack).c_str()) == 0)
+			{
+				// no magic => rely on file name
+				outType = S1::FileTypeId::tdpack;
+			}
+			else if (stricmp(extension.c_str(), GetTypeName(S1::FileTypeId::type_02).c_str()) == 0)
+			{
+				// no magic => rely on file name
+				outType = S1::FileTypeId::type_02;
+			}
+			else if (stricmp(extension.c_str(), GetTypeName(S1::FileTypeId::type_04).c_str()) == 0)
+			{
+				// no magic => rely on file name
+				outType = S1::FileTypeId::type_04;
+			}
+			else if (stricmp(extension.c_str(), GetTypeName(S1::FileTypeId::type_06).c_str()) == 0)
+			{
+				// no magic => rely on file name
+				outType = S1::FileTypeId::type_06;
+			}
+			else if (stricmp(extension.c_str(), GetTypeName(S1::FileTypeId::type_0A).c_str()) == 0)
+			{
+				// no magic => rely on file name
+				outType = S1::FileTypeId::type_0A;
+			}
 		}
 
 		return outType;
@@ -726,6 +734,8 @@ namespace NGMC
 
 		if (loader.LoadItemHeaders())
 		{
+			using namespace Databin;
+
 			unsigned int fileCount = loader.GetFileCount();
 			m_Childs.reserve(m_Childs.size() + fileCount);
 
