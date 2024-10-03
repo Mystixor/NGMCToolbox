@@ -50,7 +50,7 @@ namespace NGMC
 			return 0U;
 		}
 
-		if(m_FileHeaderOffsets.size() >= index)
+		if(m_FileHeaderOffsets.size() > index)
 			return m_FileHeaderOffsets[index];
 
 		std::streamoff pos = m_Reader.Tell();
@@ -74,7 +74,7 @@ namespace NGMC
 		switch (m_Game)
 		{
 		case SIGMA_1:
-			if (m_ItemHeadersS1.size() >= index)
+			if (m_ItemHeadersS1.size() > index)
 				return FileType((S1::FileTypeId)m_ItemHeadersS1[index].type);
 			else
 			{
@@ -84,7 +84,7 @@ namespace NGMC
 			}
 			break;
 		case SIGMA_2:
-			if (m_ItemHeadersS2.size() >= index)
+			if (m_ItemHeadersS2.size() > index)
 				return FileType((S2::FileTypeId)m_ItemHeadersS2[index].type);
 			else
 			{
@@ -108,7 +108,7 @@ namespace NGMC
 		switch (m_Game)
 		{
 		case SIGMA_1:
-			if (m_ItemHeadersS1.size() >= index)
+			if (m_ItemHeadersS1.size() > index)
 				return m_ItemHeadersS1[index].size;
 			else
 			{
@@ -118,7 +118,7 @@ namespace NGMC
 			}
 			break;
 		case SIGMA_2:
-			if (m_ItemHeadersS2.size() >= index)
+			if (m_ItemHeadersS2.size() > index)
 				return m_ItemHeadersS2[index].size;
 			else
 			{
@@ -142,7 +142,7 @@ namespace NGMC
 		switch (m_Game)
 		{
 		case SIGMA_1:
-			if (m_ItemHeadersS1.size() >= index)
+			if (m_ItemHeadersS1.size() > index)
 				return m_ItemHeadersS1[index].sizeCompressed;
 			else
 			{
@@ -152,7 +152,7 @@ namespace NGMC
 			}
 			break;
 		case SIGMA_2:
-			if (m_ItemHeadersS2.size() >= index)
+			if (m_ItemHeadersS2.size() > index)
 				return m_ItemHeadersS2[index].sizeCompressed;
 			else
 			{
