@@ -240,6 +240,7 @@
     <ClInclude Include="loaders\LoaderDatabin.h" />
     <ClInclude Include="loaders\LoaderGT1G.h" />
     <ClInclude Include="loaders\LoaderDDS.h" />
+    <ClInclude Include="utility\DDS.h" />
     <ClInclude Include="MemoryBuffer.h" />
     <ClInclude Include="popups\PopupSelectGame.h" />
     <ClInclude Include="popups\PopupAbout.h" />

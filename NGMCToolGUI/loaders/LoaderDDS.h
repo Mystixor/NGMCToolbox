@@ -6,94 +6,10 @@
 #include "File.h"
 #include "DataReader.h"
 
+#include "utility/DDS.h"
+
 namespace NGMC
 {
-	//  DDS_PIXELFORMAT.dwFlags
-
-	static DWORD DDPF_ALPHAPIXELS = 0x1;
-	static DWORD DDPF_ALPHA = 0x2;
-	static DWORD DDPF_FOURCC = 0x4;
-	static DWORD DDPF_RGB = 0x40;
-	static DWORD DDPF_YUV = 0x200;
-	static DWORD DDPF_LUMINANCE = 0x20000;
-
-
-	//	Struct defining the Pixel Format in a DDS texture.
-	struct DDS_PIXELFORMAT {
-		DWORD dwSize;
-		DWORD dwFlags;
-		DWORD dwFourCC;
-		DWORD dwRGBBitCount;
-		DWORD dwRBitMask;
-		DWORD dwGBitMask;
-		DWORD dwBBitMask;
-		DWORD dwABitMask;
-	};
-
-
-	//  DDS_HEADER.dwFlags
-
-	static DWORD DDSD_CAPS = 0x1;
-	static DWORD DDSD_HEIGHT = 0x2;
-	static DWORD DDSD_WIDTH = 0x4;
-	static DWORD DDSD_PITCH = 0x8;
-	static DWORD DDSD_PIXELFORMAT = 0x1000;
-	static DWORD DDSD_MIPMAPCOUNT = 0x20000;
-	static DWORD DDSD_LINEARSIZE = 0x80000;
-	static DWORD DDSD_DEPTH = 0x800000;
-
-
-	//  DDS_HEADER.dwCaps
-
-	static DWORD DDSCAPS_COMPLEX = 0x8;
-	static DWORD DDSCAPS_MIPMAP = 0x400000;
-	static DWORD DDSCAPS_TEXTURE = 0x1000;
-
-
-	//  DDS_HEADER.dwCaps2
-
-	static DWORD DDSCAPS2_CUBEMAP = 0x200;
-	static DWORD DDSCAPS2_CUBEMAP_POSITIVEX = 0x400;
-	static DWORD DDSCAPS2_CUBEMAP_NEGATIVEX = 0x800;
-	static DWORD DDSCAPS2_CUBEMAP_POSITIVEY = 0x1000;
-	static DWORD DDSCAPS2_CUBEMAP_NEGATIVEY = 0x2000;
-	static DWORD DDSCAPS2_CUBEMAP_POSITIVEZ = 0x4000;
-	static DWORD DDSCAPS2_CUBEMAP_NEGATIVEZ = 0x8000;
-	static DWORD DDSCAPS2_VOLUME = 0x200000;
-
-
-	//	The DDS file header struct.
-	typedef struct {
-		DWORD           dwSize;
-		DWORD           dwFlags;
-		DWORD           dwHeight;
-		DWORD           dwWidth;
-		DWORD           dwPitchOrLinearSize;
-		DWORD           dwDepth;
-		DWORD           dwMipMapCount;
-		DWORD           dwReserved1[11];
-		DDS_PIXELFORMAT ddspf;
-		DWORD           dwCaps;
-		DWORD           dwCaps2;
-		DWORD           dwCaps3;
-		DWORD           dwCaps4;
-		DWORD           dwReserved2;
-	} DDS_HEADER;
-
-	//	The different DDS texture formats.
-	enum DDSFormat
-	{
-		BGRA8,
-		RGBA8,
-		DXT1,
-		DXT5,
-		LUMINANCE,
-		unsupported
-	};
-
-	//	The magic/signature "DDS " of DDS files.
-	static DWORD ddsMagic = ' SDD';
-
 	//	Builds a DDS file and saves it at the specified path.
 	static bool BuildDDS(const wchar_t* path, void* imageData, unsigned int width, unsigned int height, unsigned int mipMapCount, DDSFormat format, size_t* mipSizes)
 	{
