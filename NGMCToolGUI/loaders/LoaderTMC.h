@@ -132,6 +132,8 @@ namespace NGMC
 
 		~LoaderTMC();
 
+		bool GetTMCHeader(TMC::ChunkHeader& outHeader);
+
 		unsigned int GetTMCChunkCount();
 
 		bool GetTMCChunkType(TMC::S1::ChunkType outType, unsigned int index);

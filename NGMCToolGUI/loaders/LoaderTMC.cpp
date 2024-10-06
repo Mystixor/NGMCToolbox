@@ -27,11 +27,29 @@ namespace NGMC
 	{
 	}
 
+	bool LoaderTMC::GetTMCHeader(TMC::ChunkHeader& outHeader)
+	{
+		bool isSuccess = false;
+
+		{
+			std::streamoff pos = m_Reader.Tell();
+
+			m_Reader.Seek(0, MemoryBuffer::beg);
+			m_Reader.ReadValue(outHeader);
+
+			isSuccess = true;
+
+			m_Reader.Seek(pos, MemoryBuffer::beg);
+		}
+
+		return isSuccess;
+	}
+
     unsigned int LoaderTMC::GetTMCChunkCount()
     {
         std::streamoff pos = m_Reader.Tell();
 
-        m_Reader.Seek(0x14, MemoryBuffer::beg);
+        m_Reader.Seek(offsetof(S1::TMC, S1::TMC::header.childCount), MemoryBuffer::beg);
         uint32_t chunkCount = m_Reader.ReadUInt32();
 
         m_Reader.Seek(pos, MemoryBuffer::beg);
