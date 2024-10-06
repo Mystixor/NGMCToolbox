@@ -168,12 +168,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="previews\PreviewDDS.cpp" />
+    <ClCompile Include="previews\PreviewGT1G.cpp" />
+    <ClCompile Include="previews\BasePreviewImage.cpp" />
     <ClCompile Include="DataReader.cpp" />
     <ClCompile Include="FileManager.cpp" />
     <ClCompile Include="File.cpp" />
     <ClCompile Include="loaders\LoaderDatabin.cpp" />
     <ClCompile Include="loaders\LoaderGT1G.cpp" />
     <ClCompile Include="loaders\LoaderDDS.cpp" />
+    <ClCompile Include="loaders\LoaderTMC.cpp" />
     <ClCompile Include="MemoryBuffer.cpp" />
     <ClCompile Include="NGMCToolGUI.cpp" />
     <ClCompile Include="popups\PopupSelectGame.cpp" />
@@ -182,7 +186,11 @@
     <ClCompile Include="popups\PopupRenameFile.cpp" />
     <ClCompile Include="popups\PopupBuildGT1G.cpp" />
     <ClCompile Include="popups\Popup.cpp" />
+    <ClCompile Include="previews\PreviewDatabinItem.cpp" />
+    <ClCompile Include="previews\PreviewDatabin.cpp" />
+    <ClCompile Include="previews\BasePreview.cpp" />
     <ClCompile Include="Previewer.cpp" />
+    <ClCompile Include="previews\PreviewTMC.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -234,13 +242,22 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="previews\PreviewDDS.h" />
+    <ClInclude Include="previews\PreviewGT1G.h" />
+    <ClInclude Include="previews\BasePreviewImage.h" />
     <ClInclude Include="DataReader.h" />
     <ClInclude Include="FileManager.h" />
     <ClInclude Include="File.h" />
     <ClInclude Include="loaders\LoaderDatabin.h" />
     <ClInclude Include="loaders\LoaderGT1G.h" />
     <ClInclude Include="loaders\LoaderDDS.h" />
+    <ClInclude Include="loaders\LoaderTMC.h" />
+    <ClInclude Include="previews\PreviewDatabinItem.h" />
+    <ClInclude Include="previews\PreviewDatabin.h" />
+    <ClInclude Include="previews\BasePreview.h" />
+    <ClInclude Include="previews\PreviewTMC.h" />
     <ClInclude Include="utility\DDS.h" />
+    <ClInclude Include="utility\Math.h" />
     <ClInclude Include="MemoryBuffer.h" />
     <ClInclude Include="popups\PopupSelectGame.h" />
     <ClInclude Include="popups\PopupAbout.h" />

@@ -87,6 +87,30 @@
     <ClCompile Include="DataReader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="loaders\LoaderTMC.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="previews\BasePreview.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="previews\PreviewDatabin.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="previews\PreviewDatabinItem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="previews\BasePreviewImage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="previews\PreviewGT1G.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="previews\PreviewDDS.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="previews\PreviewTMC.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="vendor\ImGui\imconfig.h">
@@ -224,7 +248,34 @@
     <ClInclude Include="DataReader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="loaders\LoaderTMC.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="utility\Math.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="previews\BasePreview.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="previews\PreviewDatabin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="previews\PreviewDatabinItem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="previews\BasePreviewImage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="utility\DDS.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="previews\PreviewGT1G.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="previews\PreviewDDS.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="previews\PreviewTMC.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
