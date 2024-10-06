@@ -156,43 +156,43 @@ namespace NGMC
 		~LoaderGT1G();
 
 		//	Loads the header into the specified outHeader.
-		bool			GetHeader(GT1G::Header& outHeader);
+		bool				GetHeader(GT1G::Header& outHeader);
 
 		//	Returns the file format version.
 		GT1G::Version		GetVersion();
 
 		//	Returns the count of textures in the file.
-		unsigned int	GetTextureCount();
+		unsigned int		GetTextureCount();
 
 		//	Returns the count of mipmaps in the texture at the specified texture index.
-		unsigned int	GetTextureMipMapCount(unsigned int textureIndex);
+		unsigned int		GetTextureMipMapCount(unsigned int textureIndex);
 
 		//	Returns the PixelFormat of the texture at the specified texture index.
 		GT1G::PixelFormat	GetTexturePixelFormat(unsigned int textureIndex);
 
 		//	Returns the texture flags of the texture at the specified texture index.
-		uint32_t		GetTextureFlags(unsigned int textureIndex);
+		uint32_t			GetTextureFlags(unsigned int textureIndex);
 
 		//	Loads the extra texture flags of the texture at the specified texture index into the memory at the specified addresses if the extra flags are set, returns whether the extra flags are set.
-		bool			GetTextureExtraFlags(unsigned int textureIndex, uint32_t* outExtraFlags0, uint32_t* outExtraFlags1, uint32_t* outExtraFlags2);
+		bool				GetTextureExtraFlags(unsigned int textureIndex, uint32_t* outExtraFlags0, uint32_t* outExtraFlags1, uint32_t* outExtraFlags2);
 		
 		//	Loads the header as well as the counts of mipmaps, the formats, pixel widths and heights, flags and extra flags into the memory at the specified addresses of all textures in the file.
-		bool			GetTexturesInfo(GT1G::Header& inHeader, unsigned int* mipMapCounts, GT1G::PixelFormat* formats, unsigned int* widths, unsigned int* heights, uint32_t* flags, uint32_t* outExtraFlags0s, uint32_t* outExtraFlags1s, uint32_t* outExtraFlags2s);
+		bool				GetTexturesInfo(GT1G::Header& inHeader, unsigned int* mipMapCounts, GT1G::PixelFormat* formats, unsigned int* widths, unsigned int* heights, uint32_t* flags, uint32_t* outExtraFlags0s, uint32_t* outExtraFlags1s, uint32_t* outExtraFlags2s);
 		
 		//	Returns the width in pixels of the specified mip level at the specified texture index.
-		unsigned int	GetTextureMipMapWidth(unsigned int textureIndex, unsigned int mipLevel = 0U);
+		unsigned int		GetTextureMipMapWidth(unsigned int textureIndex, unsigned int mipLevel = 0U);
 		
 		//	Returns the height in pixels of the specified mip level at the specified texture index.
-		unsigned int	GetTextureMipMapHeight(unsigned int textureIndex, unsigned int mipLevel = 0U);
+		unsigned int		GetTextureMipMapHeight(unsigned int textureIndex, unsigned int mipLevel = 0U);
 		
 		//	Returns the size of the raw image data of the specified mip level at the specified texture index.
-		size_t			GetMipDataSize(unsigned int textureIndex, unsigned int mipLevel = 0U);
+		size_t				GetMipDataSize(unsigned int textureIndex, unsigned int mipLevel = 0U);
 		
 		//	Loads the raw image data of the specified mip level at the specified texture index into the specified outBuffer, returns whether the operation was successful.
-		bool			GetMipData(MemoryBuffer& outBuffer, unsigned int textureIndex, unsigned int mipLevel = 0U);
+		bool				GetMipData(MemoryBuffer& outBuffer, unsigned int textureIndex, unsigned int mipLevel = 0U);
 		
 		//	Loads the raw image data including all mipmaps of the texture at the specified texture index into the specified outBuffer, returns whether the operation was successful.
-		bool			GetImageData(MemoryBuffer& outBuffer, unsigned int textureIndex);
+		bool				GetImageData(MemoryBuffer& outBuffer, unsigned int textureIndex);
 		
 	private:
 		//	The DataReader object responsible for reading data from the file associated with the loader object.
