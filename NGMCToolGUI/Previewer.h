@@ -37,9 +37,6 @@ namespace NGMC
 		//	The pointer to the file object which is currently being previewed.
 		File* m_File;
 
-		//	The type of the file which was previewed on the previous frame.
-		FileType m_PrevType;
-
 		//	Whether the the file behind the pointer m_File is currently setup for previewing.
 		bool m_IsSetup;
 	};

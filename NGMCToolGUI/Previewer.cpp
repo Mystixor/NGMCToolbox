@@ -9,7 +9,7 @@ namespace NGMC
 
 	Previewer::Previewer()
 		: m_Preview(nullptr),
-		m_File(nullptr), m_PrevType(FileType()), m_IsSetup(false)
+		m_File(nullptr), m_IsSetup(false)
 	{
 	}
 
@@ -24,6 +24,8 @@ namespace NGMC
 		{
 			if (m_IsSetup)
 			{
+				m_IsSetup = false;
+
 				delete m_Preview;
 				m_Preview = nullptr;
 			}
@@ -40,24 +42,10 @@ namespace NGMC
 
 			FileType type = m_File->GetType();
 
-			if (type != m_PrevType)
-			{
-				this->Prepare();
-				m_PrevType = type;
-			}
-
 			std::string typeName = type.GetTypeName();
 
-			ImGuiTableFlags flags =
-				ImGuiTableFlags_RowBg |
-				ImGuiTableFlags_SizingFixedFit |
-				ImGuiTableFlags_NoHostExtendX |
-				ImGuiTableFlags_BordersInnerV |
-				ImGuiTableFlags_BordersOuter;
-
-			GAME game = m_File->GetType().GetGame();
 			std::string gameName = "";
-			switch (game)
+			switch (m_File->GetType().GetGame())
 			{
 			case NON_GAME:
 				gameName = "General";
@@ -73,7 +61,7 @@ namespace NGMC
 				break;
 			}
 
-			if (ImGui::BeginTable("tablePreviewerGeneral", 2, flags))
+			if (ImGui::BeginTable("tablePreviewerGeneral", 2, Preview::tableFlags))
 			{
 				ImGui::TableNextRow();
 				ImGui::TableSetColumnIndex(0); ImGui::Text("Name");
@@ -119,6 +107,11 @@ namespace NGMC
 			ImGui::Separator();
 			ImGui::Dummy(ImVec2(0.0f, 5.0f));
 			ImGui::Text("FORMAT SPECIFIC (%s > %s)", gameName.c_str(), typeName.c_str());
+
+			if (!m_IsSetup)
+			{
+				this->Prepare();
+			}
 
 			if (m_IsSetup)
 			{
