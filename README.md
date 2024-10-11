@@ -24,7 +24,7 @@ If you would like to contribute to the toolset, feel free to open an issue on th
 
 All the latest releases of the NGMC Toolbox will be available from the Releases section here on GitHub, however if you would like to build the toolset yourself you first need to go through a few steps:
 
-0. Make sure Visual Studio is installed on your system with the required packages (e.g. Desktop Development in C++). Visual Studio Community 2022, the latest Windows SDK, platform toolset v143 and the C++20 language standard are recommended.
+0. Make sure Visual Studio is installed on your system with the required packages (e.g. Desktop Development in C++) and extensions (Installer Projects 2022). Visual Studio Community 2022, the latest Windows SDK, platform toolset v143 and the C++20 language standard are recommended.
 1. Clone this repository recursively using `git clone -b [branch] https://github.com/Mystixor/NGMCToolbox.git --recursive`, where `[branch]` can be either `master` for the latest releases or `dev` for the latest (potentially unstable) updates of the toolset.
 2. Depending on whether you would like to build NGMCTool or NGMCToolGUI, see the corresponding steps below.
 
