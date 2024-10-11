@@ -51,7 +51,7 @@ namespace NGMC
 	{
 		std::string output = "";
 
-		size_t order = std::log2(size) / 10;
+		size_t order = size == 0 ? 0 : std::log2(size) / 10;
 
 		std::string unit = "";
 		switch (order)
