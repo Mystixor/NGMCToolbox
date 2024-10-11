@@ -6,11 +6,20 @@ namespace NGMC
 {
 	namespace TMC
 	{
-		struct ChunkVersion {
+		struct ChunkVersion
+		{
 			uint8_t v[4];
+
+			ChunkVersion() : v({}) {}
+
+			operator uint32_t() const { return *(uint32_t*)this; }
 		};
 
-		struct ChunkHeader {
+		constexpr inline uint32_t vSIGMA1 = 0x00010000;
+		constexpr inline uint32_t vSIGMA2 = 0x01010000;
+
+		struct ChunkHeader
+		{
 			char magic[8];
 			ChunkVersion version;
 			int32_t U01;
@@ -24,13 +33,19 @@ namespace NGMC
 			int32_t U07;
 		};
 
-		struct Chunk
+		//	TMC header common between Sigma 1 and 2.
+		struct Header : ChunkHeader
 		{
-		};
-
-		struct ChunkH : Chunk
-		{
-			ChunkHeader header;
+			uint16_t U07_0;
+			uint16_t U07_1;
+			uint32_t U08;
+			uint32_t U09;
+			uint32_t U10;
+			uint32_t U11;
+			uint32_t U12;
+			uint32_t U13;
+			uint32_t U14;
+			char identifier[16];
 		};
 
 		namespace S1
@@ -58,22 +73,9 @@ namespace NGMC
 				MPH_LYR = 0x00000011,
 				OBJHIT = 0x00000012,
 				EXTMCOL = 0x00000015,
+				MISCDATA = 0x00000020,
 				EPM1 = 0x45504D31,	// 'EPM1'
 				EMCinfo = 0x00000EFF
-			};
-
-			struct TMC : ChunkH {
-				uint16_t U07_0;
-				uint16_t U07_1;
-				uint32_t U08;
-				uint32_t U09;
-				uint32_t U10;
-				uint32_t U11;
-				uint32_t U12;
-				uint32_t U13;
-				uint32_t U14;
-				char identifier[16];
-				float U15[12];
 			};
 		}
 
@@ -103,21 +105,11 @@ namespace NGMC
 				ACSCLS = 0x0000000E,
 				EPM1 = 0x45504D31	// 'EPM1'
 			};
-
-			struct TMC : ChunkH {
-				uint16_t U07_0;
-				uint16_t U07_1;
-				uint32_t U08;
-				uint32_t U09;
-				uint32_t U10;
-				uint32_t U11;
-				uint32_t U12;
-				uint32_t U13;
-				uint32_t U14;
-				char identifier[16];
-				float U15[36];
-			};
 		}
+
+		std::string GetChunkTypeName(S1::ChunkType type);
+
+		std::string GetChunkTypeName(S2::ChunkType type);
 	}
 
 
@@ -132,12 +124,23 @@ namespace NGMC
 
 		~LoaderTMC();
 
-		bool GetTMCHeader(TMC::ChunkHeader& outHeader);
+		bool GetTMCHeader(TMC::Header& outHeader);
 
-		unsigned int GetTMCChunkCount();
+		bool GetTMCVersion(TMC::ChunkVersion& outVersion);
 
-		bool GetTMCChunkType(TMC::S1::ChunkType outType, unsigned int index);
-		bool GetTMCChunkType(TMC::S2::ChunkType outType, unsigned int index);
+		bool GetTMCChildCount(uint32_t& outCount);
+
+		bool GetTMCChildType(TMC::S1::ChunkType& outType, unsigned int index);
+		bool GetTMCChildType(TMC::S2::ChunkType& outType, unsigned int index);
+
+		bool GetTMCIdentifier(std::string& outIdentifier);
+
+		bool GetTMCU15(std::vector<float>& outU15);
+
+		bool GetTMCChunkIDs(std::vector<TMC::S1::ChunkType>& outIDs);
+		bool GetTMCChunkIDs(std::vector<TMC::S2::ChunkType>& outIDs);
+
+		bool GetTMCChunkOffsets(std::vector<int32_t>& outOffsets);
 
 	private:
 		DataReader m_Reader;
