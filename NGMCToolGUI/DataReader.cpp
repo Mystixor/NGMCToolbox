@@ -50,7 +50,7 @@ namespace NGMC
 			return DataReader::Init(file.GetFilePath());
 	}
 
-	std::streamoff DataReader::Tell()
+	std::streamoff DataReader::Tell() const
 	{
 		if (m_IsFileInMemory)
 			return m_InBuffer->Tell();

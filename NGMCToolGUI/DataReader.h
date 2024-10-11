@@ -25,7 +25,7 @@ namespace NGMC
 		bool Init(File& file);
 
 		//	Returns the offset in bytes to the beginnning of the file of where the reading head is currently at.
-		std::streamoff Tell();
+		std::streamoff Tell() const;
 
 		//	Seeks by an offset in bytes relative to the position defined by the parameter way.
 		void Seek(std::streamoff offset, MemoryBuffer::seekdir way = MemoryBuffer::beg);
@@ -102,7 +102,7 @@ namespace NGMC
 		MemoryBuffer* m_InBuffer;
 
 		//	The Input File Stream to read the file from, unused if m_IsFileInMemory == true
-		std::ifstream m_InStream;
+		mutable std::ifstream m_InStream;
 
 		//	The size of either the Input File Stream or the MemoryBuffer.
 		std::streamsize m_Size;
