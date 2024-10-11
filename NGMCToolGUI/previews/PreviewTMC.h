@@ -18,6 +18,15 @@ namespace NGMC
 
         void OnRenderTMCChunkHeader(TMC::ChunkHeader& header);
 
-        TMC::ChunkHeader m_TMCHeader;
+        TMC::Header m_Header;
+
+        std::string m_TMCIdentifier;
+
+        std::vector<float> m_TMC_U15;
+
+        std::vector<TMC::S1::ChunkType> m_TMC_S1_ChunkIDs;
+        std::vector<TMC::S2::ChunkType> m_TMC_S2_ChunkIDs;
+
+        std::vector<int32_t> m_TMC_ChunkOffsets;
     };
 }
