@@ -663,7 +663,8 @@ namespace NGMC
 
 
 	//	Returns whether a file exists with the specified wide char string file name.
-	inline bool IsFileExisting(const std::wstring& name) {
+	inline bool IsFileExisting(const std::wstring& name)
+	{
 		if (FILE* file = _wfopen(name.c_str(), L"r")) {
 			fclose(file);
 			return true;
