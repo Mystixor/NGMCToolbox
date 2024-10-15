@@ -117,6 +117,9 @@ namespace NGMC
 		//	Loads a databinItem.
 		bool LoadDatabinItem(GAME game);
 
+		//	Handles the attempt of loading a file of unsupported type.
+		bool LoadUnsupported();
+
 		//	Extracts all files from a databin, returns the amount of extracted files.
 		unsigned int ExtractDatabin(GAME game, const wchar_t* directory);
 

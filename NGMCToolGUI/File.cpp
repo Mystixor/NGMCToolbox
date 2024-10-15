@@ -331,7 +331,7 @@ namespace NGMC
 				case FileTypeId::invalid:
 				default:
 				{
-					Log("File type 0x{:02X} is not supported.", (char)m_Type.GetId());
+					m_IsLoaded = LoadUnsupported();
 				}
 				}
 				break;
@@ -354,7 +354,7 @@ namespace NGMC
 				case FileTypeId::unknown:
 				default:
 				{
-					Log("File type 0x{:02X} is not supported.", (char)m_Type.GetId());
+					m_IsLoaded = LoadUnsupported();
 				}
 				}
 				break;
@@ -377,7 +377,7 @@ namespace NGMC
 				case FileTypeId::unknown:
 				default:
 				{
-					Log("File type 0x{:02X} is not supported.", (char)m_Type.GetId());
+					m_IsLoaded = LoadUnsupported();
 				}
 				}
 				break;
@@ -804,6 +804,13 @@ namespace NGMC
 		}
 
 		return isSuccess;
+	}
+
+	bool File::LoadUnsupported()
+	{
+		Log("File type \"{}\" is not supported.", m_Type.GetTypeName());
+
+		return false;
 	}
 
 	unsigned int File::ExtractDatabin(GAME game, const wchar_t* directory)
