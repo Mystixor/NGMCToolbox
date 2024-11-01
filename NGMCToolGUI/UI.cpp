@@ -464,6 +464,21 @@ namespace NGMC
 					}
 					break;
 				}
+				case RE_3:
+				{
+					using namespace Databin::RE;
+					switch (type.GetId())
+					{
+					case FileTypeId::databin:
+					case FileTypeId::databinItem:
+						if (ImGui::Selectable("Extract"))
+						{
+							action = ContextMenuFileAction::Extract;
+						}
+						break;
+					}
+					break;
+				}
 				}
 
 				if (ImGui::BeginMenu("Set type to..."))

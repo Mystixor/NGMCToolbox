@@ -207,6 +207,24 @@ namespace NGMC
 				}
 				break;
 			}
+			case RE_3:
+			{
+				using namespace RE;
+				switch (type.GetId())
+				{
+				case FileTypeId::databin:
+				{
+					m_Preview = new PreviewDatabin(*m_File);
+					break;
+				}
+				case FileTypeId::databinItem:
+				{
+					m_Preview = new PreviewDatabinItem(*m_File);
+					break;
+				}
+				}
+				break;
+			}
 			}
 
 			if (m_Preview != nullptr)

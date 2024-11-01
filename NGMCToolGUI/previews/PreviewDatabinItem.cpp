@@ -7,7 +7,8 @@ namespace NGMC
 	PreviewDatabinItem::PreviewDatabinItem(File& file)
 		: BasePreview(file),
 		m_DatabinItemHeaderS1(Databin::S1::ItemHeader()),
-		m_DatabinItemHeaderS2(Databin::S2::ItemHeader())
+		m_DatabinItemHeaderS2(Databin::S2::ItemHeader()),
+		m_DatabinItemHeaderRE(Databin::RE::ItemHeader())
 	{
 	}
 
@@ -40,6 +41,15 @@ namespace NGMC
 				size = m_DatabinItemHeaderS2.size;
 				sizeCompressed = m_DatabinItemHeaderS2.sizeCompressed;
 				dat_10 = m_DatabinItemHeaderS2.dat_10;
+				break;
+			}
+			case RE_3:
+			{
+				offset = m_DatabinItemHeaderRE.offset;
+				dat_04 = m_DatabinItemHeaderRE.dat_04;
+				size = m_DatabinItemHeaderRE.size;
+				sizeCompressed = m_DatabinItemHeaderRE.sizeCompressed;
+				dat_10 = m_DatabinItemHeaderRE.dat_10;
 				break;
 			}
 			}
@@ -114,6 +124,18 @@ namespace NGMC
 
 				break;
 			}
+			case RE_3:
+			{
+				ImGui::TableNextRow();
+				ImGui::TableSetColumnIndex(0); ImGui::Text("type");
+				ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("0x{:08X} ({})", m_DatabinItemHeaderRE.type, GetFileExtension((Databin::RE::FileTypeId)m_DatabinItemHeaderRE.type)).c_str());
+
+				ImGui::TableNextRow();
+				ImGui::TableSetColumnIndex(0); ImGui::Text("indexLinkedFile");
+				ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", m_DatabinItemHeaderRE.indexLinkedFile).c_str());
+
+				break;
+			}
 			}
 
 			ImGui::EndTable();
@@ -132,6 +154,9 @@ namespace NGMC
 			break;
 		case SIGMA_2:
 			m_IsSetup = loader.LoadItemHeader(m_DatabinItemHeaderS2, m_File.GetIndexInParent());
+			break;
+		case RE_3:
+			m_IsSetup = loader.LoadItemHeader(m_DatabinItemHeaderRE, m_File.GetIndexInParent());
 			break;
 		}
 

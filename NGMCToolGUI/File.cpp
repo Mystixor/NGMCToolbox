@@ -217,12 +217,12 @@ namespace NGMC
 				{
 				case FileTypeId::databin:
 				{
-					m_IsLoaded = LoadDatabin(SIGMA_1);
+					m_IsLoaded = LoadDatabin();
 					break;
 				}
 				case FileTypeId::databinItem:
 				{
-					m_IsLoaded = LoadDatabinItem(SIGMA_1);
+					m_IsLoaded = LoadDatabinItem();
 					break;
 				}
 				case FileTypeId::GT1G_07:
@@ -343,12 +343,12 @@ namespace NGMC
 				{
 				case FileTypeId::databin:
 				{
-					m_IsLoaded = LoadDatabin(SIGMA_2);
+					m_IsLoaded = LoadDatabin();
 					break;
 				}
 				case FileTypeId::databinItem:
 				{
-					m_IsLoaded = LoadDatabinItem(SIGMA_2);
+					m_IsLoaded = LoadDatabinItem();
 					break;
 				}
 				case FileTypeId::unknown:
@@ -366,12 +366,12 @@ namespace NGMC
 				{
 				case FileTypeId::databin:
 				{
-					m_IsLoaded = LoadDatabin(RE_3);
+					m_IsLoaded = LoadDatabin();
 					break;
 				}
 				case FileTypeId::databinItem:
 				{
-					m_IsLoaded = LoadDatabinItem(RE_3);
+					m_IsLoaded = LoadDatabinItem();
 					break;
 				}
 				case FileTypeId::unknown:
@@ -452,7 +452,7 @@ namespace NGMC
 				{
 				case FileTypeId::databin:
 				{
-					extractCount = ExtractDatabin(SIGMA_1, directory);
+					extractCount = ExtractDatabin(directory);
 					break;
 				}
 				default:
@@ -493,7 +493,7 @@ namespace NGMC
 				{
 				case FileTypeId::databin:
 				{
-					extractCount = ExtractDatabin(SIGMA_2, directory);
+					extractCount = ExtractDatabin(directory);
 					break;
 				}
 				default:
@@ -534,7 +534,7 @@ namespace NGMC
 				{
 				case FileTypeId::databin:
 				{
-					extractCount = ExtractDatabin(RE_3, directory);
+					extractCount = ExtractDatabin(directory);
 					break;
 				}
 				default:
@@ -726,11 +726,11 @@ namespace NGMC
 		return outType;
 	}
 
-	bool File::LoadDatabin(GAME game)
+	bool File::LoadDatabin()
 	{
 		bool isSuccess = false;
 
-		LoaderDatabin loader(game, *this);
+		LoaderDatabin loader(m_Type.GetGame(), *this);
 
 		if (loader.LoadItemHeaders())
 		{
@@ -740,7 +740,7 @@ namespace NGMC
 			m_Childs.reserve(m_Childs.size() + fileCount);
 
 			FileType childType = FileType();
-			switch (game)
+			switch (m_Type.GetGame())
 			{
 			case SIGMA_1:
 				childType.SetType(S1::FileTypeId::databinItem);
@@ -774,11 +774,11 @@ namespace NGMC
 		return isSuccess;
 	}
 
-	bool File::LoadDatabinItem(GAME game)
+	bool File::LoadDatabinItem()
 	{
 		bool isSuccess = false;
 
-		LoaderDatabin loader(game, *this);
+		LoaderDatabin loader(m_Type.GetGame(), *this);
 
 		if (m_IndexInParent < loader.GetFileCount())
 		{
@@ -813,11 +813,11 @@ namespace NGMC
 		return false;
 	}
 
-	unsigned int File::ExtractDatabin(GAME game, const wchar_t* directory)
+	unsigned int File::ExtractDatabin(const wchar_t* directory)
 	{
 		unsigned int extractCount = 0U;
 
-		LoaderDatabin loader(game, *this);
+		LoaderDatabin loader(m_Type.GetGame(), *this);
 
 		if (loader.LoadItemHeaders())
 		{

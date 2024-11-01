@@ -21,5 +21,8 @@ namespace NGMC
 		
 		//	The header of a compressed databin item from Ninja Gaiden Sigma 2.
 		Databin::S2::ItemHeader m_DatabinItemHeaderS2;
+		
+		//	The header of a compressed databin item from Ninja Gaiden 3: Razor's Edge.
+		Databin::RE::ItemHeader m_DatabinItemHeaderRE;
 	};
 }

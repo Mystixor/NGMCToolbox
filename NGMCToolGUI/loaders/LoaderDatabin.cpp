@@ -93,6 +93,16 @@ namespace NGMC
 				return FileType((S2::FileTypeId)itemHeader.type);
 			}
 			break;
+		case RE_3:
+			if (m_ItemHeadersRE3.size() > index)
+				return FileType((RE::FileTypeId)m_ItemHeadersRE3[index].type);
+			else
+			{
+				RE::ItemHeader itemHeader = RE::ItemHeader();
+				this->LoadItemHeader(itemHeader, index);
+				return FileType((RE::FileTypeId)itemHeader.type);
+			}
+			break;
 		default:
 			return FileType();
 		}
@@ -123,6 +133,16 @@ namespace NGMC
 			else
 			{
 				S2::ItemHeader itemHeader = S2::ItemHeader();
+				this->LoadItemHeader(itemHeader, index);
+				return itemHeader.size;
+			}
+			break;
+		case RE_3:
+			if (m_ItemHeadersRE3.size() > index)
+				return m_ItemHeadersRE3[index].size;
+			else
+			{
+				RE::ItemHeader itemHeader = RE::ItemHeader();
 				this->LoadItemHeader(itemHeader, index);
 				return itemHeader.size;
 			}
@@ -161,6 +181,16 @@ namespace NGMC
 				return itemHeader.sizeCompressed;
 			}
 			break;
+		case RE_3:
+			if (m_ItemHeadersRE3.size() > index)
+				return m_ItemHeadersRE3[index].sizeCompressed;
+			else
+			{
+				RE::ItemHeader itemHeader = RE::ItemHeader();
+				this->LoadItemHeader(itemHeader, index);
+				return itemHeader.sizeCompressed;
+			}
+			break;
 		default:
 			return 0ULL;
 		}
@@ -188,6 +218,11 @@ namespace NGMC
 	}
 
 	bool LoaderDatabin::LoadItemHeader(S2::ItemHeader& outItemHeader, unsigned int index)
+	{
+		return LoadItemHeaderT(outItemHeader, index);
+	}
+	
+	bool LoaderDatabin::LoadItemHeader(RE::ItemHeader& outItemHeader, unsigned int index)
 	{
 		return LoadItemHeaderT(outItemHeader, index);
 	}
@@ -222,6 +257,10 @@ namespace NGMC
 				case SIGMA_2:
 					m_ItemHeadersS2.push_back(S2::ItemHeader());
 					m_Reader.ReadValue(m_ItemHeadersS2[i]);
+					break;
+				case RE_3:
+					m_ItemHeadersRE3.push_back(RE::ItemHeader());
+					m_Reader.ReadValue(m_ItemHeadersRE3[i]);
 					break;
 				default:
 					//	Unsupported game.
@@ -269,6 +308,15 @@ namespace NGMC
 				case SIGMA_2:
 				{
 					S2::ItemHeader fileHeader = S2::ItemHeader();
+					m_Reader.ReadValue(fileHeader);
+					offset = fileHeader.offset;
+					size = fileHeader.size;
+					sizeCompressed = fileHeader.sizeCompressed;
+					break;
+				}
+				case RE_3:
+				{
+					RE::ItemHeader fileHeader = RE::ItemHeader();
 					m_Reader.ReadValue(fileHeader);
 					offset = fileHeader.offset;
 					size = fileHeader.size;

@@ -112,16 +112,16 @@ namespace NGMC
 		FileType DetectType();
 
 		//	Loads a databin.
-		bool LoadDatabin(GAME game);
+		bool LoadDatabin();
 		
 		//	Loads a databinItem.
-		bool LoadDatabinItem(GAME game);
+		bool LoadDatabinItem();
 
 		//	Handles the attempt of loading a file of unsupported type.
 		bool LoadUnsupported();
 
 		//	Extracts all files from a databin, returns the amount of extracted files.
-		unsigned int ExtractDatabin(GAME game, const wchar_t* directory);
+		unsigned int ExtractDatabin(const wchar_t* directory);
 
 		//	Whether the file is loaded into memory, as opposed to being read from disk.
 		bool m_IsFileInMemory;

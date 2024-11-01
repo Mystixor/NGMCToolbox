@@ -5,7 +5,8 @@
 namespace NGMC
 {
 	PreviewDatabin::PreviewDatabin(File& file)
-		: BasePreview(file)
+		: BasePreview(file),
+		m_DatabinHeader()
 	{
 	}
 
@@ -69,7 +70,8 @@ namespace NGMC
 	{
 		FileType type = m_File.GetType();
 		if ((type.GetGame() == SIGMA_1 && type.GetId() == Databin::S1::databin) ||
-			(type.GetGame() == SIGMA_2 && type.GetId() == Databin::S2::databin))
+			(type.GetGame() == SIGMA_2 && type.GetId() == Databin::S2::databin) ||
+			(type.GetGame() == RE_3 && type.GetId() == Databin::RE::databin))
 		{
 			LoaderDatabin loader = LoaderDatabin(type.GetGame(), m_File);
 

@@ -225,6 +225,36 @@ namespace NGMC
 			//	Type Ids of files found in NG3RE.
 			enum FileTypeId
 			{
+				type_00 = 0x00,
+				type_01 = 0x01,
+				type_02 = 0x02,
+				chr_dat2 = 0x03,
+				type_04 = 0x04,
+				type_05 = 0x05,
+				TMC_06 = 0x06,
+				type_07 = 0x07,
+				type_08 = 0x08,
+				type_09 = 0x09,
+				TMC_0A = 0x0A,
+				type_0B = 0x0B,
+				IBLPK = 0x0C,
+				itm_dat2 = 0x0D,
+				type_0E = 0x0E,
+				type_0F = 0x0F,
+				tdpack_10 = 0x10,
+				chr_dat = 0x11,
+				type_12 = 0x12,
+				tdpack_13 = 0x13,
+				TDP4SOB = 0x14,
+				TDP4SOC = 0x15,
+				sprpack = 0x16,
+				type_17 = 0x17,
+				STAGEETC = 0x18,
+				stry_dat = 0x19,
+				TNF = 0x1A,
+				type_1B = 0x1B,
+				type_1C = 0x1C,
+				XWSFILE = 0x1D,
 				databin,
 				databinItem,
 				unknown
@@ -494,6 +524,73 @@ namespace NGMC
 
 		switch (id)
 		{
+		case FileTypeId::chr_dat2:
+		{
+			output += "chr_dat2";
+			break;
+		}
+		case FileTypeId::TMC_06:
+		case FileTypeId::TMC_0A:
+		{
+			output += "TMC";
+			break;
+		}
+		case FileTypeId::IBLPK:
+		{
+			output += "IBLPK";
+			break;
+		}
+		case FileTypeId::itm_dat2:
+		{
+			output += "itm_dat2";
+			break;
+		}
+		case FileTypeId::tdpack_10:
+		case FileTypeId::tdpack_13:
+		{
+			output += "tdpack";
+			break;
+		}
+		case FileTypeId::chr_dat:
+		{
+			output += "chr_dat";
+			break;
+		}
+		case FileTypeId::TDP4SOB:
+		{
+			output += "TDP4SOB";
+			break;
+		}
+		case FileTypeId::TDP4SOC:
+		{
+			output += "TDP4SOC";
+			break;
+		}
+		case FileTypeId::sprpack:
+		{
+			output += "sprpack";
+			break;
+		}
+		case FileTypeId::STAGEETC:
+		{
+			output += "STAGEETC";
+			break;
+		}
+		case FileTypeId::stry_dat:
+		{
+			output += "stry_dat";
+			break;
+		}
+		case FileTypeId::TNF:
+		{
+			output += "TNF";
+			break;
+		}
+		case FileTypeId::XWSFILE:
+		{
+			output += "XWSFILE";
+			break;
+		}
 		case FileTypeId::databin:
 		{
 			output += "databin";
@@ -600,7 +697,8 @@ namespace NGMC
 			if (
 				(m_Game == NON_GAME && m_Id == Databin::General::FileTypeId::unknown) ||
 				(m_Game == SIGMA_1 && m_Id == Databin::S1::FileTypeId::unknown) ||
-				(m_Game == SIGMA_2 && m_Id == Databin::S2::FileTypeId::unknown)
+				(m_Game == SIGMA_2 && m_Id == Databin::S2::FileTypeId::unknown) ||
+				(m_Game == RE_3 && m_Id == Databin::RE::FileTypeId::unknown)
 				)
 				return true;
 			else

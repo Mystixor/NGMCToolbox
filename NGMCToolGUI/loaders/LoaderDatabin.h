@@ -33,7 +33,7 @@ namespace NGMC
 				uint32_t size;
 				uint32_t sizeCompressed;
 				uint32_t dat_10;
-				uint16_t indexLinkedFile0, indexLinkedFile1;
+				int16_t indexLinkedFile0, indexLinkedFile1;
 				uint8_t typeLinkedFile0, typeLinkedFile1;
 				uint8_t type;
 				uint8_t dat_1B;
@@ -51,9 +51,24 @@ namespace NGMC
 				uint32_t size;
 				uint32_t sizeCompressed;
 				uint32_t dat_10;
-				uint16_t indexLinkedFile;
+				int16_t indexLinkedFile;
 				uint8_t typeLinkedFile;
 				uint8_t type;
+			};
+		}
+
+		namespace RE
+		{
+			//	The compressed databin item header struct from NGRE3.
+			struct ItemHeader
+			{
+				uint32_t offset;
+				int32_t dat_04;
+				uint32_t size;
+				uint32_t sizeCompressed;
+				uint32_t dat_10;
+				uint32_t type;
+				int32_t indexLinkedFile;
 			};
 		}
 	}
@@ -98,6 +113,9 @@ namespace NGMC
 
 		//	Sigma 2: Loads the item header of the databin item at the specified index into the specified outItemHeader, returns whether the operation was successful.
 		bool LoadItemHeader(Databin::S2::ItemHeader& outItemHeader, unsigned int index);
+		
+		//	Razor's Edge: Loads the item header of the databin item at the specified index into the specified outItemHeader, returns whether the operation was successful.
+		bool LoadItemHeader(Databin::RE::ItemHeader& outItemHeader, unsigned int index);
 
 		//	Loads the item headers of all databin items into m_ItemHeaders, returns whether the operation was successful.
 		bool LoadItemHeaders();
@@ -120,6 +138,9 @@ namespace NGMC
 
 		//	Sigma 2: List of the item headers, filled by the LoadItemHeaders functions.
 		std::vector<Databin::S2::ItemHeader> m_ItemHeadersS2;
+		
+		//	Razor's Edge: List of the item headers, filled by the LoadItemHeaders functions.
+		std::vector<Databin::RE::ItemHeader> m_ItemHeadersRE3;
 
 		//	Loads the item header of the file at the specified index into the specified outItemHeader, returns whether the operation was successful.
 		template<typename T_ItemHeader>
