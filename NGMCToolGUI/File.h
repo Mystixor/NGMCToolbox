@@ -108,8 +108,14 @@ namespace NGMC
 		void SetNodeOpenness(bool isOpen);
 
 	private:
+		bool CheckExtension(FileType checkType, const char* extension);
+		
+		bool CheckMagic(FileType checkType, char magic[8]);
+
+		bool CheckExtensionMagic(FileType checkType, const char* extension, char magic[8]);
+
 		//	Tries to detect and returns the FileType of the File by parsing its file extension and confirming it (if possible) by parsing its magic.
-		FileType DetectType();
+		FileType DetectType(FileType typeBias = FileType());
 
 		//	Loads a databin.
 		bool LoadDatabin();

@@ -117,7 +117,10 @@ namespace NGMC
 
 
 	//	Unique identifier for each supported game.
-	typedef unsigned char GAME;
+	typedef char GAME;
+
+	//	Unique identifier for an actively unknown game.
+	constexpr GAME UNKNOWN_GAME = -1;
 
 	//	Not-a-game identifier.
 	constexpr GAME NON_GAME = 0;
@@ -150,7 +153,7 @@ namespace NGMC
 			//	Type Ids of files found in NGS1.
 			enum FileTypeId
 			{
-				tdpack = 0x00,
+				type_00 = 0x00,
 				btl_dat = 0x01,
 				type_02 = 0x02,
 				chr_dat2 = 0x03,
@@ -173,6 +176,7 @@ namespace NGMC
 				invalid = 0x14,
 				databin,
 				databinItem,
+				tdpack_00,
 				unknown
 			};
 		}
@@ -197,7 +201,7 @@ namespace NGMC
 				type_0C = 0x0C,
 				itm_dat2 = 0x0D,
 				type_0E = 0x0E,
-				DDS_0F = 0x0F,
+				type_0F = 0x0F,
 				type_10 = 0x10,
 				chr_dat = 0x11,
 				rtm_dat = 0x12,
@@ -208,14 +212,18 @@ namespace NGMC
 				STAGEETC = 0x17,
 				TDP4STY = 0x18,
 				TNF = 0x19,
-				DDS_1A = 0x1A,
+				type_1A = 0x1A,
 				TMCL = 0x1B,
-				XWSFILE = 0x1C,
+				type_1C = 0x1C,
 				type_1D = 0x1D,
 				type_1E = 0x1E,
 				invalid = 0x1F,
 				databin,
 				databinItem,
+				LANG_00,
+				tdpack_00,
+				XWSFILE_1C,
+				tdpack_1C,
 				unknown
 			};
 		}
@@ -305,7 +313,7 @@ namespace NGMC
 
 		switch (id)
 		{
-		case FileTypeId::tdpack:
+		case FileTypeId::tdpack_00:
 		{
 			output += "tdpack";
 			break;
@@ -412,6 +420,11 @@ namespace NGMC
 
 		switch (id)
 		{
+		case FileTypeId::LANG_00:
+		{
+			output += "LANG";
+			break;
+		}
 		case FileTypeId::TDP4ACT:
 		{
 			output += "TDP4ACT";
@@ -433,12 +446,6 @@ namespace NGMC
 			output += "itm_dat2";
 			break;
 		}
-		case FileTypeId::DDS_0F:
-		case FileTypeId::DDS_1A:
-		{
-			output += "DDS";
-			break;
-		}
 		case FileTypeId::chr_dat:
 		{
 			output += "chr_dat";
@@ -449,6 +456,8 @@ namespace NGMC
 			output += "rtm_dat";
 			break;
 		}
+		case FileTypeId::tdpack_00:
+		case FileTypeId::tdpack_1C:
 		case FileTypeId::tdpack:
 		{
 			output += "tdpack";
@@ -489,7 +498,7 @@ namespace NGMC
 			output += "TMCL";
 			break;
 		}
-		case FileTypeId::XWSFILE:
+		case FileTypeId::XWSFILE_1C:
 		{
 			output += "XWSFILE";
 			break;
@@ -642,7 +651,7 @@ namespace NGMC
 	{
 	public:
 		FileType()
-			: m_Id(Databin::General::FileTypeId::unknown), m_Game(NON_GAME)
+			: m_Id(-1), m_Game(UNKNOWN_GAME)
 		{}
 
 		FileType(Databin::General::FileTypeId id)
@@ -702,9 +711,20 @@ namespace NGMC
 			m_Id = id;
 		}
 
+		void SetGame(GAME game)
+		{
+			m_Game = game;
+		}
+		
+		void SetId(int id)
+		{
+			m_Id = id;
+		}
+
 		bool IsUnknown() const
 		{
 			if (
+				(m_Game == UNKNOWN_GAME) ||
 				(m_Game == NON_GAME && m_Id == Databin::General::FileTypeId::unknown) ||
 				(m_Game == SIGMA_1 && m_Id == Databin::S1::FileTypeId::unknown) ||
 				(m_Game == SIGMA_2 && m_Id == Databin::S2::FileTypeId::unknown) ||
@@ -727,6 +747,7 @@ namespace NGMC
 
 			switch (m_Game)
 			{
+			case UNKNOWN_GAME:
 			case NON_GAME:
 			{
 				output += NGMC::GetTypeName((General::FileTypeId)m_Id);

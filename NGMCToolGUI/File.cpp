@@ -80,15 +80,11 @@ namespace NGMC
 		m_IndexInParent = indexInParent;
 		m_Parent = p_Parent;
 
-		size_t size = memBuf.GetSize();
-		if (size)
-		{
-			m_MemBuf = memBuf;
-			m_Size = size;
-			m_IsFileInMemory = true;
-			m_Name = name;
-			m_Type = type;
-		}
+		m_MemBuf = memBuf;
+		m_Size = memBuf.GetSize();
+		m_IsFileInMemory = true;
+		m_Name = name;
+		m_Type = type;
 	}
 
 	File::~File()
@@ -586,9 +582,44 @@ namespace NGMC
 		m_IsNodeOpened = isOpen;
 	}
 
-	FileType File::DetectType()
+	bool File::CheckExtension(FileType checkType, const char* extension)
+	{
+		std::string typeName = checkType.GetTypeName();
+		if (stricmp(extension, typeName.c_str()) == 0)
+		{
+			return true;
+		}
+		return false;
+	}
+
+	bool File::CheckMagic(FileType checkType, char magic[8])
+	{
+		std::string typeName = checkType.GetTypeName();
+		if (strnicmp(typeName.c_str(), magic, min(8, typeName.length())) == 0)
+		{
+			return true;
+		}
+		return false;
+	}
+
+	bool File::CheckExtensionMagic(FileType checkType, const char* extension, char magic[8])
+	{
+		std::string typeName = checkType.GetTypeName();
+		if (stricmp(extension, typeName.c_str()) == 0)
+		{
+			if (strnicmp(typeName.c_str(), magic, min(8, typeName.length())) == 0)
+				return true;
+		}
+		return false;
+	}
+
+	FileType File::DetectType(FileType typeBias)
 	{
 		FileType outType = FileType();
+		outType.SetGame(typeBias.GetGame());
+
+		if (this->GetSize() < 8)
+			outType.SetId(typeBias.GetId());
 
 		size_t extensionOffset = m_Name.find_last_of('.') + 1;
 		std::string extension = m_Name.substr(extensionOffset, m_Name.length() - extensionOffset);
@@ -621,105 +652,269 @@ namespace NGMC
 		{
 			using namespace Databin;
 
-			if (stricmp(extension.c_str(), GetTypeName(S1::FileTypeId::btl_dat).c_str()) == 0)
+			GAME gameBias = typeBias.GetGame();
+			int idBias = typeBias.GetId();
+			if (gameBias == NON_GAME || gameBias == UNKNOWN_GAME)
 			{
-				if (strnicmp(extension.c_str(), magic, 7) == 0)
-					outType = S1::FileTypeId::btl_dat;
-			}
-			else if (stricmp(extension.c_str(), GetTypeName(S1::FileTypeId::chr_dat2).c_str()) == 0)
-			{
-				if (strnicmp(extension.c_str(), magic, 8) == 0)
-					outType = S1::FileTypeId::chr_dat2;
-			}
-			else if (stricmp(extension.c_str(), GetTypeName(S1::FileTypeId::TMC_05).c_str()) == 0)
-			{
-				if (strnicmp(extension.c_str(), magic, 3) == 0)
-					outType = S1::FileTypeId::TMC_05;
-			}
-			else if (stricmp(extension.c_str(), GetTypeName(S1::FileTypeId::GT1G_07).c_str()) == 0)
-			{
-				if (strnicmp(extension.c_str(), magic, 4) == 0)
-					outType = S1::FileTypeId::GT1G_07;
-			}
-			else if (stricmp(extension.c_str(), GetTypeName(S1::FileTypeId::itm_dat2_08).c_str()) == 0)
-			{
-				if (strnicmp(extension.c_str(), magic, 8) == 0)
-					outType = S1::FileTypeId::itm_dat2_08;
-			}
-			else if (stricmp(extension.c_str(), GetTypeName(S1::FileTypeId::MESSTR).c_str()) == 0)
-			{
-				if (strnicmp(extension.c_str(), magic, 6) == 0)
-					outType = S1::FileTypeId::MESSTR;
-			}
-			else if (stricmp(extension.c_str(), GetTypeName(S1::FileTypeId::chr_dat).c_str()) == 0)
-			{
-				if (strnicmp(extension.c_str(), magic, 7) == 0)
-					outType = S1::FileTypeId::chr_dat;
-			}
-			else if (stricmp(extension.c_str(), GetTypeName(S1::FileTypeId::rtm_dat).c_str()) == 0)
-			{
-				if (strnicmp(extension.c_str(), magic, 7) == 0)
-					outType = S1::FileTypeId::rtm_dat;
-			}
-			else if (stricmp(extension.c_str(), GetTypeName(S1::FileTypeId::SND).c_str()) == 0)
-			{
-				if (strnicmp(extension.c_str(), magic, 3) == 0)
-					outType = S1::FileTypeId::SND;
-			}
-			else if (stricmp(extension.c_str(), GetTypeName(S1::FileTypeId::stry_dat).c_str()) == 0)
-			{
-				if (strnicmp(extension.c_str(), magic, 8) == 0)
-					outType = S1::FileTypeId::stry_dat;
-			}
-			else if (stricmp(extension.c_str(), GetTypeName(S1::FileTypeId::TMCL).c_str()) == 0)
-			{
-				//	magic is not TMCL, file consists of TMC chunks
-				outType = S1::FileTypeId::TMCL;
-			}
-			else if (stricmp(extension.c_str(), GetTypeName(S1::FileTypeId::sprite).c_str()) == 0)
-			{
-				if (strnicmp(extension.c_str(), magic, 6) == 0)
-					outType = S1::FileTypeId::sprite;
-			}
-			else if (stricmp(extension.c_str(), GetTypeName(General::FileTypeId::DDS).c_str()) == 0)
-			{
-				//char ddsMagic[4] = { ' ', 'S', 'D', 'D' };
-				if (strnicmp("DDS ", magic, 4) == 0)
-					outType = General::FileTypeId::DDS;
-			}
-			else if (stricmp(extension.c_str(), GetTypeName(S1::FileTypeId::databin).c_str()) == 0)
-			{
-				// no magic => rely on file name as well as user to pick the correct game
+				using namespace General;
 
-				g_PopupSelectGame.Setup(this);
-				g_PopupSelectGame.Open();
+				if (CheckExtensionMagic(FileTypeId::DDS, extension.c_str(), magic))
+				{
+					outType = FileTypeId::DDS;
+				}
+				else if (CheckExtension(FileTypeId::databin, extension.c_str()))
+				{
+					g_PopupSelectGame.Setup(this);
+					g_PopupSelectGame.Open();
 
-				outType = General::FileTypeId::databin;
+					outType = FileTypeId::databin;
+				}
+
+				if (!outType.IsUnknown())
+					return outType;
 			}
-			else if (stricmp(extension.c_str(), GetTypeName(S1::FileTypeId::tdpack).c_str()) == 0)
+			if (gameBias == SIGMA_1 || gameBias == UNKNOWN_GAME)
 			{
-				// no magic => rely on file name
-				outType = S1::FileTypeId::tdpack;
+				using namespace S1;
+
+				if (CheckExtensionMagic(FileTypeId::tdpack_00, extension.c_str(), magic))
+				{
+					outType = FileTypeId::tdpack_00;
+				}
+				else if (CheckExtension(FileTypeId::type_00, extension.c_str()))
+				{
+					if (CheckMagic(FileTypeId::tdpack_00, magic))
+						outType = FileTypeId::tdpack_00;
+					else
+						outType = FileTypeId::type_00;
+				}
+				else if (CheckExtensionMagic(FileTypeId::btl_dat, extension.c_str(), magic))
+				{
+					outType = FileTypeId::btl_dat;
+				}
+				else if (CheckExtension(FileTypeId::type_02, extension.c_str()))
+				{
+					outType = FileTypeId::type_02;
+				}
+				else if (CheckExtensionMagic(FileTypeId::chr_dat2, extension.c_str(), magic))
+				{
+					outType = FileTypeId::chr_dat2;
+				}
+				else if (CheckExtension(FileTypeId::type_04, extension.c_str()))
+				{
+					outType = FileTypeId::type_04;
+				}
+				else if (CheckExtensionMagic(FileTypeId::TMC_05, extension.c_str(), magic))
+				{
+					outType = FileTypeId::TMC_05;
+					if (idBias == FileTypeId::TMC_10)
+						outType = FileTypeId::TMC_10;
+				}
+				else if (CheckExtension(FileTypeId::type_06, extension.c_str()))
+				{
+					outType = FileTypeId::type_06;
+				}
+				else if (CheckExtensionMagic(FileTypeId::GT1G_07, extension.c_str(), magic))
+				{
+					outType = FileTypeId::GT1G_07;
+					if (idBias == FileTypeId::GT1G_13)
+						outType = FileTypeId::GT1G_13;
+				}
+				else if (CheckExtensionMagic(FileTypeId::itm_dat2_08, extension.c_str(), magic))
+				{
+					outType = FileTypeId::itm_dat2_08;
+					if (idBias == FileTypeId::itm_dat2_0E)
+						outType = FileTypeId::itm_dat2_0E;
+				}
+				else if (CheckExtensionMagic(FileTypeId::MESSTR, extension.c_str(), magic))
+				{
+					outType = FileTypeId::MESSTR;
+				}
+				else if (CheckExtension(FileTypeId::type_0A, extension.c_str()))
+				{
+					outType = FileTypeId::type_0A;
+				}
+				else if (CheckExtensionMagic(FileTypeId::chr_dat, extension.c_str(), magic))
+				{
+					outType = FileTypeId::chr_dat;
+				}
+				else if (CheckExtensionMagic(FileTypeId::rtm_dat, extension.c_str(), magic))
+				{
+					outType = FileTypeId::rtm_dat;
+				}
+				else if (CheckExtensionMagic(FileTypeId::SND, extension.c_str(), magic))
+				{
+					outType = FileTypeId::SND;
+				}
+				else if (CheckExtensionMagic(FileTypeId::stry_dat, extension.c_str(), magic))
+				{
+					outType = FileTypeId::stry_dat;
+				}
+				else if (CheckExtension(FileTypeId::TMCL, extension.c_str()))
+				{
+					outType = FileTypeId::TMCL;
+				}
+				else if (CheckExtensionMagic(FileTypeId::sprite, extension.c_str(), magic))
+				{
+					outType = FileTypeId::sprite;
+				}
+
+				if (!outType.IsUnknown())
+					return outType;
 			}
-			else if (stricmp(extension.c_str(), GetTypeName(S1::FileTypeId::type_02).c_str()) == 0)
+			if (gameBias == SIGMA_2 || gameBias == UNKNOWN_GAME)
 			{
-				// no magic => rely on file name
-				outType = S1::FileTypeId::type_02;
-			}
-			else if (stricmp(extension.c_str(), GetTypeName(S1::FileTypeId::type_04).c_str()) == 0)
-			{
-				// no magic => rely on file name
-				outType = S1::FileTypeId::type_04;
-			}
-			else if (stricmp(extension.c_str(), GetTypeName(S1::FileTypeId::type_06).c_str()) == 0)
-			{
-				// no magic => rely on file name
-				outType = S1::FileTypeId::type_06;
-			}
-			else if (stricmp(extension.c_str(), GetTypeName(S1::FileTypeId::type_0A).c_str()) == 0)
-			{
-				// no magic => rely on file name
-				outType = S1::FileTypeId::type_0A;
+				using namespace S2;
+
+				if (CheckExtensionMagic(FileTypeId::LANG_00, extension.c_str(), magic))
+				{
+					outType = FileTypeId::LANG_00;
+				}
+				else if (CheckExtension(FileTypeId::type_00, extension.c_str()))
+				{
+					if (CheckMagic(FileTypeId::LANG_00, magic))
+						outType = FileTypeId::LANG_00;
+					else if (CheckMagic(FileTypeId::tdpack_00, magic))
+						outType = FileTypeId::tdpack_00;
+					else
+						outType = FileTypeId::type_00;
+				}
+				else if (CheckExtension(FileTypeId::type_01, extension.c_str()))
+				{
+					outType = FileTypeId::type_01;
+				}
+				else if (CheckExtension(FileTypeId::type_02, extension.c_str()))
+				{
+					outType = FileTypeId::type_02;
+				}
+				else if (CheckExtensionMagic(FileTypeId::TDP4ACT, extension.c_str(), magic))
+				{
+					outType = FileTypeId::TDP4ACT;
+				}
+				else if (CheckExtensionMagic(FileTypeId::TDP4CLD, extension.c_str(), magic))
+				{
+					outType = FileTypeId::TDP4CLD;
+				}
+				else if (CheckExtension(FileTypeId::type_05, extension.c_str()))
+				{
+					outType = FileTypeId::type_05;
+				}
+				else if (CheckExtension(FileTypeId::type_06, extension.c_str()))
+				{
+					outType = FileTypeId::type_06;
+				}
+				else if (CheckExtension(FileTypeId::type_07, extension.c_str()))
+				{
+					outType = FileTypeId::type_07;
+				}
+				else if (CheckExtensionMagic(FileTypeId::TMC_08, extension.c_str(), magic))
+				{
+					outType = FileTypeId::TMC_08;
+					if (idBias == FileTypeId::TMC_0B)
+						outType = FileTypeId::TMC_0B;
+				}
+				else if (CheckExtension(FileTypeId::type_09, extension.c_str()))
+				{
+					outType = FileTypeId::type_09;
+				}
+				else if (CheckExtension(FileTypeId::type_0A, extension.c_str()))
+				{
+					outType = FileTypeId::type_0A;
+				}
+				else if (CheckExtension(FileTypeId::type_0C, extension.c_str()))
+				{
+					outType = FileTypeId::type_0C;
+				}
+				else if (CheckExtensionMagic(FileTypeId::itm_dat2, extension.c_str(), magic))
+				{
+					outType = FileTypeId::itm_dat2;
+				}
+				else if (CheckExtension(FileTypeId::type_0E, extension.c_str()))
+				{
+					outType = FileTypeId::type_0E;
+				}
+				else if (CheckExtension(FileTypeId::type_0F, extension.c_str()))
+				{
+					outType = FileTypeId::type_0F;
+				}
+				else if (CheckExtension(FileTypeId::type_10, extension.c_str()))
+				{
+					outType = FileTypeId::type_10;
+				}
+				else if (CheckExtensionMagic(FileTypeId::chr_dat, extension.c_str(), magic))
+				{
+					outType = FileTypeId::chr_dat;
+				}
+				else if (CheckExtensionMagic(FileTypeId::rtm_dat, extension.c_str(), magic))
+				{
+					outType = FileTypeId::rtm_dat;
+				}
+				else if (CheckExtensionMagic(FileTypeId::tdpack, extension.c_str(), magic))
+				{
+					outType = FileTypeId::tdpack_00;
+					if (idBias == FileTypeId::tdpack)
+						outType = FileTypeId::tdpack;
+				}
+				else if (CheckExtensionMagic(FileTypeId::TDP4SOB, extension.c_str(), magic))
+				{
+					outType = FileTypeId::TDP4SOB;
+				}
+				else if (CheckExtensionMagic(FileTypeId::TDP4SOC, extension.c_str(), magic))
+				{
+					outType = FileTypeId::TDP4SOC;
+				}
+				else if (CheckExtensionMagic(FileTypeId::sprpack, extension.c_str(), magic))
+				{
+					outType = FileTypeId::sprpack;
+				}
+				else if (CheckExtensionMagic(FileTypeId::STAGEETC, extension.c_str(), magic))
+				{
+					outType = FileTypeId::STAGEETC;
+				}
+				else if (CheckExtensionMagic(FileTypeId::TDP4STY, extension.c_str(), magic))
+				{
+					outType = FileTypeId::TDP4STY;
+				}
+				else if (CheckExtensionMagic(FileTypeId::TNF, extension.c_str(), magic))
+				{
+					outType = FileTypeId::TNF;
+				}
+				else if (CheckExtension(FileTypeId::type_1A, extension.c_str()))
+				{
+					outType = FileTypeId::type_1A;
+				}
+				else if (CheckExtension(FileTypeId::TMCL, extension.c_str()))
+				{
+					outType = FileTypeId::TMCL;
+				}
+				else if (CheckExtensionMagic(FileTypeId::XWSFILE_1C, extension.c_str(), magic))
+				{
+					outType = FileTypeId::XWSFILE_1C;
+				}
+				else if (CheckExtensionMagic(FileTypeId::tdpack_1C, extension.c_str(), magic))
+				{
+					outType = FileTypeId::tdpack_1C;
+				}
+				else if (CheckExtension(FileTypeId::type_1C, extension.c_str()))
+				{
+					if (CheckMagic(FileTypeId::XWSFILE_1C, magic))
+						outType = FileTypeId::XWSFILE_1C;
+					else if (CheckMagic(FileTypeId::tdpack_1C, magic))
+						outType = FileTypeId::tdpack_1C;
+					else
+						outType = FileTypeId::type_1C;
+				}
+				else if (CheckExtension(FileTypeId::type_1D, extension.c_str()))
+				{
+					outType = FileTypeId::type_1D;
+				}
+				else if (CheckExtension(FileTypeId::type_1E, extension.c_str()))
+				{
+					outType = FileTypeId::type_1E;
+				}
+
+				if (!outType.IsUnknown())
+					return outType;
 			}
 		}
 
@@ -795,6 +990,9 @@ namespace NGMC
 					type
 				);
 
+				m_Childs.back().SetType(m_Childs.back().DetectType(type));
+				m_Childs.back().SetName((std::format("{:05d}.", m_IndexInParent) + m_Childs.back().GetType().GetFileExtension()).c_str());
+
 				isSuccess = true;
 			}
 		}
@@ -849,7 +1047,11 @@ namespace NGMC
 				{
 					loader.DecompressItem(outBuf, /*m_MemBuf, */ i);
 
-					std::string tempString = std::format("{:05d}.", i) + loader.GetFileType(i).GetFileExtension();
+					FileType childType = loader.GetFileType(i);
+					File childFile = File(outBuf, (std::format("{:05d}.", i) + childType.GetFileExtension()).c_str(), i, this);
+					childFile.SetType(childFile.DetectType(childType));
+
+					std::string tempString = std::format("{:05d}.", i) + childFile.GetType().GetFileExtension();
 					std::wstring filePath = directory;
 					filePath += L"\\" + std::wstring(tempString.begin(), tempString.end());
 

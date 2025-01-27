@@ -68,7 +68,7 @@ namespace NGMC
 			}
 			if (ImGui::MenuItem("tdpack"))
 			{
-				type.SetType(FileTypeId::tdpack);
+				type.SetType(FileTypeId::tdpack_00);
 			}
 			if (ImGui::MenuItem("btl_dat"))
 			{
@@ -161,6 +161,14 @@ namespace NGMC
 			{
 				type.SetType(FileTypeId::type_00);
 			}
+			if (ImGui::MenuItem("tdpack_00"))
+			{
+				type.SetType(FileTypeId::tdpack_00);
+			}
+			if (ImGui::MenuItem("LANG"))
+			{
+				type.SetType(FileTypeId::LANG_00);
+			}
 			if (ImGui::MenuItem("type_01"))
 			{
 				type.SetType(FileTypeId::type_01);
@@ -217,9 +225,9 @@ namespace NGMC
 			{
 				type.SetType(FileTypeId::type_0E);
 			}
-			if (ImGui::MenuItem("DDS_0F"))
+			if (ImGui::MenuItem("type_0F"))
 			{
-				type.SetType(FileTypeId::DDS_0F);
+				type.SetType(FileTypeId::type_0F);
 			}
 			if (ImGui::MenuItem("type_10"))
 			{
@@ -261,9 +269,9 @@ namespace NGMC
 			{
 				type.SetType(FileTypeId::TNF);
 			}
-			if (ImGui::MenuItem("DDS_1A"))
+			if (ImGui::MenuItem("type_1A"))
 			{
-				type.SetType(FileTypeId::DDS_1A);
+				type.SetType(FileTypeId::type_1A);
 			}
 			if (ImGui::MenuItem("TMCL"))
 			{
@@ -271,7 +279,11 @@ namespace NGMC
 			}
 			if (ImGui::MenuItem("XWSFILE"))
 			{
-				type.SetType(FileTypeId::XWSFILE);
+				type.SetType(FileTypeId::XWSFILE_1C);
+			}
+			if (ImGui::MenuItem("tdpack_1C"))
+			{
+				type.SetType(FileTypeId::tdpack_1C);
 			}
 			if (ImGui::MenuItem("type_1D"))
 			{
