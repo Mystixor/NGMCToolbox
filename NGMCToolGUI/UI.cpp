@@ -134,9 +134,9 @@ namespace NGMC
 			{
 				type.SetType(FileTypeId::TMC_10);
 			}
-			if (ImGui::MenuItem("VtxLay"))
+			if (ImGui::MenuItem("TMCL"))
 			{
-				type.SetType(FileTypeId::VtxLay);
+				type.SetType(FileTypeId::TMCL);
 			}
 			if (ImGui::MenuItem("sprite"))
 			{
@@ -265,9 +265,9 @@ namespace NGMC
 			{
 				type.SetType(FileTypeId::DDS_1A);
 			}
-			if (ImGui::MenuItem("DDS_1B"))
+			if (ImGui::MenuItem("TMCL"))
 			{
-				type.SetType(FileTypeId::DDS_1B);
+				type.SetType(FileTypeId::TMCL);
 			}
 			if (ImGui::MenuItem("XWSFILE"))
 			{

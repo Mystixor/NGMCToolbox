@@ -157,7 +157,7 @@ namespace NGMC
 				type_04 = 0x04,
 				TMC_05 = 0x05,
 				type_06 = 0x06,
-				GT1G_07 = 0x07,
+				GT1G_07 = 0x07,			//	texture container, for 3d models?
 				itm_dat2_08 = 0x08,
 				MESSTR = 0x09,
 				type_0A = 0x0A,
@@ -166,10 +166,10 @@ namespace NGMC
 				SND = 0x0D,
 				itm_dat2_0E = 0x0E,
 				stry_dat = 0x0F,
-				TMC_10 = 0x10,
-				VtxLay = 0x11,
+				TMC_10 = 0x10,			//	
+				TMCL = 0x11,
 				sprite = 0x12,
-				GT1G_13 = 0x13,
+				GT1G_13 = 0x13,			//	texture container, for sprites?
 				invalid = 0x14,
 				databin,
 				databinItem,
@@ -209,7 +209,7 @@ namespace NGMC
 				TDP4STY = 0x18,
 				TNF = 0x19,
 				DDS_1A = 0x1A,
-				DDS_1B = 0x1B,
+				TMCL = 0x1B,
 				XWSFILE = 0x1C,
 				type_1D = 0x1D,
 				type_1E = 0x1E,
@@ -232,7 +232,7 @@ namespace NGMC
 				type_04 = 0x04,
 				type_05 = 0x05,
 				TMC_06 = 0x06,
-				type_07 = 0x07,
+				TMCL_07 = 0x07,
 				type_08 = 0x08,
 				type_09 = 0x09,
 				TMC_0A = 0x0A,
@@ -253,7 +253,7 @@ namespace NGMC
 				stry_dat = 0x19,
 				TNF = 0x1A,
 				type_1B = 0x1B,
-				type_1C = 0x1C,
+				TMCL_1C = 0x1C,
 				XWSFILE = 0x1D,
 				databin,
 				databinItem,
@@ -363,9 +363,9 @@ namespace NGMC
 			output += "stry_dat";
 			break;
 		}
-		case FileTypeId::VtxLay:
+		case FileTypeId::TMCL:
 		{
-			output += "VtxLay";
+			output += "TMCL";
 			break;
 		}
 		case FileTypeId::sprite:
@@ -435,7 +435,6 @@ namespace NGMC
 		}
 		case FileTypeId::DDS_0F:
 		case FileTypeId::DDS_1A:
-		case FileTypeId::DDS_1B:
 		{
 			output += "DDS";
 			break;
@@ -483,6 +482,11 @@ namespace NGMC
 		case FileTypeId::TNF:
 		{
 			output += "TNF";
+			break;
+		}
+		case FileTypeId::TMCL:
+		{
+			output += "TMCL";
 			break;
 		}
 		case FileTypeId::XWSFILE:
@@ -533,6 +537,12 @@ namespace NGMC
 		case FileTypeId::TMC_0A:
 		{
 			output += "TMC";
+			break;
+		}
+		case FileTypeId::TMCL_07:
+		case FileTypeId::TMCL_1C:
+		{
+			output += "TMCL";
 			break;
 		}
 		case FileTypeId::IBLPK:

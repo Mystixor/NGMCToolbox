@@ -671,10 +671,10 @@ namespace NGMC
 				if (strnicmp(extension.c_str(), magic, 8) == 0)
 					outType = S1::FileTypeId::stry_dat;
 			}
-			else if (stricmp(extension.c_str(), GetTypeName(S1::FileTypeId::VtxLay).c_str()) == 0)
+			else if (stricmp(extension.c_str(), GetTypeName(S1::FileTypeId::TMCL).c_str()) == 0)
 			{
-				if (strnicmp(extension.c_str(), magic, 6) == 0)
-					outType = S1::FileTypeId::VtxLay;
+				//	magic is not TMCL, file consists of TMC chunks
+				outType = S1::FileTypeId::TMCL;
 			}
 			else if (stricmp(extension.c_str(), GetTypeName(S1::FileTypeId::sprite).c_str()) == 0)
 			{
