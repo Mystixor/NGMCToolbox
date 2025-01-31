@@ -18,3 +18,6 @@
 	path = NGMCToolGUI/vendor/GLEW
 	url = https://github.com/nigels-com/glew.git
 	branch = master
+[submodule "vendor/rapidjson"]
+	path = vendor/rapidjson
+	url = https://github.com/Tencent/rapidjson

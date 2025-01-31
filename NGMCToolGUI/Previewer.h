@@ -8,6 +8,7 @@
 #include "previews/PreviewGT1G.h"
 #include "previews/PreviewDDS.h"
 #include "previews/PreviewTMC.h"
+#include "previews/PreviewLANG.h"
 
 namespace NGMC
 {

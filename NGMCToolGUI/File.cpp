@@ -5,8 +5,12 @@
 #include "loaders/LoaderDatabin.h"
 #include "loaders/LoaderGT1G.h"
 #include "loaders/LoaderDDS.h"
+#include "loaders/LoaderLANG.h"
 
 #include "popups/PopupSelectGame.h"
+
+#include "rapidjson/document.h"
+#include "rapidjson/prettywriter.h"
 
 namespace NGMC
 {
@@ -347,6 +351,10 @@ namespace NGMC
 					m_IsLoaded = LoadDatabinItem();
 					break;
 				}
+				case FileTypeId::LANG_00:
+				{
+
+				}
 				case FileTypeId::unknown:
 				default:
 				{
@@ -490,6 +498,11 @@ namespace NGMC
 				case FileTypeId::databin:
 				{
 					extractCount = ExtractDatabin(directory);
+					break;
+				}
+				case FileTypeId::LANG_00:
+				{
+					extractCount = ExtractLANG(directory);
 					break;
 				}
 				default:
@@ -1056,6 +1069,94 @@ namespace NGMC
 					filePath += L"\\" + std::wstring(tempString.begin(), tempString.end());
 
 					outBuf.SaveToFile(filePath.c_str());
+				}
+
+				extractCount++;
+			}
+		}
+
+		return extractCount;
+	}
+
+	unsigned int File::ExtractLANG(const wchar_t* directory)
+	{
+		unsigned int extractCount = 0U;
+
+		LoaderLANG loader(*this);
+
+		LANG::Node root;
+		std::vector<std::pair<LANG::CTGPACKNode, std::vector<std::pair<LANG::STRPACKNode, std::vector<std::string>>>>> content;
+
+		if (loader.GetRoot(root))
+		{
+			if (loader.ParseLANG(content))
+			{
+				rapidjson::Document d;
+				d.SetObject();
+
+				rapidjson::Document::AllocatorType& allocator = d.GetAllocator();
+				
+				rapidjson::Value rootName;
+				rootName.SetString(root.name, strlen(root.name), allocator);
+				d.AddMember("name", rootName, allocator);
+
+				rapidjson::Value CTGPACKs(rapidjson::kArrayType);
+
+				for (int i = 0; i < content.size(); i++)
+				{
+					rapidjson::Value CTGPACK;
+					CTGPACK.SetObject();
+
+					rapidjson::Value ctgpackName;
+					ctgpackName.SetString(content[i].first.name, strlen(content[i].first.name), allocator);
+					CTGPACK.AddMember("name", ctgpackName, allocator);
+
+					rapidjson::Value STRPACKs(rapidjson::kArrayType);
+
+					for (int j = 0; j < content[i].first.header.childCount; j++)
+					{
+						rapidjson::Value STRPACK;
+						STRPACK.SetObject();
+
+						rapidjson::Value strpackName;
+						strpackName.SetString(content[i].second[j].first.name, strlen(content[i].second[j].first.name), allocator);
+						STRPACK.AddMember("name", strpackName, allocator);
+
+						rapidjson::Value dat_50;
+						dat_50.SetUint(content[i].second[j].first.dat_50);
+						STRPACK.AddMember("dat_50", dat_50, allocator);
+
+						rapidjson::Value strings(rapidjson::kArrayType);
+
+						for (int k = 0; k < content[i].second[j].first.header.childCount; k++)
+						{
+							rapidjson::Value text(rapidjson::kStringType);
+							text.SetString(content[i].second[j].second[k].c_str(), allocator);
+							strings.PushBack(text, allocator);
+						}
+						STRPACK.AddMember("strings", strings, allocator);
+
+						STRPACKs.PushBack(STRPACK, allocator);
+					}
+					CTGPACK.AddMember("STRPACKs", STRPACKs, allocator);
+
+					CTGPACKs.PushBack(CTGPACK, allocator);
+				}
+				d.AddMember("CTGPACKs", CTGPACKs, allocator);
+
+				rapidjson::StringBuffer buffer;
+				rapidjson::PrettyWriter<rapidjson::StringBuffer> pretty_writer(buffer);
+				d.Accept(pretty_writer);
+
+
+				std::string tempString = std::format("{}.json", m_Name);
+				std::wstring filePath = directory;
+				filePath += L"\\" + std::wstring(tempString.begin(), tempString.end());
+
+				std::ofstream stream(filePath);
+				if (stream)
+				{
+					stream.write(buffer.GetString(), buffer.GetSize());
 				}
 
 				extractCount++;

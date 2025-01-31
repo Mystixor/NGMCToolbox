@@ -11,6 +11,8 @@
 #include "popups/PopupAbout.h"
 #include "popups/PopupSelectGame.h"
 
+#include "loaders/LoaderLANG.h"
+
 
 namespace NGMC
 {
@@ -330,6 +332,16 @@ namespace NGMC
 
 						ImGui::EndMenu();
 					}
+					if (ImGui::BeginMenu("NGS2"))
+					{
+						using namespace Databin::S2;
+						if (ImGui::MenuItem("LANG"))
+						{
+							type.SetType(FileTypeId::LANG_00);
+						}
+
+						ImGui::EndMenu();
+					}
 
 					ImGui::EndMenu();
 
@@ -344,12 +356,28 @@ namespace NGMC
 							{
 							case FileTypeId::GT1G_07:
 							case FileTypeId::GT1G_13:
+							{
 								g_PopupBuildGT1G.Setup();
 								g_PopupBuildGT1G.Open();
 								break;
 							}
+							}
 							break;
 						}
+						case SIGMA_2:
+							using namespace Databin::S2;
+							switch (type.GetId())
+							{
+							case FileTypeId::LANG_00:
+							{
+								std::vector<std::wstring> filePaths;
+								if (OpenFileDialog(filePaths, false, false))
+								{
+									if (filePaths.size())
+										ImportFileFromJSON(filePaths[0].c_str());
+								}
+							}
+							}
 						}
 					}
 				}
@@ -468,6 +496,7 @@ namespace NGMC
 					{
 					case FileTypeId::databin:
 					case FileTypeId::databinItem:
+					case FileTypeId::LANG_00:
 						if (ImGui::Selectable("Extract"))
 						{
 							action = ContextMenuFileAction::Extract;

@@ -128,6 +128,9 @@ namespace NGMC
 
 		//	Extracts all files from a databin, returns the amount of extracted files.
 		unsigned int ExtractDatabin(const wchar_t* directory);
+		
+		//	Extracts all texts from a LANG, returns the amount of extracted files.
+		unsigned int ExtractLANG(const wchar_t* directory);
 
 		//	Whether the file is loaded into memory, as opposed to being read from disk.
 		bool m_IsFileInMemory;

@@ -3,7 +3,7 @@
 #include "UI.h"
 
 
-uint32_t g_ApplicationVersion = 0x010000;	// v1.0.0
+uint32_t g_ApplicationVersion = 0x010100;	// v1.1.0
 
 
 //	No persistent settings functionality was implemented yet, therefore we hardcode settings for now.
@@ -102,7 +102,8 @@ int wmain(int argc, wchar_t** argv)
 		//io.Fonts->AddFontFromFileTTF("../../misc/fonts/DroidSans.ttf", 16.0f);
 		//io.Fonts->AddFontFromFileTTF("../../misc/fonts/Roboto-Medium.ttf", 16.0f);
 		//io.Fonts->AddFontFromFileTTF("../../misc/fonts/Cousine-Regular.ttf", 15.0f);
-		ImFont* font = io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\Arial.ttf", 16.0f, nullptr, io.Fonts->GetGlyphRangesJapanese());
+		//ImFont* font = io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\Arial.ttf", 16.0f, nullptr, io.Fonts->GetGlyphRangesJapanese());
+		ImFont* font = io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\meiryo.ttc", 20.0f, nullptr, io.Fonts->GetGlyphRangesJapanese());
 		IM_ASSERT(font != nullptr);
 	}
 

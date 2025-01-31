@@ -198,6 +198,11 @@ namespace NGMC
 					m_Preview = new PreviewDatabinItem(*m_File);
 					break;
 				}
+				case FileTypeId::LANG_00:
+				{
+					m_Preview = new PreviewLANG(*m_File);
+					break;
+				}
 				case FileTypeId::TMC_08:
 				case FileTypeId::TMC_0B:
 				{

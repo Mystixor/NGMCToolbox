@@ -111,6 +111,12 @@
     <ClCompile Include="previews\PreviewTMC.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="previews\PreviewLANG.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="loaders\LoaderLANG.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="vendor\ImGui\imconfig.h">
@@ -276,6 +282,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="previews\PreviewTMC.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="formats\Node.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="previews\PreviewLANG.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="loaders\LoaderLANG.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
