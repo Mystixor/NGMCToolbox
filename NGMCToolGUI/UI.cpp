@@ -68,6 +68,10 @@ namespace NGMC
 			{
 				type.SetType(FileTypeId::databin);
 			}
+			if (ImGui::MenuItem("Save File"))
+			{
+				type.SetType(FileTypeId::save);
+			}
 			if (ImGui::MenuItem("tdpack"))
 			{
 				type.SetType(FileTypeId::tdpack_00);
@@ -158,6 +162,10 @@ namespace NGMC
 			if (ImGui::MenuItem("databin"))
 			{
 				type.SetType(FileTypeId::databin);
+			}
+			if (ImGui::MenuItem("Save File"))
+			{
+				type.SetType(FileTypeId::save);
 			}
 			if (ImGui::MenuItem("type_00"))
 			{
@@ -305,6 +313,10 @@ namespace NGMC
 			if (ImGui::MenuItem("databin"))
 			{
 				type.SetType(FileTypeId::databin);
+			}
+			if (ImGui::MenuItem("Save File"))
+			{
+				type.SetType(FileTypeId::save);
 			}
 
 			ImGui::EndMenu();

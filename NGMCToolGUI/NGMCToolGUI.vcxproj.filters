@@ -117,6 +117,12 @@
     <ClCompile Include="loaders\LoaderLANG.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="previews\PreviewSave.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="loaders\LoaderSave.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="vendor\ImGui\imconfig.h">
@@ -291,6 +297,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="loaders\LoaderLANG.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="previews\PreviewSave.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="loaders\LoaderSave.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

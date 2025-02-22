@@ -206,6 +206,7 @@ namespace NGMC
 				databin,
 				databinItem,
 				tdpack_00,
+				save,
 				unknown
 			};
 		}
@@ -253,6 +254,7 @@ namespace NGMC
 				tdpack_00,
 				XWSFILE_1C,
 				tdpack_1C,
+				save,
 				unknown
 			};
 		}
@@ -294,6 +296,7 @@ namespace NGMC
 				XWSFILE = 0x1D,
 				databin,
 				databinItem,
+				save,
 				unknown
 			};
 		}
@@ -425,6 +428,11 @@ namespace NGMC
 			output += "databinCompressedFile";
 			break;
 		}
+		case FileTypeId::save:
+		{
+			output += "Save";
+			break;
+		}
 		case FileTypeId::unknown:
 		{
 			output += "unknown";
@@ -542,6 +550,11 @@ namespace NGMC
 			output += "databinCompressedFile";
 			break;
 		}
+		case FileTypeId::save:
+		{
+			output += "Save";
+			break;
+		}
 		case FileTypeId::unknown:
 		{
 			output += "unknown";
@@ -647,6 +660,11 @@ namespace NGMC
 		case FileTypeId::databinItem:
 		{
 			output += "databinCompressedFile";
+			break;
+		}
+		case FileTypeId::save:
+		{
+			output += "Save";
 			break;
 		}
 		case FileTypeId::unknown:
@@ -777,6 +795,10 @@ namespace NGMC
 			switch (m_Game)
 			{
 			case UNKNOWN_GAME:
+			{
+				output += "unknown";
+				break;
+			}
 			case NON_GAME:
 			{
 				output += NGMC::GetTypeName((General::FileTypeId)m_Id);

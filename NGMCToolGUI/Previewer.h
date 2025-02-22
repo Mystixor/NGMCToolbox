@@ -9,6 +9,7 @@
 #include "previews/PreviewDDS.h"
 #include "previews/PreviewTMC.h"
 #include "previews/PreviewLANG.h"
+#include "previews/PreviewSave.h"
 
 namespace NGMC
 {

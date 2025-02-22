@@ -168,7 +168,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="loaders\LoaderSave.cpp" />
     <ClCompile Include="loaders\LoaderLANG.cpp" />
+    <ClCompile Include="previews\PreviewSave.cpp" />
     <ClCompile Include="previews\PreviewLANG.cpp" />
     <ClCompile Include="previews\PreviewDDS.cpp" />
     <ClCompile Include="previews\PreviewGT1G.cpp" />
@@ -244,7 +246,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="loaders\LoaderSave.h" />
     <ClInclude Include="loaders\LoaderLANG.h" />
+    <ClInclude Include="previews\PreviewSave.h" />
     <ClInclude Include="previews\PreviewLANG.h" />
     <ClInclude Include="previews\PreviewDDS.h" />
     <ClInclude Include="previews\PreviewGT1G.h" />

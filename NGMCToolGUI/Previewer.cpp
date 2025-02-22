@@ -47,6 +47,9 @@ namespace NGMC
 			std::string gameName = "";
 			switch (m_File->GetType().GetGame())
 			{
+			case UNKNOWN_GAME:
+				gameName = "Unknown Game";
+				break;
 			case NON_GAME:
 				gameName = "General";
 				break;
@@ -81,7 +84,14 @@ namespace NGMC
 
 					ImGui::TableNextRow();
 					ImGui::TableSetColumnIndex(0); ImGui::Text("Path");
-					ImGui::TableSetColumnIndex(1); ImGui::Text(std::string(filePath.begin(), filePath.end()).c_str());
+
+					int bufferSize = WideCharToMultiByte(CP_UTF8, 0, filePath.c_str(), -1, NULL, 0, NULL, NULL);
+					char* buffer = new char[bufferSize];
+					WideCharToMultiByte(CP_UTF8, 0, filePath.c_str(), -1, buffer, bufferSize, NULL, NULL);
+
+					ImGui::TableSetColumnIndex(1); ImGui::Text(buffer);
+
+					delete[] buffer;
 				}
 				
 				ImGui::TableNextRow();
@@ -180,6 +190,11 @@ namespace NGMC
 					m_Preview = new PreviewTMC(*m_File);
 					break;
 				}
+				case FileTypeId::save:
+				{
+					m_Preview = new PreviewSave(*m_File);
+					break;
+				}
 				}
 				break;
 			}
@@ -209,6 +224,11 @@ namespace NGMC
 					m_Preview = new PreviewTMC(*m_File);
 					break;
 				}
+				case FileTypeId::save:
+				{
+					m_Preview = new PreviewSave(*m_File);
+					break;
+				}
 				}
 				break;
 			}
@@ -225,6 +245,11 @@ namespace NGMC
 				case FileTypeId::databinItem:
 				{
 					m_Preview = new PreviewDatabinItem(*m_File);
+					break;
+				}
+				case FileTypeId::save:
+				{
+					m_Preview = new PreviewSave(*m_File);
 					break;
 				}
 				}
