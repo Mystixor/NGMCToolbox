@@ -6,6 +6,12 @@
 # Dependencies
 /NGMCToolGUI/vendor/GLEW
 
+# Binaries
+/NGMCToolSetup64/*.msi
+/NGMCToolSetup32/*.msi
+/NGMCToolSetup64/*.exe
+/NGMCToolSetup32/*.exe
+
 # User-specific files
 *.rsuser
 *.suo
