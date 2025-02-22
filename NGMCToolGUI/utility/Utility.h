@@ -8,6 +8,35 @@
 
 namespace NGMC
 {
+	//	Swap bytes of a 64-bit input value if isSwap.
+	static unsigned long long SwapBytesIf(unsigned long long val, bool isSwap)
+	{
+		return isSwap ? _byteswap_uint64(val) : val;
+	}
+
+	//	Swap bytes of a 32-bit input value if isSwap.
+	static unsigned long SwapBytesIf(unsigned long val, bool isSwap)
+	{
+		return isSwap ? _byteswap_ulong(val) : val;
+	}
+
+	//	Swap bytes of a 16-bit input value if isSwap.
+	static unsigned short SwapBytesIf(unsigned short val, bool isSwap)
+	{
+		return isSwap ? _byteswap_ushort(val) : val;
+	}
+
+	static void SwapU16StringEndiannessIf(std::u16string& str, bool isSwap)
+	{
+		if (isSwap)
+		{
+			for (int i = 0; i < str.length(); i++)
+			{
+				str[i] = (str[i] << 8 & 0xFF00) + (str[i] >> 8 & 0x00FF);
+			}
+		}
+	}
+
 	//	Logs a text encoded as UTF-8 to the console.
 	static void Log(const std::string& text)
 	{

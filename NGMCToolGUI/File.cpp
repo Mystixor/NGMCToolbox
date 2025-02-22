@@ -1095,7 +1095,13 @@ namespace NGMC
 				d.SetObject();
 
 				rapidjson::Document::AllocatorType& allocator = d.GetAllocator();
-				
+
+				bool isBigEndian = root.header.version.v[0] == 255;
+
+				rapidjson::Value rootIsBigEndian;
+				rootIsBigEndian.SetBool(isBigEndian);
+				d.AddMember("isBigEndian", rootIsBigEndian, allocator);
+
 				rapidjson::Value rootName;
 				rootName.SetString(root.name, strlen(root.name), allocator);
 				d.AddMember("name", rootName, allocator);
@@ -1113,7 +1119,8 @@ namespace NGMC
 
 					rapidjson::Value STRPACKs(rapidjson::kArrayType);
 
-					for (int j = 0; j < content[i].first.header.childCount; j++)
+					int32_t ctgpackChildCount = SwapBytesIf((unsigned long)content[i].first.header.childCount, isBigEndian);
+					for (int j = 0; j < ctgpackChildCount; j++)
 					{
 						rapidjson::Value STRPACK;
 						STRPACK.SetObject();
@@ -1123,12 +1130,13 @@ namespace NGMC
 						STRPACK.AddMember("name", strpackName, allocator);
 
 						rapidjson::Value dat_50;
-						dat_50.SetUint(content[i].second[j].first.dat_50);
+						dat_50.SetUint(SwapBytesIf((unsigned long)content[i].second[j].first.dat_50, isBigEndian));
 						STRPACK.AddMember("dat_50", dat_50, allocator);
 
 						rapidjson::Value strings(rapidjson::kArrayType);
 
-						for (int k = 0; k < content[i].second[j].first.header.childCount; k++)
+						int32_t strpackChildCount = SwapBytesIf((unsigned long)content[i].second[j].first.header.childCount, isBigEndian);
+						for (int k = 0; k < strpackChildCount; k++)
 						{
 							rapidjson::Value text(rapidjson::kStringType);
 							text.SetString(content[i].second[j].second[k].c_str(), allocator);

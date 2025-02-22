@@ -318,7 +318,7 @@ namespace NGMC
 		{
 			if (ImGui::BeginMenu("File"))
 			{
-				if (ImGui::BeginMenu("New..."))
+				if (ImGui::BeginMenu("New"))
 				{
 					FileType type = FileType();
 					//OnImGuiNGMCFileTypeMenuItems(type);
@@ -328,16 +328,6 @@ namespace NGMC
 						if (ImGui::MenuItem("GT1G"))
 						{
 							type.SetType(FileTypeId::GT1G_07);
-						}
-
-						ImGui::EndMenu();
-					}
-					if (ImGui::BeginMenu("NGS2"))
-					{
-						using namespace Databin::S2;
-						if (ImGui::MenuItem("LANG"))
-						{
-							type.SetType(FileTypeId::LANG_00);
 						}
 
 						ImGui::EndMenu();
@@ -364,20 +354,6 @@ namespace NGMC
 							}
 							break;
 						}
-						case SIGMA_2:
-							using namespace Databin::S2;
-							switch (type.GetId())
-							{
-							case FileTypeId::LANG_00:
-							{
-								std::vector<std::wstring> filePaths;
-								if (OpenFileDialog(filePaths, false, false))
-								{
-									if (filePaths.size())
-										ImportFileFromJSON(filePaths[0].c_str());
-								}
-							}
-							}
 						}
 					}
 				}
@@ -385,11 +361,49 @@ namespace NGMC
 				if (ImGui::MenuItem("Open"))
 				{
 					std::vector<std::wstring> filePaths;
-					if (OpenFileDialog(filePaths, false, false))
+					if (OpenFileDialog(filePaths, false, true))
 					{
-						if (filePaths.size())
-							fileManager.RegisterFile(filePaths[0].c_str());
+						for (int i = 0; i <filePaths.size(); i++)
+							fileManager.RegisterFile(filePaths[i].c_str());
 					}
+				}
+
+				if (ImGui::BeginMenu("Import"))
+				{
+					FileType type = FileType();
+					if (ImGui::BeginMenu("NGS2"))
+					{
+						using namespace Databin::S2;
+						if (ImGui::MenuItem("LANG.JSON"))
+						{
+							type.SetType(FileTypeId::LANG_00);
+						}
+
+						ImGui::EndMenu();
+
+						if (!type.IsUnknown())
+						{
+							switch (type.GetGame())
+							{
+							case SIGMA_2:
+								using namespace Databin::S2;
+								switch (type.GetId())
+								{
+								case FileTypeId::LANG_00:
+								{
+									std::vector<std::wstring> filePaths;
+									if (OpenFileDialog(filePaths, false, true))
+									{
+										for (int i = 0; i < filePaths.size(); i++)
+											ImportFileFromJSON(filePaths[i].c_str());
+									}
+								}
+								}
+							}
+						}
+					}
+
+					ImGui::EndMenu();
 				}
 
 				ImGui::EndMenu();
@@ -558,6 +572,10 @@ namespace NGMC
 				if (ImGui::Selectable("Save"))
 				{
 					action = ContextMenuFileAction::Save;
+				}
+				if (ImGui::Selectable("Extract"))
+				{
+					action = ContextMenuFileAction::Extract;
 				}
 
 				ImGui::Separator();

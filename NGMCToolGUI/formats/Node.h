@@ -2,6 +2,8 @@
 
 #include "stdafx.h"
 
+#include "utility/Utility.h"
+
 namespace NGMC
 {
 	namespace Chunk
@@ -44,10 +46,13 @@ namespace NGMC
 
 			T* GetChild(uint32_t index)
 			{
-				if (index < header.childCount)
+				bool isBigEndian = header.version.v[0] == 255;
+
+				int32_t childCount = SwapBytesIf((unsigned long)header.childCount, isBigEndian);
+				if (index < childCount)
 				{
-					uint32_t* childOffsets = (uint32_t*)((uintptr_t)this + header.childOffsetsOffset);
-					return (T*)((uintptr_t)this + childOffsets[index]);
+					uint32_t* childOffsets = (uint32_t*)((uintptr_t)this + SwapBytesIf((unsigned long)header.childOffsetsOffset, isBigEndian));
+					return (T*)((uintptr_t)this + SwapBytesIf((unsigned long)childOffsets[index], isBigEndian));
 				}
 				return nullptr;
 			}
@@ -58,10 +63,13 @@ namespace NGMC
 		{
 			int32_t GetChildSize(uint32_t index)
 			{
-				if (index < this->header.childCount)
+				bool isBigEndian = this->header.version.v[0] == 255;
+
+				int32_t childCount = SwapBytesIf((unsigned long)this->header.childCount, isBigEndian);
+				if (index < childCount)
 				{
-					uint32_t* sizeOffsets = (uint32_t*)((uintptr_t)this + this->header.extraDataOffset);
-					return *(int32_t*)((uintptr_t)this + sizeOffsets[index]);
+					uint32_t* sizeOffsets = (uint32_t*)((uintptr_t)this + SwapBytesIf((unsigned long)this->header.extraDataOffset, isBigEndian));
+					return (int32_t)SwapBytesIf(*(unsigned long*)((uintptr_t)this + SwapBytesIf(sizeOffsets[index], isBigEndian)), isBigEndian);
 				}
 				return -1;
 			}
