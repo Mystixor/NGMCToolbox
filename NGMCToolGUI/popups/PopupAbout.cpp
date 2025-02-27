@@ -27,9 +27,9 @@ namespace NGMC
 	{
 		ImGui::Dummy({ 0.0f, 0.0f });
 		ImGui::SetCursorPosX((ImGui::CalcTextSize(longDesc).x - ImGui::CalcTextSize(appTitle).x) / 2);
-		ImGui::Text(appTitle);
+		ImGui::TextUnformatted(appTitle);
 		ImGui::Dummy({ 0.0f, 0.0f });
-		ImGui::Text(longDesc);
+		ImGui::TextUnformatted(longDesc);
 		ImGui::Dummy({ 0.0f, 0.0f });
 
 		ImGui::Separator();
@@ -38,29 +38,9 @@ namespace NGMC
 
 		if (ImGui::BeginTable("tableAbout", 2))
 		{
-			ImGui::TableNextRow();
-
-			ImGui::TableSetColumnIndex(0);
-			ImGui::Text("Version");
-
-			ImGui::TableSetColumnIndex(1);
-			ImGui::Text(std::format("{:X}.{:X}.{:X}", (g_ApplicationVersion >> 16) & 0xFF, (g_ApplicationVersion >> 8) & 0xFF, g_ApplicationVersion & 0xFF).c_str());
-			
-			ImGui::TableNextRow();
-
-			ImGui::TableSetColumnIndex(0);
-			ImGui::Text("Author");
-
-			ImGui::TableSetColumnIndex(1);
-			ImGui::Text("Mystixor");
-			
-			ImGui::TableNextRow();
-
-			ImGui::TableSetColumnIndex(0);
-			ImGui::Text("Contributors");
-
-			ImGui::TableSetColumnIndex(1);
-			ImGui::Text("");
+			ROW_FORMAT("Version", "{:X}.{:X}.{:X}", (g_ApplicationVersion >> 16) & 0xFF, (g_ApplicationVersion >> 8) & 0xFF, g_ApplicationVersion & 0xFF);
+			ROW_CSTRING("Author", "Mystixor");
+			ROW_CSTRING("Contributors", "");
 
 			ImGui::EndTable();
 		}

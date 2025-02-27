@@ -38,7 +38,7 @@ namespace NGMC
 	{
 		if (m_File != nullptr)
 		{
-			ImGui::Text("GENERAL");
+			ImGui::TextUnformatted("GENERAL");
 
 			FileType type = m_File->GetType();
 
@@ -63,42 +63,20 @@ namespace NGMC
 
 			if (ImGui::BeginTable("tablePreviewerGeneral", 2, Preview::tableFlags))
 			{
-				ImGui::TableNextRow();
-				ImGui::TableSetColumnIndex(0); ImGui::Text("Name");
-				ImGui::TableSetColumnIndex(1); ImGui::Text(m_File->GetName());
-
-				ImGui::TableNextRow();
-				ImGui::TableSetColumnIndex(0); ImGui::Text("Type");
-				ImGui::TableSetColumnIndex(1); ImGui::Text("%s > %s", gameName.c_str(), typeName.c_str());
-
-				ImGui::TableNextRow();
-				ImGui::TableSetColumnIndex(0); ImGui::Text("Is file in memory");
-				ImGui::TableSetColumnIndex(1); ImGui::Text(m_File->IsFileInMemory() ? "true" : "false");
+				ROW_CSTRING("Name", m_File->GetName());
+				ROW_PRINTF("Type", "%s > %s", gameName.c_str(), typeName.c_str());
+				ROW_CSTRING("Is file in memory", m_File->IsFileInMemory() ? "true" : "false");
 
 				if (!m_File->IsFileInMemory())
 				{
 					std::wstring filePath = m_File->GetFilePath();
-
-					ImGui::TableNextRow();
-					ImGui::TableSetColumnIndex(0); ImGui::Text("Path");
-					ImGui::TableSetColumnIndex(1); ImGui::Text(std::string(filePath.begin(), filePath.end()).c_str());
+					ROW_STRING("Path", std::string(filePath.begin(), filePath.end()));
 				}
 				
-				ImGui::TableNextRow();
-				ImGui::TableSetColumnIndex(0); ImGui::Text("Is file loaded");
-				ImGui::TableSetColumnIndex(1); ImGui::Text(m_File->IsLoaded() ? "true" : "false");
-
-				ImGui::TableNextRow();
-				ImGui::TableSetColumnIndex(0); ImGui::Text("Size");
-				ImGui::TableSetColumnIndex(1); ImGui::Text(GetPrettySize(m_File->GetSize()).c_str());
-
-				ImGui::TableNextRow();
-				ImGui::TableSetColumnIndex(0); ImGui::Text("Index in Parent");
-				ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", m_File->GetIndexInParent()).c_str());
-				
-				ImGui::TableNextRow();
-				ImGui::TableSetColumnIndex(0); ImGui::Text("Child count");
-				ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", m_File->GetChildCount()).c_str());
+				ROW_CSTRING("Is file loaded", m_File->IsLoaded() ? "true" : "false");
+				ROW_SIZE("Size", m_File->GetSize());
+				ROW_VALUE("Index in Parent", m_File->GetIndexInParent());
+				ROW_VALUE("Child count", m_File->GetChildCount());
 
 				ImGui::EndTable();
 			}
@@ -120,14 +98,14 @@ namespace NGMC
 			else
 			{
 				if (type.IsUnknown())
-					ImGui::Text("Format unknown. Right-click the file and set a type manually.");
+					ImGui::TextUnformatted("Format unknown. Right-click the file and set a type manually.");
 				else
-					ImGui::Text("This format is not yet supported for previewing.");
+					ImGui::TextUnformatted("This format is not yet supported for previewing.");
 			}
 		}
 		else
 		{
-			ImGui::Text("Select an element in the content viewer to see a preview of its data here.");
+			ImGui::TextUnformatted("Select an element in the content viewer to see a preview of its data here.");
 		}
 	}
 

@@ -30,14 +30,14 @@ namespace NGMC
 
 	void PopupSelectGame::OnRenderContent()
 	{
-		ImGui::Text("Please select the Game which this file belongs to:");
+		ImGui::TextUnformatted("Please select the Game which this file belongs to:");
 
 		if (ImGui::BeginTable("tableFileInputForBorders", 1, ImGuiTableFlags_BordersOuter))
 		{
 			ImGui::TableNextRow();
 			ImGui::TableSetColumnIndex(0);
 
-			ImGui::Text((std::string("\"") + GetFile()->GetName() + "\"").c_str());
+			ImGui::TextUnformatted((std::string("\"") + GetFile()->GetName() + "\"").c_str());
 
 			ImGui::EndTable();
 		}

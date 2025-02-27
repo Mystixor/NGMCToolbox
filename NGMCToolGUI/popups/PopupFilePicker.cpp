@@ -162,7 +162,7 @@ namespace NGMC
 			else
 			{
 				ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetStyle().FramePadding.y);
-				ImGui::Text(std::format("Select a file of type \"{}\"", m_AcceptType.GetTypeName()).c_str());
+				ImGui::TextUnformatted(std::format("Select a file of type \"{}\"", m_AcceptType.GetTypeName()).c_str());
 			}
 
 			ImGui::TableSetColumnIndex(2);

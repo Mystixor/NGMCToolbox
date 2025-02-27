@@ -37,16 +37,12 @@ namespace NGMC
 		ImGui::Separator();
 		ImGui::Dummy(ImVec2(0.0f, 5.0f));
 
-		ImGui::Text("DDS_HEADER");
+		ImGui::TextUnformatted("DDS_HEADER");
 
 		if (ImGui::BeginTable("tablePreviewerDDS_HEADER", 2, Preview::tableFlags))
 		{
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("dwSize");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(GetPrettySize(m_DDS_HEADER.dwSize).c_str());
+			ROW_SIZE("dwSize", m_DDS_HEADER.dwSize);
 
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("dwFlags");
 			std::string flagsStr =
 				std::string((m_DDS_HEADER.dwFlags & DDSD_CAPS ? "DDSD_CAPS | " : "")) +
 				(m_DDS_HEADER.dwFlags & DDSD_HEIGHT ? "DDSD_HEIGHT | " : "") +
@@ -56,44 +52,20 @@ namespace NGMC
 				(m_DDS_HEADER.dwFlags & DDSD_MIPMAPCOUNT ? "DDSD_MIPMAPCOUNT | " : "") +
 				(m_DDS_HEADER.dwFlags & DDSD_LINEARSIZE ? "DDSD_LINEARSIZE | " : "") +
 				(m_DDS_HEADER.dwFlags & DDSD_DEPTH ? "DDSD_DEPTH | " : "");
-			ImGui::TableSetColumnIndex(1); ImGui::Text((std::format("0x{:08X}", m_DDS_HEADER.dwFlags) + (m_DDS_HEADER.dwFlags ? std::format(" ({})", flagsStr.substr(0, flagsStr.length() ? flagsStr.length() - 3 : 0)) : "")).c_str());
+			ROW_STRING("dwFlags", std::format("0x{:08X}", m_DDS_HEADER.dwFlags) + (m_DDS_HEADER.dwFlags ? std::format(" ({})", flagsStr.substr(0, flagsStr.length() ? flagsStr.length() - 3 : 0)) : ""));
 
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("dwHeight");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", m_DDS_HEADER.dwHeight).c_str());
+			ROW_VALUE("dwHeight", m_DDS_HEADER.dwHeight);
+			ROW_VALUE("dwWidth", m_DDS_HEADER.dwWidth);
+			ROW_VALUE("dwPitchOrLinearSize", m_DDS_HEADER.dwPitchOrLinearSize);
+			ROW_VALUE("dwDepth", m_DDS_HEADER.dwDepth);
+			ROW_VALUE("dwMipMapCount", m_DDS_HEADER.dwMipMapCount);
+			ROW_STRING("dwReserved1", std::string("\"") + (char*)m_DDS_HEADER.dwReserved1 + "\"");
 
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("dwWidth");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", m_DDS_HEADER.dwWidth).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("dwPitchOrLinearSize");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", m_DDS_HEADER.dwPitchOrLinearSize).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("dwDepth");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", m_DDS_HEADER.dwDepth).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("dwMipMapCount");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", m_DDS_HEADER.dwMipMapCount).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("dwReserved1");
-			ImGui::TableSetColumnIndex(1); ImGui::Text((std::string("\"") + (char*)m_DDS_HEADER.dwReserved1 + "\"").c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("ddspf");
-			ImGui::TableSetColumnIndex(1);
-
+			ROW_BEGIN("ddspf");
 			if (ImGui::BeginTable("tablePreviewerDDS_HEADERddspf", 2, Preview::tableFlags))
 			{
-				ImGui::TableNextRow();
-				ImGui::TableSetColumnIndex(0); ImGui::Text("dwSize");
-				ImGui::TableSetColumnIndex(1); ImGui::Text(GetPrettySize(m_DDS_HEADER.ddspf.dwSize).c_str());
+				ROW_SIZE("dwSize", m_DDS_HEADER.ddspf.dwSize);
 
-				ImGui::TableNextRow();
-				ImGui::TableSetColumnIndex(0); ImGui::Text("dwFlags");
 				std::string ddspfFlagsStr =
 					std::string((m_DDS_HEADER.ddspf.dwFlags & DDPF_ALPHAPIXELS ? "DDPF_ALPHAPIXELS | " : "")) +
 					(m_DDS_HEADER.ddspf.dwFlags & DDPF_ALPHA ? "DDPF_ALPHA | " : "") +
@@ -101,45 +73,24 @@ namespace NGMC
 					(m_DDS_HEADER.ddspf.dwFlags & DDPF_RGB ? "DDPF_RGB | " : "") +
 					(m_DDS_HEADER.ddspf.dwFlags & DDPF_YUV ? "DDPF_YUV | " : "") +
 					(m_DDS_HEADER.ddspf.dwFlags & DDPF_LUMINANCE ? "DDPF_LUMINANCE | " : "");
-				ImGui::TableSetColumnIndex(1); ImGui::Text((std::format("0x{:08X}", m_DDS_HEADER.ddspf.dwFlags) + (m_DDS_HEADER.ddspf.dwFlags ? std::format(" ({})", ddspfFlagsStr.substr(0, ddspfFlagsStr.length() ? ddspfFlagsStr.length() - 3 : 0)) : "")).c_str());
+				ROW_STRING("dwFlags", std::format("0x{:08X}", m_DDS_HEADER.ddspf.dwFlags) + (m_DDS_HEADER.ddspf.dwFlags ? std::format(" ({})", ddspfFlagsStr.substr(0, ddspfFlagsStr.length() ? ddspfFlagsStr.length() - 3 : 0)) : ""));
 
-				ImGui::TableNextRow();
-				ImGui::TableSetColumnIndex(0); ImGui::Text("dwFourCC");
-				ImGui::TableSetColumnIndex(1); ImGui::Text((std::string("\"") + (char*)&m_DDS_HEADER.ddspf.dwFourCC + "\"").c_str());
-
-				ImGui::TableNextRow();
-				ImGui::TableSetColumnIndex(0); ImGui::Text("dwRGBBitCount");
-				ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", m_DDS_HEADER.ddspf.dwRGBBitCount).c_str());
-
-				ImGui::TableNextRow();
-				ImGui::TableSetColumnIndex(0); ImGui::Text("dwRBitMask");
-				ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("0x{:08X}", m_DDS_HEADER.ddspf.dwRBitMask).c_str());
-
-				ImGui::TableNextRow();
-				ImGui::TableSetColumnIndex(0); ImGui::Text("dwGBitMask");
-				ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("0x{:08X}", m_DDS_HEADER.ddspf.dwGBitMask).c_str());
-
-				ImGui::TableNextRow();
-				ImGui::TableSetColumnIndex(0); ImGui::Text("dwBBitMask");
-				ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("0x{:08X}", m_DDS_HEADER.ddspf.dwBBitMask).c_str());
-
-				ImGui::TableNextRow();
-				ImGui::TableSetColumnIndex(0); ImGui::Text("dwABitMask");
-				ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("0x{:08X}", m_DDS_HEADER.ddspf.dwABitMask).c_str());
+				ROW_STRING("dwFourCC", std::string("\"") + (char*)&m_DDS_HEADER.ddspf.dwFourCC + "\"");
+				ROW_VALUE("dwRGBBitCount", m_DDS_HEADER.ddspf.dwRGBBitCount);
+				ROW_VALUE("dwRBitMask", m_DDS_HEADER.ddspf.dwRBitMask);
+				ROW_VALUE("dwGBitMask", m_DDS_HEADER.ddspf.dwGBitMask);
+				ROW_VALUE("dwBBitMask", m_DDS_HEADER.ddspf.dwBBitMask);
+				ROW_VALUE("dwABitMask", m_DDS_HEADER.ddspf.dwABitMask);
 
 				ImGui::EndTable();
 			}
 
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("dwCaps");
 			std::string capsStr =
 				std::string((m_DDS_HEADER.dwCaps & DDSCAPS_COMPLEX ? "DDSCAPS_COMPLEX | " : "")) +
 				(m_DDS_HEADER.dwCaps & DDSCAPS_MIPMAP ? "DDSCAPS_MIPMAP | " : "") +
 				(m_DDS_HEADER.dwCaps & DDSCAPS_TEXTURE ? "DDSCAPS_TEXTURE | " : "");
-			ImGui::TableSetColumnIndex(1); ImGui::Text((std::format("0x{:08X}", m_DDS_HEADER.dwCaps) + (m_DDS_HEADER.dwCaps ? std::format(" ({})", capsStr.substr(0, capsStr.length() ? capsStr.length() - 3 : 0)) : "")).c_str());
+			ROW_STRING("dwCaps", std::format("0x{:08X}", m_DDS_HEADER.dwCaps) + (m_DDS_HEADER.dwCaps ? std::format(" ({})", capsStr.substr(0, capsStr.length() ? capsStr.length() - 3 : 0)) : ""));
 
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("dwCaps2");
 			std::string caps2Str =
 				std::string((m_DDS_HEADER.dwCaps2 & DDSCAPS2_CUBEMAP ? "DDSCAPS2_CUBEMAP | " : "")) +
 				(m_DDS_HEADER.dwCaps2 & DDSCAPS2_CUBEMAP_POSITIVEX ? "DDSCAPS2_CUBEMAP_POSITIVEX | " : "") +
@@ -149,19 +100,11 @@ namespace NGMC
 				(m_DDS_HEADER.dwCaps2 & DDSCAPS2_CUBEMAP_POSITIVEZ ? "DDSCAPS2_CUBEMAP_POSITIVEZ | " : "") +
 				(m_DDS_HEADER.dwCaps2 & DDSCAPS2_CUBEMAP_NEGATIVEZ ? "DDSCAPS2_CUBEMAP_NEGATIVEZ | " : "") +
 				(m_DDS_HEADER.dwCaps2 & DDSCAPS2_VOLUME ? "DDSCAPS2_VOLUME | " : "");
-			ImGui::TableSetColumnIndex(1); ImGui::Text((std::format("0x{:08X}", m_DDS_HEADER.dwCaps2) + (m_DDS_HEADER.dwCaps2 ? std::format(" ({})", caps2Str.substr(0, caps2Str.length() ? caps2Str.length() - 3 : 0)) : "")).c_str());
+			ROW_STRING("dwCaps2", std::format("0x{:08X}", m_DDS_HEADER.dwCaps2) + (m_DDS_HEADER.dwCaps2 ? std::format(" ({})", caps2Str.substr(0, caps2Str.length() ? caps2Str.length() - 3 : 0)) : ""));
 
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("dwCaps3");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("0x{:08X}", m_DDS_HEADER.dwCaps3).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("dwCaps4");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("0x{:08X}", m_DDS_HEADER.dwCaps4).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("dwReserved2");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", m_DDS_HEADER.dwReserved2).c_str());
+			ROW_VALUE("dwCaps3", m_DDS_HEADER.dwCaps3);
+			ROW_VALUE("dwCaps4", m_DDS_HEADER.dwCaps4);
+			ROW_VALUE("dwReserved2", m_DDS_HEADER.dwReserved2);
 
 			ImGui::EndTable();
 		}

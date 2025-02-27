@@ -93,7 +93,7 @@ namespace NGMC
 		if (ImGui::BeginChild("childWindowPopupBuildGT1GTextureList", { 0.0f, -footer_height_to_reserve }, ImGuiChildFlags_Border, ImGuiWindowFlags_AlwaysVerticalScrollbar))
 		{
 			if (m_TextureCount == 0)
-				ImGui::Text("Increase count above to edit textures here.");
+				ImGui::TextUnformatted("Increase count above to edit textures here.");
 
 			for (unsigned int i = 0; i < m_TextureCount; i++)
 			{
@@ -123,7 +123,7 @@ namespace NGMC
 						}
 
 						ImGui::TableNextRow();
-						ImGui::TableSetColumnIndex(0); ImGui::Text("File input:");
+						ImGui::TableSetColumnIndex(0); ImGui::TextUnformatted("File input:");
 
 						ImGui::TableNextRow();
 						ImGui::TableSetColumnIndex(0);
@@ -136,11 +136,11 @@ namespace NGMC
 								ImGui::TableSetColumnIndex(0);
 								if (m_TextureFilePathDisplays[i].length() == 0)
 								{
-									ImGui::Text("No file selected");
+									ImGui::TextUnformatted("No file selected");
 								}
 								else
 								{
-									ImGui::Text(m_TextureFilePathDisplays[i].c_str());
+									ImGui::TextUnformatted(m_TextureFilePathDisplays[i].c_str());
 								}
 
 								ImGui::EndTable();
@@ -148,7 +148,7 @@ namespace NGMC
 
 							if (ImGui::BeginItemTooltip())
 							{
-								ImGui::Text("Text field does not support UTF-16, but if you pick a file using the Browse button it will work correctly nonetheless");
+								ImGui::TextUnformatted("Text field does not support UTF-16, but if you pick a file using the Browse button it will work correctly nonetheless");
 								ImGui::EndTooltip();
 							}
 
@@ -208,11 +208,11 @@ namespace NGMC
 								ImGui::TableSetColumnIndex(0);
 								if (m_TextureFilePointers[i] == nullptr)
 								{
-									ImGui::Text("No file selected");
+									ImGui::TextUnformatted("No file selected");
 								}
 								else
 								{
-									ImGui::Text(m_TextureFilePointers[i]->GetName());
+									ImGui::TextUnformatted(m_TextureFilePointers[i]->GetName());
 								}
 								ImGui::EndTable();
 							}
@@ -230,7 +230,7 @@ namespace NGMC
 
 
 						ImGui::TableNextRow();
-						ImGui::TableSetColumnIndex(0); ImGui::Text("Width:");
+						ImGui::TableSetColumnIndex(0); ImGui::TextUnformatted("Width:");
 
 						ImGui::TableNextRow();
 						ImGui::TableSetColumnIndex(0);
@@ -248,7 +248,7 @@ namespace NGMC
 
 
 						ImGui::TableNextRow();
-						ImGui::TableSetColumnIndex(0); ImGui::Text("Height:");
+						ImGui::TableSetColumnIndex(0); ImGui::TextUnformatted("Height:");
 
 						ImGui::TableNextRow();
 						ImGui::TableSetColumnIndex(0);
@@ -266,7 +266,7 @@ namespace NGMC
 
 
 						ImGui::TableNextRow();
-						ImGui::TableSetColumnIndex(0); ImGui::Text("MipMap Count:");
+						ImGui::TableSetColumnIndex(0); ImGui::TextUnformatted("MipMap Count:");
 
 						ImGui::TableNextRow();
 						ImGui::TableSetColumnIndex(0);
@@ -280,7 +280,7 @@ namespace NGMC
 
 
 						ImGui::TableNextRow();
-						ImGui::TableSetColumnIndex(0); ImGui::Text("Format:");
+						ImGui::TableSetColumnIndex(0); ImGui::TextUnformatted("Format:");
 
 						ImGui::TableNextRow();
 						ImGui::TableSetColumnIndex(0);
@@ -316,7 +316,7 @@ namespace NGMC
 		ImGui::Dummy(ImVec2(0.0f, spacing));
 
 		ImGui::PushItemWidth(ImGui::GetWindowSize().x - 97.0f);
-		ImGui::Text("File name:");
+		ImGui::TextUnformatted("File name:");
 		if (ImGui::InputText("##inputFileName", (char*)m_OutputName.c_str(), 256))
 		{
 			m_OutputName = m_OutputName.c_str();

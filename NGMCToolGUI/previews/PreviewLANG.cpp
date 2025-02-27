@@ -15,7 +15,7 @@ namespace NGMC
 		{
 			ImGui::Dummy({});
 
-			ImGui::Text(std::format("LANG \"{}\"", m_Root.name).c_str());
+			ImGui::TextUnformatted(std::format("LANG \"{}\"", m_Root.name).c_str());
 
 			if (ImGui::BeginTable("tablePreviewerLANG", 1, Preview::tableFlags))
 			{
@@ -70,7 +70,7 @@ namespace NGMC
 										for (unsigned int k = 0; k < m_Content[i].second[j].first.header.childCount; k++)
 										{
 											ImGui::TableNextRow();
-											ImGui::TableSetColumnIndex(0); ImGui::Text(m_Content[i].second[j].second[k].c_str());
+											ImGui::TableSetColumnIndex(0); ImGui::TextUnformatted(m_Content[i].second[j].second[k].c_str());
 										}
 
 										ImGui::EndTable();
@@ -117,49 +117,17 @@ namespace NGMC
 		uintptr_t headerAddr = (uintptr_t)&header;
 		if (ImGui::BeginTable(std::vformat("header##{:08X}", std::make_format_args(headerAddr)).c_str(), 2, Preview::tableFlags))
 		{
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("Signature");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("\"{}\"", header.magic).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("Version");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}.{}.{}.{}", header.version.v[0], header.version.v[1], header.version.v[2], header.version.v[3]).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("dat_0C");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", header.dat_0C).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("chunkSize");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(GetPrettySize(header.chunkSize).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("childCount");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", header.childCount).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("dat_18");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", header.dat_18).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("dat_1C");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", header.dat_1C).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("childOffsetsOffset");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", header.childOffsetsOffset).c_str());
-			
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("extraDataOffset");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", header.extraDataOffset).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("dat_28");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", header.dat_28).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("dat_2C");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", header.dat_2C).c_str());
+			ROW_QUOTE("Signature", header.magic);
+			ROW_FORMAT("Version", "{}.{}.{}.{}", header.version.v[0], header.version.v[1], header.version.v[2], header.version.v[3]);
+			ROW_VALUE("dat_0C", header.dat_0C);
+			ROW_VALUE("chunkSize", header.chunkSize);
+			ROW_VALUE("childCount", header.childCount);
+			ROW_VALUE("dat_18", header.dat_18);
+			ROW_VALUE("dat_1C", header.dat_1C);
+			ROW_VALUE("childOffsetsOffset", header.childOffsetsOffset);
+			ROW_VALUE("extraDataOffset", header.extraDataOffset);
+			ROW_VALUE("dat_28", header.dat_28);
+			ROW_VALUE("dat_2C", header.dat_2C);
 
 			ImGui::EndTable();
 		}
@@ -169,29 +137,14 @@ namespace NGMC
 	{
 		if (ImGui::BeginTable("tablePreviewerLANG2", 2, Preview::tableFlags))
 		{
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("Chunk Header");
-			ImGui::TableSetColumnIndex(1); OnRenderChunkHeader(node.header);
+			ROW_BEGIN("Chunk Header");
+			OnRenderChunkHeader(node.header);
 
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("Identifier");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("\"{}\"", node.name).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("dat_40");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", node.dat_40).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("dat_44");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", node.dat_44).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("dat_48");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", node.dat_48).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("dat_4C");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", node.dat_4C).c_str());
+			ROW_QUOTE("Identifier", node.name);
+			ROW_VALUE("dat_40", node.dat_40);
+			ROW_VALUE("dat_44", node.dat_44);
+			ROW_VALUE("dat_48", node.dat_48);
+			ROW_VALUE("dat_4C", node.dat_4C);
 
 			ImGui::EndTable();
 		}
@@ -201,45 +154,18 @@ namespace NGMC
 	{
 		if (ImGui::BeginTable("tablePreviewerLANGCTGPACK2", 2, Preview::tableFlags))
 		{
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("Header");
-			ImGui::TableSetColumnIndex(1); OnRenderChunkHeader(node.header);
+			ROW_BEGIN("Header");
+			OnRenderChunkHeader(node.header);
 
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("Identifier");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("\"{}\"", node.name).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("dat_40");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", node.dat_40).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("dat_44");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", node.dat_44).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("dat_48");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", node.dat_48).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("dat_4C");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", node.dat_4C).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("dat_50");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", node.dat_50).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("dat_54");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", node.dat_54).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("dat_58");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", node.dat_58).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("dat_5C");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", node.dat_5C).c_str());
+			ROW_QUOTE("Identifier", node.name);
+			ROW_VALUE("dat_40", node.dat_40);
+			ROW_VALUE("dat_44", node.dat_44);
+			ROW_VALUE("dat_48", node.dat_48);
+			ROW_VALUE("dat_4C", node.dat_4C);
+			ROW_VALUE("dat_50", node.dat_50);
+			ROW_VALUE("dat_54", node.dat_54);
+			ROW_VALUE("dat_58", node.dat_58);
+			ROW_VALUE("dat_5C", node.dat_5C);
 
 			ImGui::EndTable();
 		}
@@ -249,45 +175,18 @@ namespace NGMC
 	{
 		if (ImGui::BeginTable("tablePreviewerLANGCTGPACKSTRPACK2", 2, Preview::tableFlags))
 		{
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("Header");
-			ImGui::TableSetColumnIndex(1); OnRenderChunkHeader(node.header);
+			ROW_BEGIN("Header");
+			OnRenderChunkHeader(node.header);
 
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("Identifier");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("\"{}\"", node.name).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("dat_40");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", node.dat_40).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("dat_44");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", node.dat_44).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("dat_48");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", node.dat_48).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("dat_4C");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", node.dat_4C).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("dat_50");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", node.dat_50).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("dat_54");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", node.dat_54).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("dat_58");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", node.dat_58).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("dat_5C");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", node.dat_5C).c_str());
+			ROW_QUOTE("Identifier", node.name);
+			ROW_VALUE("dat_40", node.dat_40);
+			ROW_VALUE("dat_44", node.dat_44);
+			ROW_VALUE("dat_48", node.dat_48);
+			ROW_VALUE("dat_4C", node.dat_4C);
+			ROW_VALUE("dat_50", node.dat_50);
+			ROW_VALUE("dat_54", node.dat_54);
+			ROW_VALUE("dat_58", node.dat_58);
+			ROW_VALUE("dat_5C", node.dat_5C);
 
 			ImGui::EndTable();
 		}

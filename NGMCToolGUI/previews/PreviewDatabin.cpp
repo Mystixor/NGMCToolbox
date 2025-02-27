@@ -14,53 +14,18 @@ namespace NGMC
 	{
 		if (ImGui::BeginTable("tablePreviewerDatabin", 2, Preview::tableFlags))
 		{
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("dat_00");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", m_DatabinHeader.dat_00).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("dat_04");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", m_DatabinHeader.dat_04).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("dat_08");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", m_DatabinHeader.dat_08).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("dat_0C");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", m_DatabinHeader.dat_0C).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("headerSize");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(GetPrettySize(m_DatabinHeader.headerSize).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("fileDataOffset");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(GetPrettySize(m_DatabinHeader.fileDataOffset).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("dat_18");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", m_DatabinHeader.dat_18).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("dat_1C");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", m_DatabinHeader.dat_1C).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("fileCount");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", m_DatabinHeader.fileCount).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("fileIndicesOffset");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(GetPrettySize(m_DatabinHeader.fileIndicesOffset).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("fileCount1");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", m_DatabinHeader.fileCount1).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("dat_2C");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", m_DatabinHeader.dat_2C).c_str());
+			ROW_VALUE("dat_00", m_DatabinHeader.dat_00);
+			ROW_VALUE("dat_04", m_DatabinHeader.dat_04);
+			ROW_VALUE("dat_08", m_DatabinHeader.dat_08);
+			ROW_VALUE("dat_0C", m_DatabinHeader.dat_0C);
+			ROW_SIZE("headerSize", m_DatabinHeader.headerSize);
+			ROW_SIZE("fileDataOffset", m_DatabinHeader.fileDataOffset);
+			ROW_VALUE("dat_18", m_DatabinHeader.dat_18);
+			ROW_VALUE("dat_1C", m_DatabinHeader.dat_1C);
+			ROW_VALUE("fileCount", m_DatabinHeader.fileCount);
+			ROW_VALUE("fileIndicesOffset", m_DatabinHeader.fileIndicesOffset);
+			ROW_VALUE("fileCount1", m_DatabinHeader.fileCount1);
+			ROW_VALUE("dat_2C", m_DatabinHeader.dat_2C);
 
 			ImGui::EndTable();
 		}

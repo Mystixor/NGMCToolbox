@@ -32,7 +32,7 @@ namespace NGMC
 
 	void PopupRenameFile::OnRenderContent()
 	{
-		ImGui::Text("File name:");
+		ImGui::TextUnformatted("File name:");
 		
 		ImGui::PushItemWidth(ImGui::GetWindowSize().x - 2 * ImGui::GetStyle().WindowPadding.x);
 		if (ImGui::InputText("##newName", (char*)m_NewName.c_str(), 128))

@@ -18,30 +18,12 @@ namespace NGMC
 
 		if (ImGui::BeginTable("tablePreviewerGT1G", 2, Preview::tableFlags))
 		{
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("Version");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}.{}.{}.{}", (char)m_GT1GHeader.version.major, (char)m_GT1GHeader.version.submajor, (char)m_GT1GHeader.version.minor, (char)m_GT1GHeader.version.patch).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("fileSize");
-			std::string prettyFileSize = GetPrettySize(m_GT1GHeader.fileSize);
-			ImGui::TableSetColumnIndex(1); ImGui::Text(prettyFileSize.c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("textureOffsetTableAddress");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("0x{:08X}", m_GT1GHeader.textureOffsetTableAddress).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("textureCount");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", m_GT1GHeader.textureCount).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("dat_14");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", m_GT1GHeader.dat_14).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("dat_18");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", m_GT1GHeader.dat_18).c_str());
+			ROW_FORMAT("Version", "{}.{}.{}.{}", (char)m_GT1GHeader.version.major, (char)m_GT1GHeader.version.submajor, (char)m_GT1GHeader.version.minor, (char)m_GT1GHeader.version.patch);
+			ROW_SIZE("fileSize", m_GT1GHeader.fileSize);
+			ROW_FORMAT("textureOffsetTableAddress", "0x{:08X}", m_GT1GHeader.textureOffsetTableAddress);
+			ROW_VALUE("textureCount", m_GT1GHeader.textureCount);
+			ROW_VALUE("dat_14", m_GT1GHeader.dat_14);
+			ROW_VALUE("dat_18", m_GT1GHeader.dat_18);
 
 			ImGui::EndTable();
 		}
@@ -52,7 +34,7 @@ namespace NGMC
 
 		if (m_GT1GHeader.textureCount)
 		{
-			ImGui::Text("Preview texture");
+			ImGui::TextUnformatted("Preview texture");
 
 			ImGui::PushItemWidth(100.0f);
 			if (ImGui::InputInt("Texture index", (int*)&m_PreviewGT1GTexIdx))
@@ -99,68 +81,56 @@ namespace NGMC
 				ImGui::Dummy(ImVec2(0.0f, 5.0f));
 				ImGui::Separator();
 				ImGui::Dummy(ImVec2(0.0f, 5.0f));
-				ImGui::Text(std::format("Texture #{}", i).c_str());
+				ImGui::TextUnformatted(std::format("Texture #{}", i).c_str());
 
 				if (ImGui::BeginTable(std::format("tablePreviewerGT1GTexture{}", i).c_str(), 2, Preview::tableFlags))
 				{
-					ImGui::TableNextRow();
-					ImGui::TableSetColumnIndex(0); ImGui::Text("Pixel format");
-					ImGui::TableSetColumnIndex(1);
-
+					ROW_BEGIN("Pixel format");
 					switch (m_GT1GTextures[i].Format)
 					{
 					case PixelFormat::RGBA8_BGRA_u8:
-						ImGui::Text("BGRA"); break;
+						ImGui::TextUnformatted("BGRA");
+						break;
 					case PixelFormat::RGBA8_RGBA_u8:
 					case PixelFormat::CompressedRgbaS3tcDxt5Ext_08:
 					case PixelFormat::CompressedRgbaS3tcDxt5Ext_5B:
-						ImGui::Text("RGBA"); break;
+						ImGui::TextUnformatted("RGBA");
+						break;
 					case PixelFormat::CompressedRgbS3tcDxt1Ext_06:
 					case PixelFormat::CompressedRgbS3tcDxt1Ext_59:
-						ImGui::Text("RGB"); break;
+						ImGui::TextUnformatted("RGB");
+						break;
 					case PixelFormat::ColorMap_u8:
-						ImGui::Text("Color Map index"); break;
+						ImGui::TextUnformatted("Color Map index");
+						break;
 					default:
-						ImGui::Text("unknown");
+						ImGui::TextUnformatted("unknown");
 					}
 
-					ImGui::TableNextRow();
-					ImGui::TableSetColumnIndex(0); ImGui::Text("Compression");
-					ImGui::TableSetColumnIndex(1);
-
+					ROW_BEGIN("Compression");
 					switch (m_GT1GTextures[i].Format)
 					{
 					case PixelFormat::RGBA8_BGRA_u8:
 					case PixelFormat::RGBA8_RGBA_u8:
 					case PixelFormat::ColorMap_u8:
-						ImGui::Text(std::format("raw (0x{:02X})", (unsigned char)m_GT1GTextures[i].Format).c_str()); break;
+						ImGui::TextUnformatted(std::format("raw (0x{:02X})", (unsigned char)m_GT1GTextures[i].Format).c_str()); break;
 					case PixelFormat::CompressedRgbS3tcDxt1Ext_06:
 					case PixelFormat::CompressedRgbS3tcDxt1Ext_59:
-						ImGui::Text(std::format("S3TC DXT1 (0x{:02X})", (unsigned char)m_GT1GTextures[i].Format).c_str()); break;
+						ImGui::TextUnformatted(std::format("S3TC DXT1 (0x{:02X})", (unsigned char)m_GT1GTextures[i].Format).c_str()); break;
 					case PixelFormat::CompressedRgbaS3tcDxt5Ext_08:
 					case PixelFormat::CompressedRgbaS3tcDxt5Ext_5B:
-						ImGui::Text(std::format("S3TC DXT5 (0x{:02X})", (unsigned char)m_GT1GTextures[i].Format).c_str()); break;
+						ImGui::TextUnformatted(std::format("S3TC DXT5 (0x{:02X})", (unsigned char)m_GT1GTextures[i].Format).c_str()); break;
 					default:
-						ImGui::Text("unknown");
+						ImGui::TextUnformatted("unknown");
 					}
 
-					ImGui::TableNextRow();
-					ImGui::TableSetColumnIndex(0); ImGui::Text("Flags");
-					ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("0x{:08X}", m_GT1GTextures[i].Flags).c_str());
+					ROW_FORMAT("Flags", "0x{:08X}", m_GT1GTextures[i].Flags);
 
 					if ((m_GT1GTextures[i].Flags >> 24) == 0x10)
 					{
-						ImGui::TableNextRow();
-						ImGui::TableSetColumnIndex(0); ImGui::Text("ExtraFlags0");
-						ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("0x{:08X}", m_GT1GTextures[i].ExtraFlags0).c_str());
-
-						ImGui::TableNextRow();
-						ImGui::TableSetColumnIndex(0); ImGui::Text("ExtraFlags1");
-						ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("0x{:08X}", m_GT1GTextures[i].ExtraFlags1).c_str());
-
-						ImGui::TableNextRow();
-						ImGui::TableSetColumnIndex(0); ImGui::Text("ExtraFlags2");
-						ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("0x{:08X}", m_GT1GTextures[i].ExtraFlags2).c_str());
+						ROW_FORMAT("ExtraFlags0", "0x{:08X}", m_GT1GTextures[i].ExtraFlags0);
+						ROW_FORMAT("ExtraFlags1", "0x{:08X}", m_GT1GTextures[i].ExtraFlags1);
+						ROW_FORMAT("ExtraFlags2", "0x{:08X}", m_GT1GTextures[i].ExtraFlags2);
 					}
 
 					ImGui::EndTable();
@@ -169,24 +139,24 @@ namespace NGMC
 				if (ImGui::BeginTable(std::format("tablePreviewerGT1GTexture{}MipMaps", i).c_str(), 1 + m_GT1GTextures[i].MipMapCount, Preview::tableFlags))
 				{
 					ImGui::TableNextRow();
-					ImGui::TableSetColumnIndex(0); ImGui::Text("MipMap level");
+					ImGui::TableSetColumnIndex(0); ImGui::TextUnformatted("MipMap level");
 					for (unsigned int j = 0; j < m_GT1GTextures[i].MipMapCount; j++)
 					{
-						ImGui::TableSetColumnIndex(1 + j); ImGui::Text(std::format("{}", j).c_str());
+						ImGui::TableSetColumnIndex(1 + j); ImGui::TextUnformatted(std::format("{}", j).c_str());
 					}
 
 					ImGui::TableNextRow();
-					ImGui::TableSetColumnIndex(0); ImGui::Text("Width");
+					ImGui::TableSetColumnIndex(0); ImGui::TextUnformatted("Width");
 					for (unsigned int j = 0; j < m_GT1GTextures[i].MipMapCount; j++)
 					{
-						ImGui::TableSetColumnIndex(1 + j); ImGui::Text(std::format("{}", m_GT1GTextures[i].MipMaps[j].Width).c_str());
+						ImGui::TableSetColumnIndex(1 + j); ImGui::TextUnformatted(std::format("{}", m_GT1GTextures[i].MipMaps[j].Width).c_str());
 					}
 
 					ImGui::TableNextRow();
-					ImGui::TableSetColumnIndex(0); ImGui::Text("Height");
+					ImGui::TableSetColumnIndex(0); ImGui::TextUnformatted("Height");
 					for (unsigned int j = 0; j < m_GT1GTextures[i].MipMapCount; j++)
 					{
-						ImGui::TableSetColumnIndex(1 + j); ImGui::Text(std::format("{}", m_GT1GTextures[i].MipMaps[j].Height).c_str());
+						ImGui::TableSetColumnIndex(1 + j); ImGui::TextUnformatted(std::format("{}", m_GT1GTextures[i].MipMaps[j].Height).c_str());
 					}
 
 					ImGui::EndTable();
@@ -195,7 +165,7 @@ namespace NGMC
 		}
 		else
 		{
-			ImGui::Text("No textures were found in this file. This is unexpected.");
+			ImGui::TextUnformatted("No textures were found in this file. This is unexpected.");
 		}
 	}
 

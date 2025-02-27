@@ -54,86 +54,37 @@ namespace NGMC
 			}
 			}
 
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("offset");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("0x{:08X}", offset).c_str());
+			ROW_FORMAT("offset", "0x{:08X}", offset);
+			ROW_VALUE("dat_04", dat_04);
+			ROW_SIZE("size", size);
+			ROW_SIZE("sizeCompressed", sizeCompressed);
+			ROW_VALUE("dat_10", dat_10);
 
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("dat_04");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", dat_04).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("size");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(GetPrettySize(size).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("sizeCompressed");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(GetPrettySize(sizeCompressed).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("dat_10");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", dat_10).c_str());
 
 			switch (game)
 			{
 			case SIGMA_1:
 			{
-				ImGui::TableNextRow();
-				ImGui::TableSetColumnIndex(0); ImGui::Text("indexLinkedFile0");
-				ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", m_DatabinItemHeaderS1.indexLinkedFile0).c_str());
-
-				ImGui::TableNextRow();
-				ImGui::TableSetColumnIndex(0); ImGui::Text("indexLinkedFile1");
-				ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", m_DatabinItemHeaderS1.indexLinkedFile1).c_str());
-
-				ImGui::TableNextRow();
-				ImGui::TableSetColumnIndex(0); ImGui::Text("typeLinkedFile0");
-				ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("0x{:02X} ({})", m_DatabinItemHeaderS1.typeLinkedFile0, GetFileExtension((Databin::S1::FileTypeId)m_DatabinItemHeaderS1.typeLinkedFile0)).c_str());
-
-				ImGui::TableNextRow();
-				ImGui::TableSetColumnIndex(0); ImGui::Text("typeLinkedFile1");
-				ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("0x{:02X} ({})", m_DatabinItemHeaderS1.typeLinkedFile1, GetFileExtension((Databin::S1::FileTypeId)m_DatabinItemHeaderS1.typeLinkedFile1)).c_str());
-
-				ImGui::TableNextRow();
-				ImGui::TableSetColumnIndex(0); ImGui::Text("type");
-				ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("0x{:02X} ({})", m_DatabinItemHeaderS1.type, GetFileExtension((Databin::S1::FileTypeId)m_DatabinItemHeaderS1.type)).c_str());
-
-				ImGui::TableNextRow();
-				ImGui::TableSetColumnIndex(0); ImGui::Text("dat_1B");
-				ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", m_DatabinItemHeaderS1.dat_1B).c_str());
-
-				ImGui::TableNextRow();
-				ImGui::TableSetColumnIndex(0); ImGui::Text("dat_1C");
-				ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", m_DatabinItemHeaderS1.dat_1C).c_str());
-
+				ROW_VALUE("indexLinkedFile0", m_DatabinItemHeaderS1.indexLinkedFile0);
+				ROW_VALUE("indexLinkedFile1", m_DatabinItemHeaderS1.indexLinkedFile1);
+				ROW_FORMAT("typeLinkedFile0", "0x{:02X} ({})", m_DatabinItemHeaderS1.typeLinkedFile0, GetFileExtension((Databin::S1::FileTypeId)m_DatabinItemHeaderS1.typeLinkedFile0));
+				ROW_FORMAT("typeLinkedFile1", "0x{:02X} ({})", m_DatabinItemHeaderS1.typeLinkedFile1, GetFileExtension((Databin::S1::FileTypeId)m_DatabinItemHeaderS1.typeLinkedFile1));
+				ROW_FORMAT("type", "0x{:02X} ({})", m_DatabinItemHeaderS1.type, GetFileExtension((Databin::S1::FileTypeId)m_DatabinItemHeaderS1.type));
+				ROW_VALUE("dat_1B", m_DatabinItemHeaderS1.dat_1B);
+				ROW_VALUE("dat_1C", m_DatabinItemHeaderS1.dat_1C);
 				break;
 			}
 			case SIGMA_2:
 			{
-				ImGui::TableNextRow();
-				ImGui::TableSetColumnIndex(0); ImGui::Text("indexLinkedFile");
-				ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", m_DatabinItemHeaderS2.indexLinkedFile).c_str());
-
-				ImGui::TableNextRow();
-				ImGui::TableSetColumnIndex(0); ImGui::Text("typeLinkedFile");
-				ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("0x{:02X} ({})", m_DatabinItemHeaderS2.typeLinkedFile, GetFileExtension((Databin::S2::FileTypeId)m_DatabinItemHeaderS2.typeLinkedFile)).c_str());
-
-				ImGui::TableNextRow();
-				ImGui::TableSetColumnIndex(0); ImGui::Text("type");
-				ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("0x{:02X} ({})", m_DatabinItemHeaderS2.type, GetFileExtension((Databin::S2::FileTypeId)m_DatabinItemHeaderS2.type)).c_str());
-
+				ROW_VALUE("indexLinkedFile", m_DatabinItemHeaderS2.indexLinkedFile);
+				ROW_FORMAT("typeLinkedFile", "0x{:02X} ({})", m_DatabinItemHeaderS2.typeLinkedFile, GetFileExtension((Databin::S2::FileTypeId)m_DatabinItemHeaderS2.typeLinkedFile));
+				ROW_FORMAT("type", "0x{:02X} ({})", m_DatabinItemHeaderS2.type, GetFileExtension((Databin::S2::FileTypeId)m_DatabinItemHeaderS2.type));
 				break;
 			}
 			case RE_3:
 			{
-				ImGui::TableNextRow();
-				ImGui::TableSetColumnIndex(0); ImGui::Text("type");
-				ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("0x{:08X} ({})", m_DatabinItemHeaderRE.type, GetFileExtension((Databin::RE::FileTypeId)m_DatabinItemHeaderRE.type)).c_str());
-
-				ImGui::TableNextRow();
-				ImGui::TableSetColumnIndex(0); ImGui::Text("indexLinkedFile");
-				ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", m_DatabinItemHeaderRE.indexLinkedFile).c_str());
-
+				ROW_FORMAT("type", "0x{:08X} ({})", m_DatabinItemHeaderRE.type, GetFileExtension((Databin::RE::FileTypeId)m_DatabinItemHeaderRE.type));
+				ROW_VALUE("indexLinkedFile", m_DatabinItemHeaderRE.indexLinkedFile);
 				break;
 			}
 			}

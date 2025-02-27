@@ -399,7 +399,7 @@ namespace NGMC
 			{
 				ImGui::Separator();
 
-				ImGui::Text("GT1G:");
+				ImGui::TextUnformatted("GT1G:");
 				if (ImGui::MenuItem("Render Color Map as raw data (color index)", NULL, &g_ReadColorMapAsLuminance))
 				{
 					previewer.Prepare();
@@ -541,8 +541,8 @@ namespace NGMC
 				}
 
 				ImGui::Separator();
-				ImGui::Text((std::string("Type: ") + type.GetTypeName() + std::format(" (0x{:02X})", (char)type.GetId())).c_str());
-				ImGui::Text((std::string("Size: ") + GetPrettySize(p_File->GetSize())).c_str());
+				ImGui::TextUnformatted((std::string("Type: ") + type.GetTypeName() + std::format(" (0x{:02X})", (char)type.GetId())).c_str());
+				ImGui::TextUnformatted((std::string("Size: ") + GetPrettySize(p_File->GetSize())).c_str());
 				ImGui::Separator();
 			}
 			else if (selectionCount > 1)
@@ -561,14 +561,14 @@ namespace NGMC
 				}
 
 				ImGui::Separator();
-				ImGui::Text(std::format("{} items selected", fileManager.GetSelectionCount()).c_str());
+				ImGui::TextUnformatted(std::format("{} items selected", fileManager.GetSelectionCount()).c_str());
 
 				uintmax_t size = 0ULL;
 				for (unsigned int i = 0; i < selectionCount; i++)
 				{
 					size += fileManager.GetSelectedFile(i)->GetSize();
 				}
-				ImGui::Text((std::string("Size: ") + GetPrettySize(size)).c_str());
+				ImGui::TextUnformatted((std::string("Size: ") + GetPrettySize(size)).c_str());
 				ImGui::Separator();
 			}
 
@@ -858,7 +858,7 @@ namespace NGMC
 		//ImGui::Separator();
 		//ImGui::Dummy(ImVec2(0.0f, 2.0f));
 		//
-		//ImGui::Text(std::format("Popup count: {}", popups.size()).c_str());
+		//ImGui::TextUnformatted(std::format("Popup count: {}", popups.size()).c_str());
 
 		ImGui::End();
 	}

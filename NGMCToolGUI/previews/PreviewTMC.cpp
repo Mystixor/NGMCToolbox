@@ -23,34 +23,25 @@ namespace NGMC
 
 			if (ImGui::BeginTable("tablePreviewerTMC", 2, Preview::tableFlags))
 			{
-				ImGui::TableNextRow();
-				ImGui::TableSetColumnIndex(0); ImGui::Text("Header");
-				ImGui::TableSetColumnIndex(1); OnRenderTMCChunkHeader(m_Header);
+				ROW_BEGIN("Header");
+				OnRenderTMCChunkHeader(m_Header);
 
-				ImGui::TableNextRow();
-				ImGui::TableSetColumnIndex(0); ImGui::Text("Identifier");
-				ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("\"{}\"", m_Header.identifier).c_str());
+				ROW_QUOTE("Identifier", m_Header.identifier);
 
-				ImGui::TableNextRow();
-				ImGui::TableSetColumnIndex(0); ImGui::Text("U15");
-				ImGui::TableSetColumnIndex(1);
-
+				ROW_BEGIN("U15");
 				if (ImGui::BeginTable("tablePreviewerTMCU15", 1, Preview::tableFlags))
 				{
 					for (unsigned int i = 0; i < m_TMC_U15.size(); i++)
 					{
 						ImGui::TableNextRow();
 						ImGui::TableSetColumnIndex(0);
-						ImGui::Text(std::format("{}", m_TMC_U15[i]).c_str());
+						ImGui::TextUnformatted(std::format("{}", m_TMC_U15[i]).c_str());
 					}
 
 					ImGui::EndTable();
 				}
 				
-				ImGui::TableNextRow();
-				ImGui::TableSetColumnIndex(0); ImGui::Text("Chunks");
-				ImGui::TableSetColumnIndex(1);
-
+				ROW_BEGIN("Chunks");
 				if (ImGui::BeginTable("tablePreviewerTMCChunkIDs", 3, Preview::tableFlags))
 				{
 					ImGui::TableSetupColumn("ID");
@@ -64,18 +55,18 @@ namespace NGMC
 						for (unsigned int i = 0; i < m_TMC_S1_ChunkIDs.size(); i++)
 						{
 							ImGui::TableNextRow();
-							ImGui::TableSetColumnIndex(0); ImGui::Text(std::format("0x{:08X}", (uint32_t)m_TMC_S1_ChunkIDs[i]).c_str());
-							ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", GetChunkTypeName(m_TMC_S1_ChunkIDs[i])).c_str());
-							ImGui::TableSetColumnIndex(2); ImGui::Text(GetPrettySize(m_TMC_ChunkOffsets[i]).c_str());
+							ImGui::TableSetColumnIndex(0); ImGui::TextUnformatted(std::format("0x{:08X}", (uint32_t)m_TMC_S1_ChunkIDs[i]).c_str());
+							ImGui::TableSetColumnIndex(1); ImGui::TextUnformatted(std::format("{}", GetChunkTypeName(m_TMC_S1_ChunkIDs[i])).c_str());
+							ImGui::TableSetColumnIndex(2); ImGui::TextUnformatted(GetPrettySize(m_TMC_ChunkOffsets[i]).c_str());
 						}
 						break;
 					case vSIGMA2:
 						for (unsigned int i = 0; i < m_TMC_S2_ChunkIDs.size(); i++)
 						{
 							ImGui::TableNextRow();
-							ImGui::TableSetColumnIndex(0); ImGui::Text(std::format("0x{:08X}", (uint32_t)m_TMC_S2_ChunkIDs[i]).c_str());
-							ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", GetChunkTypeName(m_TMC_S2_ChunkIDs[i])).c_str());
-							ImGui::TableSetColumnIndex(2); ImGui::Text(GetPrettySize(m_TMC_ChunkOffsets[i]).c_str());
+							ImGui::TableSetColumnIndex(0); ImGui::TextUnformatted(std::format("0x{:08X}", (uint32_t)m_TMC_S2_ChunkIDs[i]).c_str());
+							ImGui::TableSetColumnIndex(1); ImGui::TextUnformatted(std::format("{}", GetChunkTypeName(m_TMC_S2_ChunkIDs[i])).c_str());
+							ImGui::TableSetColumnIndex(2); ImGui::TextUnformatted(GetPrettySize(m_TMC_ChunkOffsets[i]).c_str());
 						}
 						break;
 					}
@@ -124,45 +115,16 @@ namespace NGMC
 		uintptr_t headerAddr = (uintptr_t)&header;
 		if (ImGui::BeginTable(std::vformat("header##{:08X}", std::make_format_args(headerAddr)).c_str(), 2, Preview::tableFlags))
 		{
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("Signature");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("\"{}\"", header.magic).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("Version");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}.{}.{}.{}", header.version.v[0], header.version.v[1], header.version.v[2], header.version.v[3]).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("U01");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", header.U01).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("chunkSize");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(GetPrettySize(header.chunkSize).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("childCount");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", header.childCount).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("U03");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", header.U03).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("U04");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", header.U04).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("U05");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", header.U05).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("U06");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", header.U06).c_str());
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0); ImGui::Text("U07");
-			ImGui::TableSetColumnIndex(1); ImGui::Text(std::format("{}", header.U07).c_str());
+			ROW_QUOTE("Signature", header.magic);
+			ROW_FORMAT("Version", "{}.{}.{}.{}", header.version.v[0], header.version.v[1], header.version.v[2], header.version.v[3]);
+			ROW_VALUE("U01", header.U01);
+			ROW_VALUE("chunkSize", header.chunkSize);
+			ROW_VALUE("childCount", header.childCount);
+			ROW_VALUE("U03", header.U03);
+			ROW_VALUE("U04", header.U04);
+			ROW_VALUE("U05", header.U05);
+			ROW_VALUE("U06", header.U06);
+			ROW_VALUE("U07", header.U07);
 
 			ImGui::EndTable();
 		}
